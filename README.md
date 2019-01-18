@@ -1,2 +1,2 @@
-# cieve
-Ciev, a machine learning recruitment system
+# Cieve
+Cieve, a machine learning recruitment system
