@@ -1,5 +1,5 @@
 import functools
-import bcrypt
+
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
@@ -7,6 +7,8 @@ from flask import (
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from flaskr.db import get_db
+
+from bcrypt import gensalt
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -60,6 +62,7 @@ def applicantLogin():
 
 @bp.route('/cli/login', methods=('GET', 'POST'))
 def clientLogin():
+    if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
         db = get_db()
@@ -78,7 +81,7 @@ def clientLogin():
 
         flash(error)
 
-    return render_template('auth/cli/login.html')
+        return render_template('auth/cli/login.html')
 
 @bp.before_app_request
 def load_logged_in_user():
@@ -86,9 +89,9 @@ def load_logged_in_user():
 
     if user_id is None:
         g.user = None
-    else if user_id[0] == "A":
+    elif user_id[0] == "A":
         g.user = get_db().getApplicantUserID(user_id)
-    else if user_id[0] == "C":
+    elif user_id[0] == "C":
         g.user = get_db().getClientUserID(user_id)
     else:
         g.user = None
