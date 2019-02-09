@@ -1,4 +1,4 @@
 import pytest
 
 def pytest():
-    assert '1' = '1'
+    assert '1' == '1'
