@@ -11,27 +11,28 @@ class Mongo:
     
     # Return an account class
     def getUserAccount(self, username):
-        pass
+        return
     
     # Return an account class
     def getClientAccount(self, username):
-        pass
+        return
 
     # Insert to user account, return userID if completed (None if not)
     def insertApplicantUser(self, username, passHash, salt):
-        pass
+        return
     
     # Insert to client account, return userID if completed (None if not)
     def insertClientUser(self, username, passHash, salt):
-        pass
+        return
     
     # Return applicant class populated based on id
     def getApplicantUserID(self, id):
-        pass
+        return
 
     # Return client class populated based on id
     def getClientUserID(self, id):
-        pass
+        return
+
 #Stores details from user and client account details
 class Account:
     def __init__(self, id, username, password, salt):
@@ -42,8 +43,8 @@ class Account:
 
 class Applicant:
     def __init__():
-        pass
+        return
 
 class Client:
     def __init__():
-        pass
+        return

@@ -29,7 +29,7 @@ def register():
             error = 'Username {} is already taken.'.format(username)
         
         if error is None:
-            salt = bcrypt.gensalt(12)
+            salt = gensalt(12)
             passHash = generate_password_hash(password + salt)
             db.insertApplicantUser(username, passHash, salt)
             return redirect(url_for('auth.applicantLogin'))
