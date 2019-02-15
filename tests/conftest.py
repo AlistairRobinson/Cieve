@@ -54,3 +54,37 @@ class AuthActions(object):
 @pytest.fixture
 def auth(client):
     return AuthActions(client)
+
+# Encapsulates functions used to test jobs and applications
+class JobActions(object):
+    def __init__(self, client):
+        self._client = client
+
+    def post_vacancy(self, data):
+        return self._client.post(
+            'path/to/post/vacancy',
+            data
+        )
+    
+    def apply_to_vacancy(self, data):
+        return self._client.post(
+            'path/to/vacancy/application',
+            data
+        )
+
+    def retrive_application(self, data):
+        return self._client.post(
+            'path/to/application/retrival',
+            data
+        )
+
+    def get_vacancies(self, data):
+        return self._client.post(
+            'path/to/vacancy/retrival',
+            data
+        )
+
+# Returns a job test object
+@pytest.fixture
+def jobs(client):
+    return JobActions(client)
