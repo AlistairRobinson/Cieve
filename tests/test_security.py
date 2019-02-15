@@ -1,7 +1,7 @@
 import pytest
 from flask import g, session
 
-# Client login tests
+# Client login tests (R1)
 
 def test_cli_login(client, auth):
     assert client.get('/auth/cli/login').status_code == 200
@@ -20,7 +20,7 @@ def test_cli_login_validate_input(auth, username, password, message):
     response = auth.login_cli(username, password)
     assert message in response.data
 
-# Applicant login tests
+# Applicant login tests (R1)
 
 def test_apl_login(client, auth):
     assert client.get('/auth/apl/login').status_code == 200
@@ -39,7 +39,7 @@ def test_apl_login_validate_input(auth, username, password, message):
     response = auth.login_apl(username, password)
     assert message in response.data
 
-# Applicant registration tests
+# Applicant registration tests (R1)
 
 def test_register(client, app):
     assert client.get('/auth/apl/register').status_code == 200

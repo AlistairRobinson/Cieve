@@ -16,7 +16,8 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 def register():
     if request.method == 'POST':
         username = request.form['username']
-        password = request.form['password']
+        password = request.form['password'] #Password confimation to be done client side
+
         db = get_db()
         error = None
 
@@ -24,13 +25,13 @@ def register():
             error = 'Username is required.'
         elif not password:
             error = 'Password is required.'
-        elif db.getApplicantUser(username) is not None:
+        elif db.getUserAccount(username) is not None:
             error = 'Username {} is already taken.'.format(username)
         
         if error is None:
-            passSalt = bcrypt.gensalt(12)
-            passHash = generate_password_hash(password + passSalt)
-            db.insertApplicantUser(username, passHash, passSalt)
+            salt = bcrypt.gensalt(12)
+            passHash = generate_password_hash(password + salt)
+            db.insertApplicantUser(username, passHash, salt)
             return redirect(url_for('auth.applicantLogin'))
         
         flash(error)
@@ -44,11 +45,11 @@ def applicantLogin():
         password = request.form['password']
         db = get_db()
         error = None
-        user = db.getApplicantUser(username)
+        user = db.getUserAccount(username)
 
         if user is None:
             error = 'Incorrect username or password.'
-        elif not check_password_hash(user.password, password + user.passSalt):
+        elif not check_password_hash(user.password, password + user.salt):
             error = 'Incorrect username or password.'
 
         if error is None:
@@ -67,11 +68,11 @@ def clientLogin():
         password = request.form['password']
         db = get_db()
         error = None
-        user = db.getClientUser(username)
+        user = db.getClientAccount(username)
 
         if user is None:
             error = 'Incorrect username or password.'
-        elif not check_password_hash(user.password, password + user.passSalt):
+        elif not check_password_hash(user.password, password + user.salt):
             error = 'Incorrect username or password.'
 
         if error is None:
