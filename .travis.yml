@@ -11,5 +11,5 @@ before_script:
   - export FLASK_ENV=development
 
 script:
-  - python -m flask run
+  - python -m flask run &
   - pytest
