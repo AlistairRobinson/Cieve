@@ -72,7 +72,7 @@ class JobActions(object):
             data
         )
 
-    def retrive_application(self, data):
+    def retrieve_application(self, data):
         return self._client.post(
             'path/to/application/retrival',
             data
