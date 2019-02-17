@@ -16,7 +16,7 @@ def test_cli_login(client, auth):
 
 # Vacany posting tests (R8, R14)
 
-json = {}
+json = {}                       # TODO
 json['id'] = 1
 json['name'] = 'test'
 json['skills'] = 'something'
@@ -31,7 +31,7 @@ def test_post_vacancy(client, jobs, data, message):
     
 # Vacancy retrieval tests (R15)
 
-json = {}
+json = {}           # TODO
 json['id'] = 1
 
 def test_get_vacancies(client, jobs):
@@ -40,7 +40,7 @@ def test_get_vacancies(client, jobs):
 
 # Application posting tests (R15)
 
-json = {}
+json = {}                       # TODO
 json['id'] = 1
 json['name'] = 'applicant'
 json['skills'] = 'something'
@@ -55,7 +55,7 @@ def test_post_application(client, jobs, data, message):
 
 # Application retrival tests (R5)
 
-json = {}
+json = {}               # TODO
 json['id'] = 1
 
 def test_get_applications(client, jobs):

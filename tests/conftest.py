@@ -62,25 +62,25 @@ class JobActions(object):
 
     def post_vacancy(self, data):
         return self._client.post(
-            'path/to/post/vacancy',
+            'path/to/post/vacancy', # TODO
             data
         )
     
     def apply_to_vacancy(self, data):
         return self._client.post(
-            'path/to/vacancy/application',
+            'path/to/vacancy/application', # TODO
             data
         )
 
     def retrieve_application(self, data):
         return self._client.post(
-            'path/to/application/retrival',
+            'path/to/application/retrival', # TODO
             data
         )
 
     def get_vacancies(self, data):
         return self._client.post(
-            'path/to/vacancy/retrival',
+            'path/to/vacancy/retrival', # TODO
             data
         )
 
