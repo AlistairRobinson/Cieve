@@ -1,0 +1,6 @@
+bcrypt==3.1.6
+Flask==1.0.2
+jsonschema==2.5.1
+pymongo==3.7.2
+pytest==4.2.0
+Werkzeug==0.14.1
