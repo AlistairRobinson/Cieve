@@ -1,19 +1,19 @@
 from pymongo import MongoClient
 
 def get_db():
-    uri = ""
+    uri = "mongodb+srv://cieve:N3gNW20iJNqwL0fC@cievedatabase-gzmjp.mongodb.net/test?retryWrites=true"
     client = MongoClient(uri)
-    return Mongo(client.my_database)
+    return Mongo(client.cieve_database)
 
 class Mongo:
     def __init__(self, db):
         self.db = db
     
-    # Return an account class
-    def getUserAccount(self, username):
+    # Return JSON of the account data for the applicant with username=username
+    def getApplicantAccount(self, username):
         return
     
-    # Return an account class
+    # Return JSON of the account data for the client with username=username
     def getClientAccount(self, username):
         return
 
@@ -25,26 +25,22 @@ class Mongo:
     def insertClientUser(self, username, passHash, salt):
         return
     
-    # Return applicant class populated based on id
+    # Return JSON of applicant info populated based on id
     def getApplicantUserID(self, id):
         return
 
-    # Return client class populated based on id
+    # Return JSON of client info populated based on id
     def getClientUserID(self, id):
         return
 
-#Stores details from user and client account details
-class Account:
-    def __init__(self, id, username, password, salt):
-        self.id = id
-        self.username = username
-        self.password = password
-        self.salt = salt
-
-class Applicant:
-    def __init__():
+    # Returns all the jobs currently available to applications
+    def getJobs(self, number, division, role, location):
         return
 
-class Client:
-    def __init__():
+    # Adds a new job to the database
+    def addJob(self, jsonData):
+        return
+
+    # Assign Applicant to Job
+    def applyJob(self, userID, jobID):
         return

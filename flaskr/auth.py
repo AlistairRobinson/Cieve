@@ -10,13 +10,13 @@ from flaskr.db import get_db
 
 from bcrypt import gensalt
 
-bp = Blueprint('auth', __name__, url_prefix='/auth')
+bp = Blueprint('auth', __name__)
 
-@bp.route('/apl/register', methods=('GET', 'POST'))
+@bp.route('/apl/auth/register', methods=('GET', 'POST'))
 def register():
     if request.method == 'POST':
         username = request.form['username']
-        password = request.form['password'] #Password confimation to be done client side
+        password = request.form['password'] # Password confimation to be done client side
 
         db = get_db()
         error = None
@@ -38,14 +38,18 @@ def register():
     
     return render_template('auth/apl/register.html')
 
-@bp.route('/apl/login', methods=('GET', 'POST'))
+@bp.route('/login')
+def login():
+    return render_template('login.html')
+
+@bp.route('/apl/auth/login', methods=('GET', 'POST'))
 def applicantLogin():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
         db = get_db()
         error = None
-        user = db.getUserAccount(username)
+        user = db.getApplicantAccount(username)
 
         if user is None:
             error = 'Incorrect username or password.'
@@ -61,7 +65,7 @@ def applicantLogin():
 
     return render_template('auth/apl/login.html')
 
-@bp.route('/cli/login', methods=('GET', 'POST'))
+@bp.route('/cli/auth/login', methods=('GET', 'POST'))
 def clientLogin():
     if request.method == 'POST':
         username = request.form['username']
@@ -103,10 +107,20 @@ def logout():
     session.clear()
     return redirect(url_for('index'))
 
-def login_required(view):
+def login_required_A(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
-        if g.user is None:
+        if g.user is None or session.get('user_id')[0] != "A":
+            return redirect(url_for('auth.login'))
+
+        return view(**kwargs)
+
+    return wrapped_view
+
+def login_required_C(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user is None or session.get('user_id')[0] != "C":
             return redirect(url_for('auth.login'))
 
         return view(**kwargs)
