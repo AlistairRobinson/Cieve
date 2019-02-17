@@ -27,7 +27,7 @@ json['skills'] = 'something'
 ))
 def test_post_vacancy(client, jobs, data, message):
     response = jobs.post_vacancy(data)
-    assert message in response
+    assert message in response.data
     
 # Vacancy retrieval tests (R15)
 
@@ -36,7 +36,7 @@ json['id'] = 1
 
 def test_get_vacancies(client, jobs):
     response = jobs.get_vacancies(json)
-    assert 'test' in response
+    assert 'test' in response.data
 
 # Application posting tests (R15)
 
@@ -60,4 +60,4 @@ json['id'] = 1
 
 def test_get_applications(client, jobs):
     response = jobs.retrieve_application(json)
-    assert 'applicant' in response
+    assert 'applicant' in response.data
