@@ -1,6 +1,7 @@
 import pytest
 import json
 from flask import g, session, jsonify
+from flaskr import db
 
 # Client login tests (to ensure security)
 
