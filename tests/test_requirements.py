@@ -26,7 +26,7 @@ json['skills'] = 'something'
 ))
 def test_post_vacancy(client, jobs, data, message):
     response = jobs.post_vacancy(data)
-    assert message in response.
+    assert message in response
     
 # Vacancy retrieval tests (R15)
 
