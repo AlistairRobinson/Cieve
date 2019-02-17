@@ -2,6 +2,8 @@ import pytest
 import json
 from flask import g, session, jsonify
 
+# Client login tests (to ensure security)
+
 def test_cli_login(client, auth):
     assert client.get('/auth/cli/login').status_code == 200
     response = auth.login_cli()
@@ -10,6 +12,8 @@ def test_cli_login(client, auth):
         client.get('/')
         assert session['user_id'] == 1
         assert g.user['username'] == 'test'
+
+# Vacany posting tests (R8, R14)
 
 json = {}
 json['id'] = 1
@@ -24,12 +28,16 @@ def test_post_vacancy(client, jobs, data, message):
     response = jobs.post_vacancy(data)
     assert message in response.
     
+# Vacancy retrieval tests (R15)
+
 json = {}
 json['id'] = 1
 
 def test_get_vacancies(client, jobs):
     response = jobs.get_vacancies(json)
     assert 'test' in response
+
+# Application posting tests (R15)
 
 json = {}
 json['id'] = 1
@@ -43,6 +51,8 @@ json['skills'] = 'something'
 def test_post_application(client, jobs, data, message):
     response = jobs.apply_to_vacancy(data)
     assert message in response.data
+
+# Application retrival tests (R5)
 
 json = {}
 json['id'] = 1
