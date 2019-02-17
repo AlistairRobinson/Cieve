@@ -1,3 +1,4 @@
+bcrypt==3.1.6
 Flask==1.0.2
 jsonschema==2.5.1
 pymongo==3.7.2
