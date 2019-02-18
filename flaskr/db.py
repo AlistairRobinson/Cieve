@@ -4,70 +4,97 @@ def get_db():
     uri = "mongodb+srv://cieve:N3gNW20iJNqwL0fC@cievedatabase-gzmjp.mongodb.net/test?retryWrites=true"
     client = MongoClient(uri)
     return Mongo(client.cieve_database)
+    
 
 class Mongo:
     def __init__(self, db):
-        self.db = db
+        self.db = db.db
+    
     
     # Return an account class
     def getUserAccount(self, username):
-        query = get_db().applicantInfo.find_one({"username": username})
-        if query == None:
+        query = self.db.applicantInfo.find_one({"username": username})
+        if query != None:
             return query
         else:
-            print("This username does not exist")
+            return None
+    
     
     # Return JSON of the account data for the client with username=username
     def getClientAccount(self, username):
-        query = get_db().client.find_one({"username": username})
-        if query == None:
+        query = self.db.client.find_one({"username": username})
+        if query != None:
             return query
         else:
-            print("This username does not exist")
+            return None
+
 
     # Insert to user account, return userID if completed (None if not)
     def insertApplicantUser(self, username, passHash, salt):
         applicantData = {"setup": True}
-        get_db().applicant.insert_one(applicantData)
-        applicantID = get_db().applicant.insert_one(applicantData).inserted_id
+        applicantID = self.db.applicant.insert_one(applicantData).inserted_id
         
         applicantInfoData = {"applicant_id": applicantID,
                              "username": username,
                              "password_hash": passHash,
                              "salt": salt}
-        get_db().applicantInfo.insert_one(applicantInfoData)
+        self.db.applicantInfo.insert_one(applicantInfoData)
         return applicantID
+    
     
     # Insert to client account, return userID if completed (None if not)
     def insertClientUser(self, username, passHash, salt):
         clientData = {"username": username,
                       "password_hash": passHash,
                       "salt": salt}
-        get_db().client.insert_one(clientInfoData)
-        return get_db().client.insert_one(clientInfoData).inserted_id
+        clientID = self.db.client.insert_one(clientData).inserted_id
+        return clientID
+    
     
     # Return JSON of applicant info populated based on id
     def getApplicantUserID(self, id):
-        return
+        query = self.db.applicantInfo.find_one({"applicant_id": id})
+        if query != None:
+            return query
+        else:
+            return None
+
 
     # Return JSON of client info populated based on id
     def getClientUserID(self, id):
-        pass
-    
-#Stores details from user and client account details
-class Account:
-    def __init__(self, id, username, password, salt):
-        self.id = id
-        self.username = username
-        self.password = password
-        self.salt = salt
+        query = self.db.client.find_one({"_id": id})
+        if query != None:
+            return query
+        else:
+            return None
+
 
     # Returns all the jobs currently available to applications
     def getJobs(self, number, division, role, location):
-        return
-
-class Client:
-    def __init__():
-        pass
+        Jobs = []
+        queryMaker = {"positions_available": {"$gt": 0}}
+        if division != None:
+            queryMaker['division'] = division
+        
+        if role != None:
+            queryMaker['role type'] = role
+        
+        if location != None:
+            queryMaker['location'] = location
+        
+        query = self.db.vacancy.find(queryMaker, {"_id": 0, "positions_available": 0, "applicants_recieved": 0})
+        for doc in query:
+            Jobs.append(doc)
+        return Jobs[(number-1)*20:((number-1)*20)+20]
     
-get_db()
+    
+test = Mongo(get_db())
+applicantID = test.insertApplicantUser("Applicant1", "password123", "123")
+print(applicantID)
+clientID = test.insertClientUser("Client1", "password321", "321")
+print(clientID)
+print(test.getUserAccount("Applicant1"))
+print(test.getClientAccount("Client1"))
+print(test.getClientUserID(clientID))
+print(test.getApplicantUserID(applicantID))
+print(test.getJobs(1, "Manager", None, "London"))
