@@ -11,7 +11,7 @@ bp = Blueprint('applicant', __name__, url_prefix='/apl')
 #Definition for the applicant dashboard
 @bp.route('/dashboard')
 @bp.route('/')
-@login_required_A
+#@login_required_A
 def dashboard():
     # Generate post data and pass to front end
     return render_template('/apl/Dashboard.html')

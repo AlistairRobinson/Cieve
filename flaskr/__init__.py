@@ -13,6 +13,9 @@ def create_app(test_config=None):
     from . import applicant
     app.register_blueprint(applicant.bp)
 
+    from . import client
+    app.register_blueprint(client.bp)
+
     app.config.from_mapping(SECRET_KEY='disgrace abstain umbilical freehand isotope staleness swerve matrimony babbling clock')
     if test_config is None:
         app.config.from_pyfile('config.py', silent=True)
