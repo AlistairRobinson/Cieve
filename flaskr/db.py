@@ -12,7 +12,7 @@ class Mongo:
     
     
     # Return an account class
-    def getUserAccount(self, username):
+    def getApplicantAccount(self, username):
         query = self.db.applicantInfo.find_one({"username": username})
         if query != None:
             return query
@@ -30,11 +30,12 @@ class Mongo:
 
 
     # Insert to user account, return userID if completed (None if not)
-    def insertApplicantUser(self, username, passHash, salt):
+    def insertApplicantUser(self, name, username, passHash, salt):
         applicantData = {"setup": True}
         applicantID = self.db.applicant.insert_one(applicantData).inserted_id
         
         applicantInfoData = {"applicant_id": applicantID,
+                             "name": name,
                              "username": username,
                              "password_hash": passHash,
                              "salt": salt}
@@ -73,27 +74,31 @@ class Mongo:
     def getJobs(self, number, division, role, location):
         Jobs = []
         queryMaker = {"positions_available": {"$gt": 0}}
-        if division != None:
+        if division != "":
             queryMaker['division'] = division
         
-        if role != None:
+        if role != "":
             queryMaker['role type'] = role
         
-        if location != None:
+        if location != "":
             queryMaker['location'] = location
         
         query = self.db.vacancy.find(queryMaker, {"_id": 0, "positions_available": 0, "applicants_recieved": 0})
         for doc in query:
             Jobs.append(doc)
         return Jobs[(number-1)*20:((number-1)*20)+20]
+
+        # Wiil accept a json parameter which will be defined by the input, adds the new job to the DB
+        def addJob(self, json):
+            return
     
     
 test = Mongo(get_db())
-applicantID = test.insertApplicantUser("Applicant1", "password123", "123")
+applicantID = test.insertApplicantUser("Applicant1", "nathan", "password123", "123")
 print(applicantID)
 clientID = test.insertClientUser("Client1", "password321", "321")
 print(clientID)
-print(test.getUserAccount("Applicant1"))
+print(test.getApplicantAccount("Applicant1"))
 print(test.getClientAccount("Client1"))
 print(test.getClientUserID(clientID))
 print(test.getApplicantUserID(applicantID))

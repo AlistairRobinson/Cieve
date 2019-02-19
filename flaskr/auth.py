@@ -17,6 +17,7 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password'] # Password confimation to be done client side
+        name = request.form['name']
 
         db = get_db()
         error = None
@@ -25,13 +26,13 @@ def register():
             error = 'Username is required.'
         elif not password:
             error = 'Password is required.'
-        elif db.getUserAccount(username) is not None:
+        elif db.getApplicantAccount(username) is not None:
             error = 'Username {} is already taken.'.format(username)
         
         if error is None:
             salt = gensalt(12)
             passHash = generate_password_hash(password + salt)
-            db.insertApplicantUser(username, passHash, salt)
+            db.insertApplicantUser(name, username, passHash, salt)
             return redirect(url_for('auth.applicantLogin'))
         
         flash(error)
