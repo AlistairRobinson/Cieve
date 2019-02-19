@@ -12,15 +12,9 @@ class Mongo:
     
     
     # Return an account class
-<<<<<<< HEAD
-    def getClientAccount(self, username):
-        query = get_db().applicantInfo.find_one({"username": username})
-        if query == None:
-=======
     def getUserAccount(self, username):
         query = self.db.applicantInfo.find_one({"username": username})
         if query != None:
->>>>>>> data
             return query
         else:
             return None
