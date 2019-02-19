@@ -10,7 +10,7 @@ class Mongo:
         self.db = db
     
     # Return an account class
-    def getUserAccount(self, username):
+    def getClientAccount(self, username):
         query = get_db().applicantInfo.find_one({"username": username})
         if query == None:
             return query
@@ -52,22 +52,16 @@ class Mongo:
 
     # Return JSON of client info populated based on id
     def getClientUserID(self, id):
-        pass
+        return
     
-#Stores details from user and client account details
-class Account:
-    def __init__(self, id, username, password, salt):
-        self.id = id
-        self.username = username
-        self.password = password
-        self.salt = salt
-
     # Returns all the jobs currently available to applications
     def getJobs(self, number, division, role, location):
         return
 
-class Client:
-    def __init__():
-        pass
-    
-get_db()
+    # Adds a new job to the database
+    def addJob(self, jsonData):
+        return
+
+    # Assign Applicant to Job
+    def applyJob(self, userID, jobID):
+        return
