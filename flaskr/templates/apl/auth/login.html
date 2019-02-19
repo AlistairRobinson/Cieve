@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <link rel="stylesheet" href="mainCss.css" />
+    <script async type="text/javascript" src="js/bulma.js"></script>
   </head>
   <body>
 
@@ -16,8 +17,8 @@
       <nav class="navbar has-background-white">
           <div class="container">
               <div class="navbar-brand">
-                  <a class="navbar-item" href="/">
-                    <img src="Cieve2.png" alt="Logo">
+                  <a class="navbar-item" href="LandingPage.html">
+                    <img src="CieveNavBar.png" alt="Logo">
                   </a>
                   <span class="navbar-burger burger" data-target="navbarMenu">
                      <span></span>
@@ -28,11 +29,11 @@
 
               <div id="navbarMenu" class="navbar-menu">
                 <div class="navbar-start has-text-dark">
-                  <a class="navbar-item" href="/">
+                  <a class="navbar-item" href="LandingPage.html">
                     <strong>Home</strong>
                   </a>
 
-                  <a class="navbar-item" href="/about">
+                  <a class="navbar-item">
                     About
                   </a>
                 </div>
@@ -65,10 +66,10 @@
                         </div>
 
                         <div class="buttons">
-                          <a class="button is-primary open-modal" data-modal-id="#my-modal" href="/apl/auth/register">
+                          <a class="button is-primary open-modal" data-modal-id="#my-modal" href="signUp.html">
                             <strong>Sign up</strong>
                           </a>
-                          <a class="button is-light open-modal" data-modal-id="#my-modal2" href="/login">
+                          <a class="button is-light open-modal" data-modal-id="#my-modal2" href="chooseLoginType.html">
                             Log in
                           </a>
                         </div>
@@ -85,12 +86,12 @@
           <div class ="column is-5-tablet is-4-desktop is-4-widescreen">
             <form class = "box">
               <div class = "field has-text-centered">
-                <img src = "Cieve.png" width="150">
+                <h5 class="title is-5">Applicant Login</h5>
               </div>
               <div class="field">
                 <label class="label">Email</label>
                 <div class="control has-icons-left">
-                  <input class="input" id="emailBox" type="email" placeholder="e.g. alexjohn-son@gmail.com" >
+                  <input class="input" type="email" id="emailBox" placeholder="e.g. alexjohn-son@gmail.com" >
                   <span class="icon is-small is-left">
                     <i class="fa fa-envelope"></i>
                   </span>
@@ -99,7 +100,7 @@
               <div class="field">
                 <label class="label">Password</label>
                 <div class="control has-icons-left">
-                  <input class="input" id="psswdBox" type="password" placeholder="********" required>
+                  <input class="input" type="password" id="psswdBox" placeholder="********" required>
                   <span class="icon is-small is-left">
                     <i class="fa fa-lock"></i>
                   </span>
@@ -113,14 +114,6 @@
               </div>
 
               <center><a class="button is-text">Forgot password?</a></center>
-              <div>
-                <center>
-                  Don't have an account?
-                  <a href="/apl/auth/register"><u>Sign up<u></a>
-                </center>
-              </div>
-
-
 
             </form>
           </div>

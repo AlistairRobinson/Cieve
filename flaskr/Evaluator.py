@@ -33,5 +33,4 @@ class Evaluator:
         applicant['experience_score'] = score
         applicant['skills_score'] = score
 
-
         return applicant
