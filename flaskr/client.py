@@ -18,7 +18,7 @@ def dashboard():
 
 #Definition for the client job creation
 @bp.route('/newjob', methods=('GET', 'POST'))
-#@login_required_C
+@login_required_C
 def newJob():
     if request.method == 'POST':
         # Get job post data

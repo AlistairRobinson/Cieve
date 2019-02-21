@@ -84,38 +84,14 @@
       <div class = "container">
         <div class = "columns is-centered">
           <div class ="column is-5-tablet is-4-desktop is-4-widescreen">
-            <form class = "box">
-              <div class = "field has-text-centered">
-                <h5 class="title is-5">Client Login</h5>
-              </div>
-              <div class="field">
-                <label class="label">Email</label>
-                <div class="control has-icons-left">
-                  <input class="input" type="email" id="emailBox" placeholder="e.g. alexjohn-son@gmail.com" >
-                  <span class="icon is-small is-left">
-                    <i class="fa fa-envelope"></i>
-                  </span>
-                </div>
-              </div>
-              <div class="field">
-                <label class="label">Password</label>
-                <div class="control has-icons-left">
-                  <input class="input" type="password" id="psswdBox" placeholder="********" required>
-                  <span class="icon is-small is-left">
-                    <i class="fa fa-lock"></i>
-                  </span>
-                </div>
-              </div>
+            <form class = "box" action="{{ url_for('auth.clientLogin') }}" method="POST">
+              <input class="input" type="email" id="emailBox" placeholder="e.g. alexjohn-son@gmail.com" name="username">
+                
+              <input class="input" type="password" id="psswdBox" placeholder="********" name="password" required>
+                
+              <input class="button is-success is-fullwidth" type="submit" id="loginButton" value="Login">
 
-              <div class="field">
-                <button class="button is-success is-fullwidth" id="loginButton">
-                  Login
-                </button>
-              </div>
-
-              <center><a class="button is-text">Forgot password?</a></center>
-
-            </form>
+          </form>
           </div>
         </div>
       </div>
