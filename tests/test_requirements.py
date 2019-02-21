@@ -6,7 +6,7 @@ from flaskr import db
 # Client login tests (to ensure security)
 
 def test_cli_login(client, jobs):
-    jobs._client.post('/cli/auth/login', data={'username': 'test@test.test', 'password': '123'})
+    jobs._client.post('/cli/auth/login', data={'username': 'test@test.tet', 'password': '123'})
     with jobs._client:
         client.get('/')
         assert 'C' in session['user_id']
