@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+from bson.objectid import ObjectId 
 
 def get_db():
     uri = "mongodb+srv://cieve:N3gNW20iJNqwL0fC@cievedatabase-gzmjp.mongodb.net/test?retryWrites=true"
@@ -54,7 +55,8 @@ class Mongo:
     
     # Return JSON of applicant info populated based on id
     def getApplicantUserID(self, id):
-        query = self.db.applicantInfo.find_one({"applicant_id": id})
+        query = self.db.applicantInfo.find_one({"applicant_id": ObjectId(id)})
+        print ObjectId(id)
         if query != None:
             return query
         else:
@@ -98,8 +100,9 @@ applicantID = test.insertApplicantUser("Applicant1", "nathan", "password123", "1
 print(applicantID)
 clientID = test.insertClientUser("Client1", "password321", "321")
 print(clientID)
-print(test.getApplicantAccount("Applicant1"))
+print(test.getApplicantAccount("TET@1"))
 print(test.getClientAccount("Client1"))
 print(test.getClientUserID(clientID))
 print(test.getApplicantUserID(applicantID))
-print(test.getJobs(1, "Manager", None, "London"))
+print(test.getApplicantUserID('5c6df60fa85112016b4b8420'))
+print get_db().db.applicantInfo.find_one({"applicant_id": ObjectId('5c6df60fa85112016b4b8420')})
