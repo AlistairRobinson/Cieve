@@ -37,7 +37,7 @@ class AuthActions(object):
 
     def login_apl(self, username='test', password='test'):
         return self._client.post(
-            '/auth/apl/login',
+            '/apl/auth/login',
             data={'username': username, 'password': password}
         )
 
