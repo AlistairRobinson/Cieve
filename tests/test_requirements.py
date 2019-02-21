@@ -5,6 +5,7 @@ from flaskr import db
 
 # Client login tests (to ensure security)
 
+<<<<<<< HEAD
 def test_cli_login(client, auth):
 <<<<<<< HEAD
     assert client.get('cli/auth/login').status_code == 200
@@ -14,54 +15,68 @@ def test_cli_login(client, auth):
     response = auth.login_cli()
 
     with client:
+=======
+def test_cli_login(client, jobs):
+    jobs._client.post('/cli/auth/login', data={'username': 'test@test.tet', 'password': '123'})
+    with jobs._client:
+>>>>>>> 05dd665f6e1d5cab62c05bbbe0942e24fb077d82
         client.get('/')
-        assert session['user_id'] == 1
-        assert g.user['username'] == 'test'
+        assert 'C' in session['user_id']
 
 # Vacany posting tests (R8, R14)
 
 json = {}                       # TODO
-json['id'] = 1
+json['user_id'] = 1
 json['name'] = 'test'
 json['skills'] = 'something'
 
 @pytest.mark.parametrize(('data', 'message'), (
-    (json, b'Vacany post successful'),
-    ({}, b'Vacancy post unsuccessful'),
+    (json, 'Vacany post successful'),
+    ({}, 'Vacancy post unsuccessful'),
 ))
 def test_post_vacancy(client, jobs, data, message):
     response = jobs.post_vacancy(data)
-    assert message in response.data
+    with jobs._client.session_transaction() as session:
+        try:
+            error = session['_flashes'][0]
+        except KeyError:
+            raise AssertionError('nothing flashed')
+        assert message in error[1]
     
 # Vacancy retrieval tests (R15)
 
 json = {}           # TODO
-json['id'] = 1
+json['user_id'] = 1
 
 def test_get_vacancies(client, jobs):
     response = jobs.get_vacancies(json)
-    assert 'test' in response.data
+    assert b'test' in response.data
 
 # Application posting tests (R15)
 
 json = {}                       # TODO
-json['id'] = 1
+json['user_id'] = 1
 json['name'] = 'applicant'
 json['skills'] = 'something'
 
 @pytest.mark.parametrize(('data', 'message'), (
-    (json, b'Application post successful'),
-    ({}, b'Application post unsuccessful'),
+    (json, 'Application post successful'),
+    ({}, 'Application post unsuccessful'),
 ))
 def test_post_application(client, jobs, data, message):
     response = jobs.apply_to_vacancy(data)
-    assert message in response.data
+    with jobs._client.session_transaction() as session:
+        try:
+            error = session['_flashes'][0]
+        except KeyError:
+            raise AssertionError('nothing flashed')
+        assert message in error[1]
 
 # Application retrival tests (R5)
 
 json = {}               # TODO
-json['id'] = 1
+json['user_id'] = 1
 
 def test_get_applications(client, jobs):
     response = jobs.retrieve_application(json)
-    assert 'applicant' in response.data
+    assert b'applicant' in response.data
