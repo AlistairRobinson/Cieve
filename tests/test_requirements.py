@@ -6,7 +6,7 @@ from flaskr import db
 # Client login tests (to ensure security)
 
 def test_cli_login(client, auth):
-    assert client.get('/auth/cli/login').status_code == 200
+    assert client.get('/cli/auth/login').status_code == 200
     response = auth.login_cli()
 
     with client:
