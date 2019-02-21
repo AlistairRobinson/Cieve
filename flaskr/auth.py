@@ -38,7 +38,7 @@ def register():
             error = 'Username {} is already taken.'.format(username)
         
         if error is None:
-            salt = gensalt(12)
+            salt = str(gensalt(12))
             passHash = generate_password_hash(password + salt)
             db.insertApplicantUser(name, username, passHash, salt)
             return redirect(url_for('auth.applicantLogin'))
