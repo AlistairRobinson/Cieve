@@ -40,7 +40,7 @@ def register():
         if error is None:
             salt = gensalt(12)
             passHash = generate_password_hash(password + salt)
-            print db.insertApplicantUser(name, username, passHash, salt)
+            db.insertApplicantUser(name, username, passHash, salt)
             return redirect(url_for('auth.applicantLogin'))
         
         flash(error)
@@ -69,10 +69,11 @@ def applicantLogin():
             error = 'Incorrect username or password.'
         elif not check_password_hash(user['password_hash'], password + user['salt']):
             error = 'Incorrect username or password.'
-        print(error)
+        
         if error is None:
             session.clear()
-            session['user_id'] = "A" + str(user['_id'])
+            print(user['applicant_id'])
+            session['user_id'] = "A" + str(user['applicant_id'])
             return redirect(url_for('applicant.dashboard'))
 
         flash(error)

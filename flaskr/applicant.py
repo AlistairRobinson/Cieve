@@ -14,10 +14,10 @@ bp = Blueprint('applicant', __name__, url_prefix='/apl')
 @login_required_A
 def dashboard():
     # Generate post data and pass to front end
-    print g.user
-    test = get_db().getApplicantUserID(g.user)
-    print test
-    return render_template('/apl/Dashboard.html', test=test)
+    
+    userData = get_db().getApplicantUserID(g.user)
+
+    return render_template('/apl/Dashboard.html', userData=userData)
 
 #Definition for the applicant job search page
 @bp.route('/jobsearch', methods=('GET', 'POST'))
@@ -53,28 +53,39 @@ def newApplication():
     # Generate post data and pass to front end
     skills = {}
     jobs = {}
-    others = False
+    others = ""
     if request.method == 'POST':
         skills = request.form['skills']
-        jobs = request.form['jobs']
+        jobs = request.form['jobs'] # Dictionary of jobID to prefered or not (1 or 0)
         other = request.form['other']
         error = None
 
-        # Error check
-            # other != T or F
+        if other not in ["T", "F"]:
+            error = 'Error! Other is not T or F'
+        
+        if skills == None:
+            error = "No skills"
+
+        if jobs == None:
+            error = "No jobs selected"
+        
+        # STANDARD SCORE + DB UPDATE
+
         if error is not None:
             flash(error)
         else:
-            if other == "T":
-                #otherJobs Suitable function
-                otherJobs = {}
+            if other == "F":
 
-                jobs.extend(otherJobs)
+                for job, prefered in jobs.items():
+                    if prefered == 0:
+                        del jobs[job]
             
-            for job in jobs:
+            for jobID, prefered in jobs.items():
                 db = get_db()
                 userID = session.get('user_id')[1:]
-                db.applyJob(userID, job)
+                score = 0 #CALCLUATE JOB SPECIFIC SCORE
+
+                db.applyJob(userID, jobID, score, prefered)
             
             # APPLY SKILS SCORE ....
 

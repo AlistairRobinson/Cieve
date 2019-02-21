@@ -18,7 +18,7 @@ def dashboard():
 
 #Definition for the client job creation
 @bp.route('/newjob', methods=('GET', 'POST'))
-@login_required_C
+#@login_required_C
 def newJob():
     if request.method == 'POST':
         # Get job post data
@@ -34,7 +34,7 @@ def newJob():
             db.addJob(json)
             return redirect(url_for('cli.jobs'))
     # Generate post data and pass to front end
-    return render_template('/cli/jobCreation.html')
+    return render_template('/cli/createJob.html')
 
 #Definition for the application
 @bp.route('/jobs')

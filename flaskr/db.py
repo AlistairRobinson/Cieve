@@ -56,7 +56,7 @@ class Mongo:
     # Return JSON of applicant info populated based on id
     def getApplicantUserID(self, id):
         query = self.db.applicantInfo.find_one({"applicant_id": ObjectId(id)})
-        print ObjectId(id)
+        
         if query != None:
             return query
         else:
@@ -90,23 +90,13 @@ class Mongo:
             Jobs.append(doc)
         return Jobs[(number-1)*20:((number-1)*20)+20]
 
-        # Wiil accept a json parameter which will be defined by the input, adds the new job to the DB
-        def addJob(self, json):
-            return
+    # Wiil accept a json parameter which will be defined by the input, adds the new job to the DB
+    def addNewJob(self, json):
+        return
 
-        # Given an ID return all jvaccancies an applicant has applied too (including non-preferenced ones)
-        def getApplications(self, applicantID):
-            return
+    # Given an ID return all vaccancies an applicant has applied too (including non-preferenced ones)
+    def getApplications(self, applicantID):
+        return
 
-    
-test = Mongo(get_db())
-applicantID = test.insertApplicantUser("Applicant1", "nathan", "password123", "123")
-print(applicantID)
-clientID = test.insertClientUser("Client1", "password321", "321")
-print(clientID)
-print(test.getApplicantAccount("TET@1"))
-print(test.getClientAccount("Client1"))
-print(test.getClientUserID(clientID))
-print(test.getApplicantUserID(applicantID))
-print(test.getApplicantUserID('5c6df60fa85112016b4b8420'))
-print get_db().db.applicantInfo.find_one({"applicant_id": ObjectId('5c6df60fa85112016b4b8420')})
+    def applyJob(self, userID, jobID, prefered, score):
+        return
