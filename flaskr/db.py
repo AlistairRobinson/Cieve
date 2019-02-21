@@ -56,7 +56,6 @@ class Mongo:
     # Return JSON of applicant info populated based on id
     def getApplicantUserID(self, id):
         query = self.db.applicantInfo.find_one({"applicant_id": ObjectId(id)})
-        
         if query != None:
             return query
         else:
@@ -65,7 +64,7 @@ class Mongo:
 
     # Return JSON of client info populated based on id
     def getClientUserID(self, id):
-        query = self.db.client.find_one({"_id": id})
+        query = self.db.client.find_one({"_id": ObjectId(id)})
         if query != None:
             return query
         else:
@@ -75,7 +74,7 @@ class Mongo:
     # Returns all the jobs currently available to applications
     def getJobs(self, number, division, role, location):
         Jobs = []
-        queryMaker = {"positions_available": {"$gt": 0}}
+        queryMaker = {"positions available": {"$gt": 0}}
         if division != "":
             queryMaker['division'] = division
         
@@ -85,18 +84,23 @@ class Mongo:
         if location != "":
             queryMaker['location'] = location
         
-        query = self.db.vacancy.find(queryMaker, {"_id": 0, "positions_available": 0, "applicants_recieved": 0})
+        query = self.db.vacancy.find(queryMaker, {"_id": 0, "positions available": 0, "applicants recieved": 0})
         for doc in query:
             Jobs.append(doc)
         return Jobs[(number-1)*20:((number-1)*20)+20]
 
     # Wiil accept a json parameter which will be defined by the input, adds the new job to the DB
     def addNewJob(self, json):
-        return
+        self.db.vacancy.insert_one(json)
 
-    # Given an ID return all vaccancies an applicant has applied too (including non-preferenced ones)
+    # Given an ID return all vacancies an applicant has applied too (including non-preferenced ones)
     def getApplications(self, applicantID):
-        return
+        query = self.db.applicant.find({"_id": ObjectId(id)}, {"preferred vacancies": 1, "considered vacancies": 1, "_id": 0})
+        return query
 
-    def applyJob(self, userID, jobID, prefered, score):
-        return
+    def applyJob(self, userID, jobID, preferred, score):
+        self.db.application.insert_one({"applicant id": userID,
+                                        "vacancy id": jobID,
+                                        "preferred": preferred,
+                                        "specialized score": score,
+                                        "completed": False})
