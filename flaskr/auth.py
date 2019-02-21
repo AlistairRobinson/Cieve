@@ -40,8 +40,10 @@ def register():
         if error is None:
             salt = gensalt(12)
             passHash = generate_password_hash(password + salt)
-            db.insertApplicantUser(name, username, passHash, salt)
-            return redirect(url_for('auth.applicantLogin'))
+            applicantID = db.insertApplicantUser(name, username, passHash, salt)
+            session.clear()
+            session['user_id'] = "A" + str(applicantID)
+            return redirect(url_for('applicant.dashboard'))
         
         flash(error)
         
