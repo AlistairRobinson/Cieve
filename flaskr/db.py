@@ -93,7 +93,11 @@ class Mongo:
         # Wiil accept a json parameter which will be defined by the input, adds the new job to the DB
         def addJob(self, json):
             return
-    
+
+        # Given an ID return all jvaccancies an applicant has applied too (including non-preferenced ones)
+        def getApplications(self, applicantID):
+            return
+
     
 test = Mongo(get_db())
 applicantID = test.insertApplicantUser("Applicant1", "nathan", "password123", "123")

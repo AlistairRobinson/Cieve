@@ -87,8 +87,13 @@ def newApplication():
 @bp.route('/applications')
 @login_required_A
 def applications():
-    # Generate post data and pass to front end
-    return render_template('/apl/applications.html')
+    db = get_db()
+    applicationsData = db.getApplications(session.get('user_id')[1:])
+    filteredData = {}
+    for applicationData in applicationsData:
+        if (applicationData["current stage"] != 0) or (applicationData["preferred"] == 1):
+            filteredData.append(applicationData)
+    return render_template('/apl/applications.html', applications = filteredData)
 
 @bp.before_app_request
 def load_logged_in_user():
