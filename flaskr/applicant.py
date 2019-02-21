@@ -11,10 +11,13 @@ bp = Blueprint('applicant', __name__, url_prefix='/apl')
 #Definition for the applicant dashboard
 @bp.route('/dashboard')
 @bp.route('/')
-#@login_required_A
+@login_required_A
 def dashboard():
     # Generate post data and pass to front end
-    return render_template('/apl/Dashboard.html')
+    
+    userData = get_db().getApplicantUserID(g.user)
+
+    return render_template('/apl/Dashboard.html', userData=userData)
 
 #Definition for the applicant job search page
 @bp.route('/jobsearch', methods=('GET', 'POST'))
@@ -50,28 +53,39 @@ def newApplication():
     # Generate post data and pass to front end
     skills = {}
     jobs = {}
-    others = False
+    others = ""
     if request.method == 'POST':
         skills = request.form['skills']
-        jobs = request.form['jobs']
+        jobs = request.form['jobs'] # Dictionary of jobID to prefered or not (1 or 0)
         other = request.form['other']
         error = None
 
-        # Error check
-            # other != T or F
+        if other not in ["T", "F"]:
+            error = 'Error! Other is not T or F'
+        
+        if skills == None:
+            error = "No skills"
+
+        if jobs == None:
+            error = "No jobs selected"
+        
+        # STANDARD SCORE + DB UPDATE
+
         if error is not None:
             flash(error)
         else:
-            if other == "T":
-                #otherJobs Suitable function
-                otherJobs = {}
+            if other == "F":
 
-                jobs.extend(otherJobs)
+                for job, prefered in jobs.items():
+                    if prefered == 0:
+                        del jobs[job]
             
-            for job in jobs:
+            for jobID, prefered in jobs.items():
                 db = get_db()
                 userID = session.get('user_id')[1:]
-                db.applyJob(userID, job)
+                score = 0 #CALCLUATE JOB SPECIFIC SCORE
+
+                db.applyJob(userID, jobID, score, prefered)
             
             # APPLY SKILS SCORE ....
 
@@ -84,5 +98,23 @@ def newApplication():
 @bp.route('/applications')
 @login_required_A
 def applications():
-    # Generate post data and pass to front end
-    return render_template('/apl/applications.html')
+    db = get_db()
+    applicationsData = db.getApplications(session.get('user_id')[1:])
+    filteredData = {}
+    for applicationData in applicationsData:
+        if (applicationData["current stage"] != 0) or (applicationData["preferred"] == 1):
+            filteredData.append(applicationData)
+    return render_template('/apl/applications.html', applications = filteredData)
+
+@bp.before_app_request
+def load_logged_in_user():
+    user_id = session.get('user_id')
+    if user_id is None:
+        g.user = None
+    elif user_id[0] == "A":
+        g.user = user_id[1:]
+    elif user_id[0] == "C":
+        g.user = user_id[1:]
+    else:
+        g.user = None
+        session['user_id'] = None

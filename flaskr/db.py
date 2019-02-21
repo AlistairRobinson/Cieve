@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+from bson.objectid import ObjectId 
 
 def get_db():
     uri = "mongodb+srv://cieve:N3gNW20iJNqwL0fC@cievedatabase-gzmjp.mongodb.net/test?retryWrites=true"
@@ -54,7 +55,8 @@ class Mongo:
     
     # Return JSON of applicant info populated based on id
     def getApplicantUserID(self, id):
-        query = self.db.applicantInfo.find_one({"applicant_id": id})
+        query = self.db.applicantInfo.find_one({"applicant_id": ObjectId(id)})
+        
         if query != None:
             return query
         else:
@@ -88,18 +90,13 @@ class Mongo:
             Jobs.append(doc)
         return Jobs[(number-1)*20:((number-1)*20)+20]
 
-        # Wiil accept a json parameter which will be defined by the input, adds the new job to the DB
-        def addJob(self, json):
-            return
-    
-    
-test = Mongo(get_db())
-applicantID = test.insertApplicantUser("Applicant1", "nathan", "password123", "123")
-print(applicantID)
-clientID = test.insertClientUser("Client1", "password321", "321")
-print(clientID)
-print(test.getApplicantAccount("Applicant1"))
-print(test.getClientAccount("Client1"))
-print(test.getClientUserID(clientID))
-print(test.getApplicantUserID(applicantID))
-print(test.getJobs(1, "Manager", None, "London"))
+    # Wiil accept a json parameter which will be defined by the input, adds the new job to the DB
+    def addNewJob(self, json):
+        return
+
+    # Given an ID return all vaccancies an applicant has applied too (including non-preferenced ones)
+    def getApplications(self, applicantID):
+        return
+
+    def applyJob(self, userID, jobID, prefered, score):
+        return

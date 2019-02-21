@@ -15,9 +15,17 @@ bp = Blueprint('auth', __name__)
 @bp.route('/apl/auth/register', methods=('GET', 'POST'))
 def register():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password'] # Password confimation to be done client side
-        name = request.form['name']
+        username = ""
+        if 'username' in request.form:
+            username = request.form['username']
+        
+        password = ""
+        if 'password' in request.form:
+            password = request.form['password']
+        
+        name = ""
+        if 'name' in request.form:
+            name = request.form['name']
 
         db = get_db()
         error = None
@@ -30,13 +38,13 @@ def register():
             error = 'Username {} is already taken.'.format(username)
         
         if error is None:
-            salt = gensalt(12)
+            salt = str(gensalt(12))
             passHash = generate_password_hash(password + salt)
             db.insertApplicantUser(name, username, passHash, salt)
             return redirect(url_for('auth.applicantLogin'))
         
         flash(error)
-    
+        
     return render_template('apl/auth/register.html')
 
 @bp.route('/login')
@@ -46,21 +54,27 @@ def login():
 @bp.route('/apl/auth/login', methods=('GET', 'POST'))
 def applicantLogin():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+        username = ""
+        if 'username' in request.form:
+            username = request.form['username']
+
+        password = ""
+        if 'password' in request.form:
+            password = request.form['password']
+
         db = get_db()
         error = None
         user = db.getApplicantAccount(username)
-
         if user is None:
             error = 'Incorrect username or password.'
-        elif not check_password_hash(user.password, password + user.salt):
+        elif not check_password_hash(user['password_hash'], password + user['salt']):
             error = 'Incorrect username or password.'
-
+        
         if error is None:
             session.clear()
-            session['user_id'] = "A" + str(user.id)
-            return redirect(url_for('index'))
+            print(user['applicant_id'])
+            session['user_id'] = "A" + str(user['applicant_id'])
+            return redirect(url_for('applicant.dashboard'))
 
         flash(error)
 
@@ -96,9 +110,9 @@ def load_logged_in_user():
     if user_id is None:
         g.user = None
     elif user_id[0] == "A":
-        g.user = get_db().getApplicantUserID(user_id)
+        g.user = user_id[1:]
     elif user_id[0] == "C":
-        g.user = get_db().getClientUserID(user_id)
+        g.user = user_id[1:]
     else:
         g.user = None
         session['user_id'] = None
