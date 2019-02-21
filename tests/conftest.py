@@ -60,28 +60,36 @@ class JobActions(object):
     def __init__(self, client):
         self._client = client
 
-    def post_vacancy(self, data):
+    def post_vacancy(self, vacancy):
         return self._client.post(
-            'path/to/post/vacancy', # TODO
-            data
+            '/cli/newjob', # TODO
+            data={
+                # TODO
+            }
         )
     
-    def apply_to_vacancy(self, data):
+    def apply_to_vacancy(self, application):
         return self._client.post(
-            'path/to/vacancy/application', # TODO
-            data
+            '/apl/apply', # TODO
+            data={
+                # TODO
+            }
         )
 
-    def retrieve_application(self, data):
+    def retrieve_application(self, info):
         return self._client.post(
-            'path/to/application/retrival', # TODO
-            data
+            '/cli/applications', # TODO
+            data={
+                # TODO
+            }
         )
 
-    def get_vacancies(self, data):
+    def get_vacancies(self, info):
         return self._client.post(
-            'path/to/vacancy/retrival', # TODO
-            data
+            '/apl/vacancies', # TODO
+            data={
+                # TODO
+            }
         )
 
 # Returns a job test object
