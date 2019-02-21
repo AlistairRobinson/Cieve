@@ -1,5 +1,5 @@
 import pytest
-from flask import g, session
+from flask import g, session, flash
 
 # Client login tests (R1)
 
@@ -46,13 +46,20 @@ def test_register(client, app):
     response = client.post('/apl/auth/register', data={'username': 'a', 'password': 'a'})
 
 @pytest.mark.parametrize(('username', 'password', 'message'), (
-    ('', '', b'Username is required'),
-    ('a', '', b'Password is required'),
-    ('test', 'test', b'Username test is already taken'),
+    ('', '', 'Username is required'),
+    ('a', '', 'Password is required'),
+    ('test', 'test', 'Username test is already taken'),
 ))
 def test_register_validate_input(client, username, password, message):
     response = client.post(
         '/apl/auth/register',
         data={'username': username, 'password': password}
     )
+    with client.session_transaction() as session:
+            try:
+                error = session['_flashes'][0]
+            except KeyError:
+                raise AssertionError('nothing flashed')
+            assert message in error[1]
+    print(str(response))
     assert message in response.data
