@@ -5,21 +5,11 @@ from flaskr import db
 
 # Client login tests (to ensure security)
 
-<<<<<<< HEAD
-def test_cli_login(client, auth):
-<<<<<<< HEAD
-    assert client.get('cli/auth/login').status_code == 200
-=======
-    assert client.get('/cli/auth/login').status_code == 200
->>>>>>> fbf477d422de66fc368eaa13acbe3ddce5141c3c
-    response = auth.login_cli()
 
-    with client:
-=======
+
 def test_cli_login(client, jobs):
     jobs._client.post('/cli/auth/login', data={'username': 'test@test.tet', 'password': '123'})
     with jobs._client:
->>>>>>> 05dd665f6e1d5cab62c05bbbe0942e24fb077d82
         client.get('/')
         assert 'C' in session['user_id']
 
