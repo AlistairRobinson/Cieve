@@ -11,7 +11,7 @@ bp = Blueprint('client', __name__, url_prefix='/cli')
 #Definition for the client dashboard
 @bp.route('/dashboard')
 @bp.route('/')
-#@login_required_C
+@login_required_C
 def dashboard():
     # Generate post data and pass to front end
     return render_template('/cli/Dashboard.html')

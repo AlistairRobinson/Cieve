@@ -47,7 +47,7 @@ def aplRegister():
         
         flash(error)
         
-    return render_template('cli/auth/register.html')
+    return render_template('apl/auth/register.html')
 
 @bp.route('/cli/auth/register', methods=('GET', 'POST'))
 def cliRegister():
