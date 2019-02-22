@@ -59,3 +59,16 @@ def test_register_validate_input(client, auth, username, password, message):
         except KeyError:
             raise AssertionError('nothing flashed')
         assert message in error[1]
+
+@pytest.mark.parametrize(('username', 'password', 'message'), (
+    ('abc', '[%24ne]=', 'Incorrect username or password'),
+    ('abc', '{"&gt": ""}', 'Incorrect username or password'),
+))
+def test_cli_login(client, auth, username, password, message):
+    auth._client.post('/cli/auth/login', data={'username': username, 'password': password})
+    with auth._client.session_transaction() as session:
+        try:
+            error = session['_flashes'][0]
+        except KeyError:
+            raise AssertionError('nothing flashed')
+        assert message in error[1]
