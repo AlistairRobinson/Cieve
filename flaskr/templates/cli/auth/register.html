@@ -29,11 +29,11 @@
 
               <div id="navbarMenu" class="navbar-menu">
                 <div class="navbar-start has-text-dark">
-                  <a class="navbar-item" href="LandingPage.html">
+                  <a class="navbar-item" href="/">
                     <strong>Home</strong>
                   </a>
 
-                  <a class="navbar-item">
+                  <a class="navbar-item" href="/about">
                     About
                   </a>
                 </div>
@@ -66,10 +66,10 @@
                         </div>
 
                         <div class="buttons">
-                          <a class="button is-primary open-modal" data-modal-id="#my-modal">
+                          <a class="button is-primary open-modal" data-modal-id="#my-modal" href="/apl/auth/register">
                             <strong>Sign up</strong>
                           </a>
-                          <a class="button is-light open-modal" data-modal-id="#my-modal2" href="chooseLoginType.html">
+                          <a class="button is-light open-modal" data-modal-id="#my-modal2" href="/login">
                             Log in
                           </a>
                         </div>
@@ -84,54 +84,13 @@
       <div class = "container">
         <div class = "columns is-centered">
           <div class ="column is-5-tablet is-4-desktop is-4-widescreen">
-            <form class = "box">
-              <div class = "field has-text-centered">
-                <img src = "Cieve.png" width="150">
-              </div>
-
-              <div class="field">
-                <label class="label">What's your name?</label>
-                <div class="control has-icons-left">
-                  <input class="input" type="name" id="nameBox" placeholder="e.g. John Doe" >
-                  <span class="icon is-small is-left">
-                    <i class="fa fa-user"></i>
-                  </span>
-                </div>
-
-              <div class="field">
-                <label class="label">What's your email?</label>
-                <div class="control has-icons-left">
-                  <input class="input" type="email" id="emailBox" placeholder="e.g. alexjohn-son@gmail.com" >
-                  <span class="icon is-small is-left">
-                    <i class="fa fa-envelope"></i>
-                  </span>
-                </div>
-              </div>
-
-              <div class="field">
-                <label class="label">Enter a strong password</label>
-                <div class="control has-icons-left">
-                  <input class="input" type="password" id="psswdBox" placeholder="********" required>
-                  <span class="icon is-small is-left">
-                    <i class="fa fa-lock"></i>
-                  </span>
-                </div>
-              </div>
-
-              <div class="field">
-                <button class="button is-success is-fullwidth" id="signupButton">
-                  Sign Up
-                </button>
-              </div>
-
-              <div>
-                <center>
-                  Already have an account?
-                  <a href="chooseLoginType.html"><u>Sign in<u></a>
-                </center>
-              </div>
-
-
+            <form class = "box" action="{{ url_for('auth.cliRegister') }}" method="POST">
+                 
+                  <input class="input" type="email" id="emailBox" placeholder="e.g. alexjohn-son@gmail.com" name="username">
+                  
+                  <input class="input" type="password" id="psswdBox" placeholder="********" name="password"required>
+                  
+                  <input class="button is-success is-fullwidth" type="submit" id="signupButton" value="Register">
 
             </form>
           </div>
