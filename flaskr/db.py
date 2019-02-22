@@ -95,8 +95,13 @@ class Mongo:
 
     # Given an ID return all vacancies an applicant has applied too (including non-preferenced ones)
     def getApplications(self, applicantID):
-        query = self.db.applicant.find({"_id": ObjectId(id)}, {"preferred vacancies": 1, "considered vacancies": 1, "_id": 0})
-        return query
+        applications = []
+        idQuery = self.db.application.find({"applicant id": ObjectId(applicantID)}, {"vacancy id": 1, "_id": 0})
+        for id in idQuery:
+            titleQuery = self.db.vacancy.find({"_id": id}, {"vacancy title": 1, "_id": 0})
+            for title in titleQuery:
+                applications.append(title)
+        return applications
 
     def applyJob(self, userID, jobID, preferred, score):
         self.db.application.insert_one({"applicant id": userID,
