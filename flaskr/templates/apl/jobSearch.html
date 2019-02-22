@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <link rel="stylesheet" href="../../static/main.css" />
+  </head>
+  <body>
+
+    <nav class="navbar has-shadow">
+      <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/apl">
+                <img src="../../static/CieveNavBar.png" alt="Cieve: an automated applicant solution">
+            </a>
+            <div class="navbar-burger burger" data-target="navMenuColorprimary-example">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+
+        <div id="navMenuColorprimary-example" class="navbar-menu">
+
+            <div class="navbar-start">
+              <a class="navbar-item" href="/apl">
+                <strong>Home</strong>
+              </a>
+
+              <a class="navbar-item" href="/about">
+                About
+              </a>
+            </div>
+
+            <div class="navbar-end">
+
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link" href="#">
+                        Josh Hankins
+                    </a>
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item is-leveled " href="#">
+                            <span class="icon ">
+                                    <i class="fa fa-user-circle "></i>
+                                </span>
+                            Edit Details
+                        </a>
+                        <a class="navbar-item is-leveled " href="# ">
+                            <span class="icon ">
+                                    <i class="fa fa-key "></i>
+                                </span>
+                            Change Password
+                        </a>
+                        <a class="navbar-item is-leveled " href="/logout">
+                            <span class="icon ">
+                                    <i class="fa fa-sign-out-alt"></i>
+                                </span>
+                            Sign Out
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </nav>
+
+
+      <div class="container">
+      <section class="section">
+
+        <div class="columns ">
+            <div class="column is-4-tablet is-3-desktop is-2-widescreen">
+
+                <aside class="menu ">
+                    <p class="menu-label ">
+                        General
+                    </p>
+                    <ul class="menu-list">
+                        <li>
+                            <a href="/apl"><span class="icon ">
+                                    <i class="fa fa-tachometer-alt"></i>
+                                </span>Dashboard</a>
+                        </li>
+                        <li>
+                            <a href="/apl/newapplication"><span class="icon ">
+                                    <i class="fas fa-user-md"></i>
+                                </span>Apply Now</a>
+                        </li>
+                        <li>
+                            <a class="is-active" href="">
+                                <span class="icon">
+                                    <i class="fa fa-search"></i>
+                                </span>
+                                Job Search
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <span class="icon">
+                                    <i class="fa fa-book"></i>
+                                </span>
+                                Applications
+                            </a>
+                        </li>
+                    </ul>
+
+                </aside>
+
+            </div>
+            <div class="column">
+            <h3 class="title is-3">Job Listings</h3>
+                You can <a>view all the open positions</a> or use the following form to narrow down your options.
+                <br><br>
+
+                <form action="" method="POST">
+
+
+                  <!-- <div class="field is-grouped is-fullwidth">
+                      <div class="control">
+                        <input class="input" type="text" placeholder="Enter any keywords">
+                      </div>
+                      <div class="control">
+                        <button class="button is-link">Search</button>
+                      </div>
+                  </div> -->
+
+                  <div class="field">
+                  <div class="columns">
+                      <div class="column">
+                          <label class="label">Division
+                            <div class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltiptext">What area in the company would you like to work in?</span></div></label>
+                          <div class="control">
+                              <div class="select is-fullwidth">
+                                  <select name="divisions">
+                                      <option>Any</option>
+                                      <option>Tech</option>
+                                      <option>Hr</option>
+                                  </select>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="column">
+                          <label class="label">Role
+                            <div class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltiptext">What role do you want to work as?</span></div></label>
+                          <div class="control">
+                              <div class="select is-fullwidth">
+                                  <select name="roles">
+                                      <option>Any</option>
+                                      <option>Full-Time</option>
+                                      <option>Grad.</option>
+                                      <option>Intern</option>
+                                  </select>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="column">
+                          <label class="label">Country
+                            <div class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltiptext">Which country do you want to work in?</span></div></label>
+                          <p class="control has-icons-left">
+                            <span class="select is-fullwidth">
+                              <select>
+                                <option selected>Any</option>
+                                <option>United Kingdom</option>
+                                <option>America</option>
+                                <option>France</option>
+                              </select>
+                            </span>
+                            <span class="icon is-small is-left">
+                              <i class="fas fa-globe"></i>
+                            </span>
+                          </p>
+                      </div>
+                  </div>
+              </div>
+              <div class="control">
+                <button class="button is-link">Search</button>
+              </div>
+                </form>
+
+            <br>
+
+            <div class="columns">
+                <div class="column">
+                  <b>Search Results</b></b>
+                </div>
+                <div class="column">
+                  <span class="select is-pulled-right">
+                    <select>
+                      <option selected>Sort by...</option>
+                      <option>Job Title ASC</option>
+                      <option>Job Title DESC</option>
+                      <option>Division ASC</option>
+                      <option>Division DESC</option>
+                      <option>Role ASC</option>
+                      <option>Role DESC</option>
+                    </select>
+                  </span>
+                </div>
+            </div>
+
+
+
+
+            </div>
+
+      </section>
+    </div>
+
+
+    </div>
+  </section
+  </body>
+</html>
