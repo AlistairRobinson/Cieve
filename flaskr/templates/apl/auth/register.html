@@ -6,7 +6,7 @@
     <title>Sign Up</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
-    <link rel="stylesheet" href="mainCss.css" />
+    <link rel="stylesheet" href="../static/mainCss.css" />
   </head>
   <body>
 
@@ -17,7 +17,7 @@
           <div class="container">
               <div class="navbar-brand">
                   <a class="navbar-item" href="/">
-                    <img src="Cieve2.png" alt="Logo">
+                    <img src="../../../static/CieveNavBar.png" alt="Logo">
                   </a>
                   <span class="navbar-burger burger" data-target="navbarMenu">
                      <span></span>
@@ -84,13 +84,13 @@
         <div class = "columns is-centered">
           <div class ="column is-5-tablet is-4-desktop is-4-widescreen">
             <form class = "box" action="{{ url_for('auth.register') }}" method="POST">
-              
+
                   <input class="input" type="name" id="nameBox" placeholder="e.g. John Doe" name="name">
-                 
+
                   <input class="input" type="email" id="emailBox" placeholder="e.g. alexjohn-son@gmail.com" name="username">
-                  
+
                   <input class="input" type="password" id="psswdBox" placeholder="********" name="password"required>
-                  
+
                   <input class="button is-success is-fullwidth" type="submit" id="signupButton" value="Register">
 
             </form>
