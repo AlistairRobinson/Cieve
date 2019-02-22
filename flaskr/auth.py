@@ -46,7 +46,7 @@ def aplRegister():
             return redirect(url_for('applicant.dashboard'))
 
         flash(error)
-
+        
     return render_template('apl/auth/register.html')
 
 @bp.route('/cli/auth/register', methods=('GET', 'POST'))

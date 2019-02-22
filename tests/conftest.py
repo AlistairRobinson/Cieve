@@ -26,27 +26,33 @@ def runner(app):
 
 # Encapsulates functions used to test authentication
 class AuthActions(object):
+
+    # Set up a virtual client to store session variables
     def __init__(self, client):
         self._client = client
 
+    # Log into a client account
     def login_cli(self, username='test', password='test'):
         return self._client.post(
             '/cli/auth/login',
             data={'username': username, 'password': password}
         )
 
+    # Log into an applicant account
     def login_apl(self, username='test', password='test'):
         return self._client.post(
             '/apl/auth/login',
             data={'username': username, 'password': password}
         )
 
+    # Register an applicant account
     def register(self, username='test', password='test'):
         return self._client.post(
             'apl/auth/register',
             data={'username': username, 'password': password}
         ) 
 
+    # Log out a user by clearing session
     def logout(self):
         return self._client.get('/auth/logout')
 
@@ -57,9 +63,12 @@ def auth(client):
 
 # Encapsulates functions used to test jobs and applications
 class JobActions(object):
+
+    # Set up a virtual client to store session variables
     def __init__(self, client):
         self._client = client
 
+    # Post a vacancy to the database
     def post_vacancy(self, vacancy):
         return self._client.post(
             '/cli/newjob', # TODO
@@ -68,6 +77,7 @@ class JobActions(object):
             }
         )
     
+    # Post an application to a vacancy
     def apply_to_vacancy(self, application):
         return self._client.post(
             '/apl/apply', # TODO
@@ -76,6 +86,7 @@ class JobActions(object):
             }
         )
 
+    # Retrieve an application from the database
     def retrieve_application(self, info):
         return self._client.post(
             '/cli/applications', # TODO
@@ -84,6 +95,7 @@ class JobActions(object):
             }
         )
 
+    # Retrieve a vacancy from the database
     def get_vacancies(self, info):
         return self._client.post(
             '/apl/vacancies', # TODO
