@@ -60,6 +60,8 @@ def test_register_validate_input(client, auth, username, password, message):
             raise AssertionError('nothing flashed')
         assert message in error[1]
 
+# NoSQL injection tests (R16)
+
 @pytest.mark.parametrize(('username', 'password', 'message'), (
     ('abc', '[%24ne]=', 'Incorrect username or password'),
     ('abc', '{"&gt": ""}', 'Incorrect username or password'),
