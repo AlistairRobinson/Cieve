@@ -13,7 +13,7 @@
     <nav class="navbar has-shadow">
       <div class="container">
         <div class="navbar-brand">
-            <a class="navbar-item" href="LandingPage.html">
+            <a class="navbar-item" href="/apl">
                 <img src="../../static/CieveNavBar.png" alt="Cieve: an automated applicant solution">
             </a>
             <div class="navbar-burger burger" data-target="navMenuColorprimary-example">
@@ -26,11 +26,11 @@
         <div id="navMenuColorprimary-example" class="navbar-menu">
 
             <div class="navbar-start">
-              <a class="navbar-item" href="LandingPageTest.html">
+              <a class="navbar-item" href="/apl">
                 <strong>Home</strong>
               </a>
 
-              <a class="navbar-item">
+              <a class="navbar-item" href="/about">
                 About
               </a>
             </div>
@@ -42,7 +42,7 @@
                         Josh Hankins
                     </a>
                     <div class="navbar-dropdown">
-                        <a class="navbar-item is-leveled " href="# ">
+                        <a class="navbar-item is-leveled " href="#">
                             <span class="icon ">
                                     <i class="fa fa-user-circle "></i>
                                 </span>
@@ -54,7 +54,7 @@
                                 </span>
                             Change Password
                         </a>
-                        <a class="navbar-item is-leveled " href="# ">
+                        <a class="navbar-item is-leveled " href="/logout">
                             <span class="icon ">
                                     <i class="fa fa-sign-out-alt"></i>
                                 </span>
@@ -80,17 +80,17 @@
                     </p>
                     <ul class="menu-list">
                         <li>
-                            <a href="dashboard.html"><span class="icon ">
+                            <a href="/apl"><span class="icon ">
                                     <i class="fa fa-tachometer-alt"></i>
                                 </span>Dashboard</a>
                         </li>
                         <li>
-                            <a class="is-active" href="apply.html"><span class="icon ">
+                            <a class="is-active" href=""><span class="icon ">
                                     <i class="fas fa-user-md"></i>
                                 </span>Apply Now</a>
                         </li>
                         <li>
-                            <a href="">
+                            <a href="/apl/jobsearch">
                                 <span class="icon">
                                     <i class="fa fa-search"></i>
                                 </span>
@@ -112,7 +112,7 @@
             </div>
             <div class="column">
             <h3 class="title is-3">Create Your Application</h3>
-                <form action="{{ url_for('auth.newapplication') }}" method="POST">
+                <form action="{{ url_for('applicant.newApplication') }}" method="POST">
 
                 <h4 class="title is-4">Job Selector</h4>
                 <div class="field">
@@ -123,6 +123,7 @@
                             <div class="control">
                                 <div class="select is-fullwidth">
                                     <select name="divisions">
+                                        <option>Any</option>
                                         <option>Tech</option>
                                         <option>Hr</option>
                                     </select>
@@ -135,6 +136,7 @@
                             <div class="control">
                                 <div class="select is-fullwidth">
                                     <select name="roles">
+                                        <option>Any</option>
                                         <option>Full-Time</option>
                                         <option>Grad.</option>
                                         <option>Intern</option>
@@ -146,9 +148,10 @@
                             <label class="label">Country
                               <div class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltiptext">Which country do you want to work in?</span></div></label>
                             <p class="control has-icons-left">
-                              <span class="select">
+                              <span class="select is-fullwidth">
                                 <select>
-                                  <option selected>United Kingdom</option>
+                                  <option selected>Any</option>
+                                  <option>United Kingdom</option>
                                   <option>America</option>
                                   <option>France</option>
                                 </select>
@@ -160,6 +163,10 @@
                         </div>
                     </div>
                 </div>
+                <div class="control">
+                  <button class="button is-link">Search</button>
+                </div>
+                <br>
 
 
 

@@ -18,11 +18,11 @@ def aplRegister():
         username = ""
         if 'username' in request.form:
             username = request.form['username']
-        
+
         password = ""
         if 'password' in request.form:
             password = request.form['password']
-        
+
         name = ""
         if 'name' in request.form:
             name = request.form['name']
@@ -36,7 +36,7 @@ def aplRegister():
             error = 'Password is required.'
         elif db.getApplicantAccount(username) is not None:
             error = 'Username {} is already taken.'.format(username)
-        
+
         if error is None:
             salt = str(gensalt(12))
             passHash = generate_password_hash(password + salt)
@@ -44,10 +44,10 @@ def aplRegister():
             session.clear()
             session['user_id'] = "A" + str(applicantID)
             return redirect(url_for('applicant.dashboard'))
-        
+
         flash(error)
         
-    return render_template('cli/auth/register.html')
+    return render_template('apl/auth/register.html')
 
 @bp.route('/cli/auth/register', methods=('GET', 'POST'))
 def cliRegister():
@@ -55,11 +55,11 @@ def cliRegister():
         username = ""
         if 'username' in request.form:
             username = request.form['username']
-        
+
         password = ""
         if 'password' in request.form:
             password = request.form['password']
-        
+
         db = get_db()
         error = None
 
@@ -69,7 +69,7 @@ def cliRegister():
             error = 'Password is required.'
         elif db.getClientAccount(username) is not None:
             error = 'Username {} is already taken.'.format(username)
-        
+
         if error is None:
             salt = str(gensalt(12))
             passHash = generate_password_hash(password + salt)
@@ -77,9 +77,9 @@ def cliRegister():
             session.clear()
             session['user_id'] = "C" + str(clientID)
             return redirect(url_for('client.dashboard'))
-        
+
         flash(error)
-        
+
     return render_template('cli/auth/register.html')
 
 @bp.route('/login')
@@ -104,7 +104,7 @@ def applicantLogin():
             error = 'Incorrect username or password.'
         elif not check_password_hash(user['password_hash'], password + user['salt']):
             error = 'Incorrect username or password.'
-        
+
         if error is None:
             session.clear()
             session['user_id'] = "A" + str(user['applicant_id'])

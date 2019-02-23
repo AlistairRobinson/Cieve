@@ -1,304 +1,398 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Create Job</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.0/css/bulma.min.css">
-    <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
-    <script type="text/javascript" src="static/jquery-3.3.1.min.js"></script>
-    <script type="text/javascript" src="static/bulma-slider.min.js"></script>
-    <script type="text/javascript" src="static/bulma-tagsinput.min.js"></script>
-    <link rel="stylesheet" href="{{url_for('static', filename='bulma-slider.min.css')}}">
-    <link rel="stylesheet" href="{{url_for('static', filename='bulma-tagsinput.min.css')}}">
-    <!-- <link rel="stylesheet" href="../syles/debug.css"> -->
-</head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <link rel="stylesheet" href="../static/main.css" />
+  </head>
+  <body>
 
-<body>
-    <section class="section">
-
-        <div class="container">
-            <h1 class="title">
-					Create Job
-				</h1>
-            <form id="create-job">
-                <div class="field">
-                    <label class="label">Job Title</label>
-                    <div class="control">
-                        <input class="input" type="text" name="job_title" placeholder="Enter the Job Title">
-                    </div>
-                </div>
-                <div class="field">
-                    <div class="columns">
-                        <div class="column">
-                            <label class="label">Division</label>
-                            <div class="control">
-                                <div class="select is-fullwidth">
-                                    <select name="divisions">
-                                        <option>Tech</option>
-                                        <option>Hr</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="column">
-                            <label class="label">Role</label>
-                            <div class="control">
-                                <div class="select is-fullwidth">
-                                    <select name="roles">
-                                        <option>Full-Time</option>
-                                        <option>Grad.</option>
-                                        <option>Intern</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="field">
-                    <label class="label">Job Description</label>
-                    <div class="control">
-                        <textarea class="textarea" placeholder="Job Description" name="job_desc"></textarea>
-                    </div>
-                </div>
-                <div class="field">
-                    <label class="label">Number of vacancies</label>
-                    <div class="control">
-                        <input id="sliderWithValue" class="slider has-output is-fullwidth is-circle is-large" min="0" max="100" value="0" step="1" type="range">
-                        <output for="sliderWithValue">0</output>
-                        <!-- <input class="input" type="number" name="numberovacancies" placeholder="#"> -->
-                    </div>
-                </div>
-                <div class="field is-horizontal is-multiline">
-                    <div class="field-label is-normal">
-                        <label class="label">Application Stages</label>
-                    </div>
-                    <div class="field-body" id="stages-fb">
-                        <div class="field">
-                            <div class="control">
-                                <input class="input" type="text" name="Stage_Description[]" placeholder="Description">
-                            </div>
-                        </div>
-                        <div class="field is-grouped">
-                            <p class="control">
-                                <a class="button is-primary" id="add-stage">
-								      Add Stage
-								    </a>
-                            </p>
-                            <p class="control">
-                                <a class="button is-light" id="delete-stage">
-								      Delete Stage
-								    </a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="field">
-                    <label class="label">Job Tags</label>
-                    <div class="control">
-                        <input class="input is-normal" type="tags" placeholder="Add Tag">
-                    </div>
-                </div>
-                <div class="field" id="row">
-                    <div class="columns">
-                        <div class="column">
-                            <label class="label">Skill</label>
-                            <div class="control">
-                                <div class="select is-fullwidth">
-                                    <select name="skill[]">
-                                        <option>Python</option>
-                                        <option>Java</option>
-                                        <option>Haskell</option>
-                                        <option>C</option>
-                                        <option>HTML</option>
-                                        <option>CSS</option>
-                                        <option>javascript</option>
-                                        <option>PHP</option>
-                                        <option>C++</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="column">
-                            <label class="label">Proficiency</label>
-                            <div class="control">
-                                <div class="select is-fullwidth">
-                                    <select name="prof[]">
-                                        <option>Beginner</option>
-                                        <option>Intermediate</option>
-                                        <option>Advanced</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="field is-grouped ">
-                    <p class="control">
-                        <a class="button is-primary" id="add-skill">
-								Add Skill
-							</a>
-                    </p>
-                    <p class="control">
-                        <a class="button is-light" id="delete-skill">
-								Delete Skill
-							</a>
-                    </p>
-                </div>
-                <div class="field">
-                    <div class="control">
-                        <div class="box has-text-centered is-shadowless">
-
-                            <button class="button is-success is-large">
-                                Submit
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </form>
+    <nav class="navbar has-shadow">
+      <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/cli">
+                <img src="../../static/CieveNavBar.png" alt="Cieve: an automated applicant solution">
+            </a>
+            <div class="navbar-burger burger" data-target="navMenuColorprimary-example">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </div>
-    </section>
-    <script>
-        $(document).ready(function() {
-            var stage_counter = 1;
-            var counter2 = 1;
-            $('#add-stage').click(function(e) {
-                $('#stages-fb').prepend('<div class="field" id="st' + stage_counter + '"> <div class="control"> <input class="input" type="text" name="Stage_Description[]" placeholder="Description"> </div></div> ');
-                stage_counter++;
 
-            });
+        <div id="navMenuColorprimary-example" class="navbar-menu">
 
-            $('body').on('click', '#delete-stage', function(e) {
-                e.preventDefault();
-                $('#st' + (stage_counter - 1)).remove();
-                stage_counter--;
+            <div class="navbar-start">
+              <a class="navbar-item" href="/cli">
+                <strong>Home</strong>
+              </a>
 
-            });
+              <a class="navbar-item" href="/about">
+                About
+              </a>
+            </div>
 
-            $('#add-skill').click(function(e) {
-                $('#row').append(`		<div class="columns" id="col` + counter2 + `">
-							<div class="column">
-							<label class="label">Skill</label>
-								<div class="control">
-									<div class="select is-fullwidth">
-										<select name="skill[]">
-											<option>Python</option>
-											<option>Java</option>
-											<option>Haskell</option>
-											<option>C</option>
-											<option>HTML</option>
-											<option>CSS</option>
-											<option>javascript</option>
-											<option>PHP</option>
-											<option>C++</option>
-										</select>
-									</div>
-								</div>
-							</div>
-							<div class="column">
-							<label class="label">Proficiency</label>
-								<div class="control">
-									<div class="select is-fullwidth">
-										<select name="prof[]">
-											<option>Beginner</option>
-											<option>Intermediate</option>
-											<option>Advanced</option>
-										</select>
-									</div>
-								</div>
-							</div>
-					</div>
-						`);
-                counter2++;
+            <div class="navbar-end">
 
-            });
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link" href="#">
+                        Josh Hankins
+                    </a>
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item is-leveled " href="#">
+                            <span class="icon ">
+                                    <i class="fa fa-user-circle "></i>
+                                </span>
+                            Edit Details
+                        </a>
+                        <a class="navbar-item is-leveled " href="# ">
+                            <span class="icon ">
+                                    <i class="fa fa-key "></i>
+                                </span>
+                            Change Password
+                        </a>
+                        <a class="navbar-item is-leveled " href="/logout">
+                            <span class="icon ">
+                                    <i class="fa fa-sign-out-alt"></i>
+                                </span>
+                            Sign Out
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </nav>
 
-            $('body').on('click', '#delete-skill', function(e) {
-                e.preventDefault();
-                $('#col' + (counter2 - 1)).remove();
-                counter2--;
+      <div class="container">
+      <section class="section">
 
-            });
+        <div class="columns ">
+            <div class="column is-4-tablet is-3-desktop is-2-widescreen">
 
-            var Tagify = require("bulma-extensions/bulma-tagsinput/dist/js/bulma-tagsinput");
-            document.addEventListener('DOMContentLoaded', function() {
-                Tagify.attach()
-            });
+                <aside class="menu ">
+                    <p class="menu-label ">
+                        General
+                    </p>
+                    <ul class="menu-list">
+                        <li>
+                            <a href="/cli"><span class="icon ">
+                                    <i class="fa fa-tachometer-alt"></i>
+                                </span>Dashboard</a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <span class="icon">
+                                    <i class="fa fa-search"></i>
+                                </span>
+                                Your Jobs
+                            </a>
+                        </li>
+                        <li>
+                            <a class="is-active" href="">
+                                <span class="icon">
+                                    <i class="fa fa-plus"></i>
+                                </span>
+                                New Job
+                            </a>
+                        </li>
+                    </ul>
+                </aside>
 
-        });
-        // Find output DOM associated to the DOM element passed as parameter
-        function findOutputForSlider(element) {
-            var idVal = element.id;
-            outputs = document.getElementsByTagName('output');
-            for (var i = 0; i < outputs.length; i++) {
-                if (outputs[i].htmlFor == idVal)
-                    return outputs[i];
-            }
-        }
+            </div>
+            <div class="column ">
 
-        function getSliderOutputPosition(slider) {
-            // Update output position
-            var newPlace,
-                minValue;
+                <h3 class="title is-3">Create Your Job</h3>
 
-            var style = window.getComputedStyle(slider, null);
-            // Measure width of range input
-            sliderWidth = parseInt(style.getPropertyValue('width'), 10);
+                <form id="create-job">
+                    <div class="field">
+                        <label class="label">Job Title</label>
+                        <div class="control">
+                            <input class="input" type="text" name="job_title" placeholder="Enter the Job Title">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="columns">
+                            <div class="column">
+                                <label class="label">Division</label>
+                                <div class="control">
+                                    <div class="select is-fullwidth">
+                                        <select name="divisions">
+                                            <option>Tech</option>
+                                            <option>Hr</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <label class="label">Role</label>
+                                <div class="control">
+                                    <div class="select is-fullwidth">
+                                        <select name="roles">
+                                            <option>Full-Time</option>
+                                            <option>Grad.</option>
+                                            <option>Intern</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Job Description</label>
+                        <div class="control">
+                            <textarea class="textarea" placeholder="Job Description" name="job_desc"></textarea>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Number of vacancies</label>
+                        <div class="control">
+                            <input id="sliderWithValue" class="slider has-output is-fullwidth is-circle is-large" min="0" max="100" value="0" step="1" type="range">
+                            <output for="sliderWithValue">0</output>
+                            <!-- <input class="input" type="number" name="numberovacancies" placeholder="#"> -->
+                        </div>
+                    </div>
+                    <div class="field is-horizontal is-multiline">
+                        <div class="field-label is-normal">
+                            <label class="label">Application Stages</label>
+                        </div>
+                        <div class="field-body" id="stages-fb">
+                            <div class="field">
+                                <div class="control">
+                                    <input class="input" type="text" name="Stage_Description[]" placeholder="Description">
+                                </div>
+                            </div>
+                            <div class="field is-grouped">
+                                <p class="control">
+                                    <a class="button is-primary" id="add-stage">
+    								      Add Stage
+    								    </a>
+                                </p>
+                                <p class="control">
+                                    <a class="button is-light" id="delete-stage">
+    								      Delete Stage
+    								    </a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Job Tags</label>
+                        <div class="control">
+                            <input class="input is-normal" type="tags" placeholder="Add Tag">
+                        </div>
+                    </div>
+                    <div class="field" id="row">
+                        <div class="columns">
+                            <div class="column">
+                                <label class="label">Skill</label>
+                                <div class="control">
+                                    <div class="select is-fullwidth">
+                                        <select name="skill[]">
+                                            <option>Python</option>
+                                            <option>Java</option>
+                                            <option>Haskell</option>
+                                            <option>C</option>
+                                            <option>HTML</option>
+                                            <option>CSS</option>
+                                            <option>javascript</option>
+                                            <option>PHP</option>
+                                            <option>C++</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <label class="label">Proficiency</label>
+                                <div class="control">
+                                    <div class="select is-fullwidth">
+                                        <select name="prof[]">
+                                            <option>Beginner</option>
+                                            <option>Intermediate</option>
+                                            <option>Advanced</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field is-grouped ">
+                        <p class="control">
+                            <a class="button is-primary" id="add-skill">
+    								Add Skill
+    							</a>
+                        </p>
+                        <p class="control">
+                            <a class="button is-light" id="delete-skill">
+    								Delete Skill
+    							</a>
+                        </p>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <div class="box has-text-centered is-shadowless">
 
-            // Figure out placement percentage between left and right of input
-            if (!slider.getAttribute('min')) {
-                minValue = 0;
-            } else {
-                minValue = slider.getAttribute('min');
-            }
-            var newPoint = (slider.value - minValue) / (slider.getAttribute('max') - minValue);
+                                <button class="button is-success is-large">
+                                    Submit
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
 
-            // Prevent bubble from going beyond left or right (unsupported browsers)
-            if (newPoint < 0) {
-                newPlace = 0;
-            } else if (newPoint > 1) {
-                newPlace = sliderWidth;
-            } else {
-                newPlace = sliderWidth * newPoint;
-            }
+            </div>
 
-            return {
-                'position': newPlace + 'px'
-            }
-        }
+          </div>
 
-        document.addEventListener('DOMContentLoaded', function() {
-            // Get all document sliders
-            var sliders = document.querySelectorAll('input[type="range"].slider');
-            [].forEach.call(sliders, function(slider) {
-                var output = findOutputForSlider(slider);
-                if (output) {
-                    if (slider.classList.contains('has-output-tooltip')) {
-                        // Get new output position
-                        var newPosition = getSliderOutputPosition(slider);
+      </section>
 
-                        // Set output position
-                        output.style['left'] = newPosition.position;
-                    }
+      <script>
+          $(document).ready(function() {
+              var stage_counter = 1;
+              var counter2 = 1;
+              $('#add-stage').click(function(e) {
+                  $('#stages-fb').prepend('<div class="field" id="st' + stage_counter + '"> <div class="control"> <input class="input" type="text" name="Stage_Description[]" placeholder="Description"> </div></div> ');
+                  stage_counter++;
 
-                    // Add event listener to update output when slider value change
-                    slider.addEventListener('input', function(event) {
-                        if (event.target.classList.contains('has-output-tooltip')) {
-                            // Get new output position
-                            var newPosition = getSliderOutputPosition(event.target);
+              });
 
-                            // Set output position
-                            output.style['left'] = newPosition.position;
-                        }
+              $('body').on('click', '#delete-stage', function(e) {
+                  e.preventDefault();
+                  $('#st' + (stage_counter - 1)).remove();
+                  stage_counter--;
 
-                        // Update output with slider value
-                        output.value = event.target.value;
-                    });
-                }
-            });
-        });
-    </script>
-</body>
+              });
 
+              $('#add-skill').click(function(e) {
+                  $('#row').append(`		<div class="columns" id="col` + counter2 + `">
+  							<div class="column">
+  							<label class="label">Skill</label>
+  								<div class="control">
+  									<div class="select is-fullwidth">
+  										<select name="skill[]">
+  											<option>Python</option>
+  											<option>Java</option>
+  											<option>Haskell</option>
+  											<option>C</option>
+  											<option>HTML</option>
+  											<option>CSS</option>
+  											<option>javascript</option>
+  											<option>PHP</option>
+  											<option>C++</option>
+  										</select>
+  									</div>
+  								</div>
+  							</div>
+  							<div class="column">
+  							<label class="label">Proficiency</label>
+  								<div class="control">
+  									<div class="select is-fullwidth">
+  										<select name="prof[]">
+  											<option>Beginner</option>
+  											<option>Intermediate</option>
+  											<option>Advanced</option>
+  										</select>
+  									</div>
+  								</div>
+  							</div>
+  					</div>
+  						`);
+                  counter2++;
+
+              });
+
+              $('body').on('click', '#delete-skill', function(e) {
+                  e.preventDefault();
+                  $('#col' + (counter2 - 1)).remove();
+                  counter2--;
+
+              });
+
+              var Tagify = require("bulma-extensions/bulma-tagsinput/dist/js/bulma-tagsinput");
+              document.addEventListener('DOMContentLoaded', function() {
+                  Tagify.attach()
+              });
+
+          });
+          // Find output DOM associated to the DOM element passed as parameter
+          function findOutputForSlider(element) {
+              var idVal = element.id;
+              outputs = document.getElementsByTagName('output');
+              for (var i = 0; i < outputs.length; i++) {
+                  if (outputs[i].htmlFor == idVal)
+                      return outputs[i];
+              }
+          }
+
+          function getSliderOutputPosition(slider) {
+              // Update output position
+              var newPlace,
+                  minValue;
+
+              var style = window.getComputedStyle(slider, null);
+              // Measure width of range input
+              sliderWidth = parseInt(style.getPropertyValue('width'), 10);
+
+              // Figure out placement percentage between left and right of input
+              if (!slider.getAttribute('min')) {
+                  minValue = 0;
+              } else {
+                  minValue = slider.getAttribute('min');
+              }
+              var newPoint = (slider.value - minValue) / (slider.getAttribute('max') - minValue);
+
+              // Prevent bubble from going beyond left or right (unsupported browsers)
+              if (newPoint < 0) {
+                  newPlace = 0;
+              } else if (newPoint > 1) {
+                  newPlace = sliderWidth;
+              } else {
+                  newPlace = sliderWidth * newPoint;
+              }
+
+              return {
+                  'position': newPlace + 'px'
+              }
+          }
+
+          document.addEventListener('DOMContentLoaded', function() {
+              // Get all document sliders
+              var sliders = document.querySelectorAll('input[type="range"].slider');
+              [].forEach.call(sliders, function(slider) {
+                  var output = findOutputForSlider(slider);
+                  if (output) {
+                      if (slider.classList.contains('has-output-tooltip')) {
+                          // Get new output position
+                          var newPosition = getSliderOutputPosition(slider);
+
+                          // Set output position
+                          output.style['left'] = newPosition.position;
+                      }
+
+                      // Add event listener to update output when slider value change
+                      slider.addEventListener('input', function(event) {
+                          if (event.target.classList.contains('has-output-tooltip')) {
+                              // Get new output position
+                              var newPosition = getSliderOutputPosition(event.target);
+
+                              // Set output position
+                              output.style['left'] = newPosition.position;
+                          }
+
+                          // Update output with slider value
+                          output.value = event.target.value;
+                      });
+                  }
+              });
+          });
+      </script>
+    </div>
+
+
+    </div>
+  </section
+  </body>
 </html>
