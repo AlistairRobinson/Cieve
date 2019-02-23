@@ -35,6 +35,25 @@ def create_app(test_config=None):
     @app.route('/about')
     def about():
         return render_template("about.html")
-    
+
+    # Can be called by a AJAX request to return the job data
+    # For applications pass 0 to return all jobs
+    @app.route('/getJobs', methods=('GET', 'POST'))
+    def getJobs():
+        if request.method == "POST":
+            no = request.form['page']
+            division = request.form['division']
+            role = request.form['role']
+            location = request.form['location']
+            error = None
+
+            # ERROR checks
+
+            if error is not None:
+                return None
+
+            db = get_db()
+            return jsonify(db.getJobs(no, division, role, location))
+        return None
 
     return app
