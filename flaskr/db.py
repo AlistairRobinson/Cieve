@@ -126,3 +126,7 @@ class Mongo:
     # In order of job related score
     def getApplicantsJob(self, jobID, stepOrder):
         return ""
+    
+    #Move applicants to the next stage in the steps for the jobs and update complted flag
+    def moveToNextStage(self, applicantID, JobID):
+        return ""

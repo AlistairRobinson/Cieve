@@ -90,6 +90,7 @@ def newJob():
                     stages,
                     skills,
                     skillVal}
+                    
             # Populate json with job data
             db.addNewJob(json, session.get('user_id')[1:])
             return redirect(url_for('client.jobs'))
