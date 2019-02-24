@@ -9,7 +9,7 @@ def get_db():
 
 class Mongo:
     def __init__(self, db):
-        self.db = db
+        self.db = db.db
     
     
     # Return an account class
@@ -53,6 +53,29 @@ class Mongo:
         return clientID
     
     
+    # Create an application, return the applicationID if completed (None if not)
+    def createApplication(self, applicantID, jobID, stage, score):
+        query = self.db.applicant.find_one({"preferred vacancies": jobID})
+        if query != None:
+            preferred = True
+        else:
+            preferred = False
+
+        applicationData = {"applicant id": applicantID,
+                           "vacancy id": jobID,
+                           "current stage": stage,
+                           "specialized score": score,
+                           "preferred": preferred,
+                           "completed": False}
+        applicationID = self.db.application.insert_one(applicationData).inserted_id
+        return applicationID
+    
+    
+    
+    def updateApplication(self, applicantID, stage, completed):
+        self.db.application.update_one({"applicant id": applicantID}, {"$set": {"stage": stage, "completed": completed}})
+    
+    
     # Return JSON of applicant info populated based on id
     def getApplicantUserID(self, id):
         query = self.db.applicantInfo.find_one({"applicant_id": ObjectId(id)})
@@ -93,9 +116,11 @@ class Mongo:
         else:
             return Jobs[(number-1)*20:((number-1)*20)+20]
 
+
     # Wiil accept a json parameter which will be defined by the input, adds the new job to the DB
     def addNewJob(self, json):
         self.db.vacancy.insert_one(json)
+
 
     # Given an ID return all vacancies an applicant has applied too (including non-preferenced ones)
     def getApplications(self, applicantID):
@@ -107,11 +132,5 @@ class Mongo:
                 applications.append(title)
         return applications
 
-    def applyJob(self, userID, jobID, preferred, score):
-        self.db.application.insert_one({"applicant id": userID,
-                                        "vacancy id": jobID,
-                                        "preferred": preferred,
-                                        "specialized score": score,
-                                        "completed": False})
-
 get_db().insertApplicantUser("name", "user", "123", "abc")
+print(get_db().getApplicantAccount("user"))
