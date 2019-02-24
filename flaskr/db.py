@@ -94,7 +94,7 @@ class Mongo:
             return Jobs[(number-1)*20:((number-1)*20)+20]
 
     # Wiil accept a json parameter which will be defined by the input, adds the new job to the DB
-    def addNewJob(self, json):
+    def addNewJob(self, json, clientID):
         self.db.vacancy.insert_one(json)
 
     # Given an ID return all vacancies an applicant has applied too (including non-preferenced ones)

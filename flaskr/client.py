@@ -91,7 +91,7 @@ def newJob():
                     skills,
                     skillVal}
             # Populate json with job data
-            db.addNewJob(json)
+            db.addNewJob(json, session.get('user_id')[1:])
             return redirect(url_for('client.jobs'))
     # Generate post data and pass to front end
     return render_template('/cli/createJob.html', stages=stages)

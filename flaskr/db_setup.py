@@ -43,14 +43,30 @@ db.vacancy.insert_one({"vacancy title": 0,
                        "division": 0,
                        "location": 0,
                        "role type": 0,
-                       "applications receieved": 0})
+                       "applications receieved": 0,
+                       "stages" : [1, 3,2])
 
-db.stage.insert_one({"vacancy id": 0,
-                     "type": 0,
-                     "questions": 0,
+db.stage.insert_one({"type": "",
+                    "TITLE": ""
                      "description": 0})
 
+questionStage
+stageID
+[QUESTIONS [ answer,  (WRONG ANSWERS)]]]
+
+
+interviewStage
+stageID
+SLOT
+{
+    "DD/MM/YYYY : HH:MM" : APPLICATIONID
+    "21/10/20 12:00" : ""
+}
+
+
+
 db.assessment.insert_one({"stage id": 0,
+                            "APPLICANTION ID"
                           "correct answers": 0,
                           "incorrect answers": 0,
                           "score": 0})
