@@ -42,7 +42,8 @@ db.db.vacancy.insert_one({"vacancy title": 0,
                           "positions available": 0,
                           "division": 0,
                           "location": 0,
-                          "role type": 0,
+                          "role type": 0
+                          "stage order": 0,
                           "applications receieved": 0})
 
 db.db.stage.insert_one({"vacancy id": 0,
@@ -51,6 +52,7 @@ db.db.stage.insert_one({"vacancy id": 0,
                         "description": 0})
 
 db.db.assessment.insert_one({"stage id": 0,
+                             "application id": 0,
                              "correct answers": 0,
                              "incorrect answers": 0,
                              "score": 0})
