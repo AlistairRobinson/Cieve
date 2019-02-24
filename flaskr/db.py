@@ -114,8 +114,15 @@ class Mongo:
                                         "specialized score": score,
                                         "completed": False})
 
-    # Return all stages title
+    # Return all stages, dictionary of stage id and title
     def getStages(self):
         return ""
 
-get_db().insertApplicantUser("name", "user", "123", "abc")
+    # Return the details for all jobs the client is linked too
+    def getClientJobs(self, clientID):
+        return ""
+
+    # Return a list of all applicants applying to a role for a specific step (1 = First stages, etc)
+    # In order of job related score
+    def getApplicantsJob(self, jobID, stepOrder):
+        return ""
