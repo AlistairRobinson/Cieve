@@ -2,6 +2,8 @@ import os
 
 from flask import Flask
 from flask import render_template
+from flask import request, session, abort
+from flaskr import csrf
 
 def create_app(test_config=None):
 
@@ -25,6 +27,16 @@ def create_app(test_config=None):
         os.makedirs(app.instance_path)
     except OSError:
         pass
+
+    @app.before_request
+    def csrf_protect():
+        if request.method == "POST":
+            token = session['_csrf_token']
+            session['_csrf_token'] = csrf.generate_csrf_token()
+            if not token or token != request.form.get('_csrf_token'):
+                abort(403)
+                
+    app.jinja_env.globals['csrf_token'] = csrf.generate_csrf_token 
     
     @app.route('/LandingPage')
     @app.route('/index')

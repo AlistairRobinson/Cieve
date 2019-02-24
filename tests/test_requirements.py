@@ -1,12 +1,13 @@
 import pytest
 import json
 from flask import g, session, jsonify
-from flaskr import db
+from flaskr import db, csrf
 
 # Client login tests (to ensure security)
 
 def test_cli_login(client, jobs):
-    jobs._client.post('/cli/auth/login', data={'username': 'test@test.tet', 'password': '123'})
+    token = csrf.generate_csrf_token_with_session(jobs._client)
+    response = jobs._client.post('/cli/auth/login', data={'username': 'test@test.tet', 'password': '123', '_csrf_token': token})
     with jobs._client:
         client.get('/')
         assert 'C' in session['user_id']

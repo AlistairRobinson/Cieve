@@ -108,6 +108,7 @@
                 <h3 class="title is-3">Create Your Job</h3>
 
                 <form id="create-job">
+                    <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                     <div class="field">
                         <label class="label">Job Title</label>
                         <div class="control">

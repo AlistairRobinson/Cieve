@@ -84,6 +84,7 @@
         <div class = "columns is-centered">
           <div class ="column is-5-tablet is-4-desktop is-4-widescreen">
             <form class = "box" action="{{ url_for('auth.aplRegister') }}" method="POST">
+                  <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                   <label class="label">What's your name?</label>
                   <input class="input" type="name" id="nameBox" placeholder="e.g. John Doe" name="name">
                   <label class="label">What's your email?</label>
