@@ -19,7 +19,7 @@ def dashboard():
 
     return render_template('/apl/Dashboard.html', userData=userData)
 
-#Definition for the applicant job search page
+#Definition for the applicant job search page`
 @bp.route('/jobsearch', methods=('GET', 'POST'))
 @login_required_A
 def jobSearch():
@@ -73,8 +73,6 @@ def newApplication():
             return render_template(url_for('apl.applications'))
 
     return render_template('/apl/applicationCreation.html')
-
-
 
 #Definition for the application
 @bp.route('/applications')

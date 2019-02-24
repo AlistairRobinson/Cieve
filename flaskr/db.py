@@ -9,7 +9,7 @@ def get_db():
 
 class Mongo:
     def __init__(self, db):
-        self.db = db
+        self.db = db.db
     
     
     # Return an account class
@@ -94,7 +94,7 @@ class Mongo:
             return Jobs[(number-1)*20:((number-1)*20)+20]
 
     # Wiil accept a json parameter which will be defined by the input, adds the new job to the DB
-    def addNewJob(self, json):
+    def addNewJob(self, json, clientID):
         self.db.vacancy.insert_one(json)
 
     # Given an ID return all vacancies an applicant has applied too (including non-preferenced ones)
@@ -114,4 +114,19 @@ class Mongo:
                                         "specialized score": score,
                                         "completed": False})
 
-get_db().insertApplicantUser("name", "user", "123", "abc")
+    # Return all stages, dictionary of stage id and title
+    def getStages(self):
+        return ""
+
+    # Return the details for all jobs the client is linked too
+    def getClientJobs(self, clientID):
+        return ""
+
+    # Return a list of all applicants applying to a role for a specific step (1 = First stages, etc)
+    # In order of job related score
+    def getApplicantsJob(self, jobID, stepOrder):
+        return ""
+    
+    #Move applicants to the next stage in the steps for the jobs and update complted flag
+    def moveToNextStage(self, applicantID, JobID):
+        return ""
