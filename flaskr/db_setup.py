@@ -42,7 +42,7 @@ db.db.vacancy.insert_one({"vacancy title": 0,
                           "positions available": 0,
                           "division": 0,
                           "location": 0,
-                          "role type": 0
+                          "role type": 0,
                           "stage order": 0,
                           "applications receieved": 0})
 
