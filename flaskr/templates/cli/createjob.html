@@ -6,10 +6,10 @@
     <title>Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
-    <link rel="stylesheet" href="../static/main.css" />
-    <script src="{{url_for('static', filename='js/jquery-3.3.1.min.js')}}"></script>
-    <script type="text/javascript" src="{{url_for('static', filename='js/bulma-slider.min.js')}}"></script>
-    <link rel="stylesheet" href="{{url_for('static', filename='css/bulma-slider.min.css')}}">
+    <link rel="stylesheet" href="../../static/main.css" />
+    <script src="../../static/js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="../../static/js/bulma-slider.min.js"></script>
+    <link rel="stylesheet" href="../../static/css/bulma-slider.min.css">
   </head>
   <body>
 
@@ -143,23 +143,26 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="column">
+                            <div class="field">
+                              <label class="label">Country</label>
+                                <div class="control has-icons-left">
+                                  <span class="select is-fullwidth">
+                                    <select class="select is-fullwidth" name="country">
+                                      <option>United Kingdom</option>
+                                      <option>United States</option>
+                                      <option>Germany</option>
+                                    </select>
+                                  </span>
+                                  <span class="icon is-small is-left">
+                                    <i class="fas fa-globe"></i>
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="field">
-                      <label class="label">Country</label>
-                        <div class="control has-icons-left">
-                          <span class="select">
-                            <select class="select is-fullwidth" name="country">
-                              <option>United Kingdom</option>
-                              <option>United States</option>
-                              <option>Germany</option>
-                            </select>
-                          </span>
-                          <span class="icon is-small is-left">
-                            <i class="fas fa-globe"></i>
-                          </span>
-                        </div>
-                      </div>
+
                     <div class="field">
                         <label class="label">Job Description</label>
                         <div class="control">
@@ -276,7 +279,18 @@
               var stage_counter = 1;
               var counter2 = 1;
               $('#add-stage').click(function(e) {
-                  $('#stages-fb').append('<div class="field" id="st' + stage_counter + '"> <div class="control"> <input class="input" type="text" name="Stage_Description" placeholder="Description"> </div></div> ');
+                  $('#stages-fb').append(`<div class="field" id="st' + stage_counter + '">
+                   <div class="control">
+                   <div class="select is-fullwidth">
+                       <select name="Stage_Description[]">
+                           {%for stage in stages%}
+                            <option value={{stage.id}}>{{stage.desc}}</option>
+                           {%endfor%}
+                       </select>
+                   </div>
+                    </div>
+                    </div> `
+                  );
                   stage_counter++;
 
               });
