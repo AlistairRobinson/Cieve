@@ -1,5 +1,6 @@
 import pytest
 from flask import g, session, flash
+from flaskr import csrf
 
 # Client login tests (R1)
 
@@ -41,7 +42,8 @@ def test_apl_login_validate_input(auth, username, password, message):
 
 def test_register(client, app):
     assert client.get('/apl/auth/register').status_code == 200
-    response = client.post('/apl/auth/register', data={'username': 'test', 'password': 'test'})
+    token = csrf.generate_csrf_token_with_session(client)
+    response = client.post('/apl/auth/register', data={'username': 'test', 'password': 'test', '_csrf_token': token})
 
 @pytest.mark.parametrize(('username', 'password', 'message'), (
     ('', '', 'Username is required'),
@@ -49,9 +51,10 @@ def test_register(client, app):
     ('test', 'test', 'Username test is already taken'),
 ))
 def test_register_validate_input(client, auth, username, password, message):
+    token = csrf.generate_csrf_token_with_session(auth._client)
     response = auth._client.post(
         '/apl/auth/register',
-        data={'username': username, 'password': password}
+        data={'username': username, 'password': password, '_csrf_token': token}
     )
     with auth._client.session_transaction() as session:
         try:
@@ -67,7 +70,8 @@ def test_register_validate_input(client, auth, username, password, message):
     ('abc', '{"&gt": ""}', 'Incorrect username or password'),
 ))
 def test_cli_login(client, auth, username, password, message):
-    auth._client.post('/cli/auth/login', data={'username': username, 'password': password})
+    token = csrf.generate_csrf_token_with_session(auth._client)
+    auth._client.post('/cli/auth/login', data={'username': username, 'password': password, '_csrf_token': token})
     with auth._client.session_transaction() as session:
         try:
             error = session['_flashes'][0]

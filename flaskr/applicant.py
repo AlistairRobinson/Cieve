@@ -23,27 +23,7 @@ def dashboard():
 @bp.route('/jobsearch', methods=('GET', 'POST'))
 @login_required_A
 def jobSearch():
-    no = 1
-    division = ""
-    role = ""
-    location = ""
-    if request.method == 'POST':
-        no = request.form['page']
-        division = request.form['division']
-        role = request.form['role']
-        location = request.form['location']
-
-        error = None
-
-        #ERROR CHECK
-
-        if error is not None:
-            flash(error)
-
-    db = get_db()
-    postData = db.getJobs(no, division, role, location)
-    
-    return render_template('/apl/jobSearch.html', post = postData)
+    return render_template('/apl/jobSearch.html')
             # Return first 20 (use a page count, get[1,2,...])
 
 #Definition for the application
@@ -93,6 +73,8 @@ def newApplication():
             return render_template(url_for('apl.applications'))
 
     return render_template('/apl/applicationCreation.html')
+
+
 
 #Definition for the application
 @bp.route('/applications')

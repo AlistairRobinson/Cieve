@@ -2,6 +2,8 @@ import os
 
 from flask import Flask
 from flask import render_template
+from flask import request, session, abort
+from flaskr import csrf
 
 def create_app(test_config=None):
 
@@ -25,6 +27,16 @@ def create_app(test_config=None):
         os.makedirs(app.instance_path)
     except OSError:
         pass
+
+    @app.before_request
+    def csrf_protect():
+        if request.method == "POST":
+            token = session['_csrf_token']
+            session['_csrf_token'] = csrf.generate_csrf_token()
+            if not token or token != request.form.get('_csrf_token'):
+                abort(403)
+                
+    app.jinja_env.globals['csrf_token'] = csrf.generate_csrf_token 
     
     @app.route('/LandingPage')
     @app.route('/index')
@@ -35,6 +47,25 @@ def create_app(test_config=None):
     @app.route('/about')
     def about():
         return render_template("about.html")
-    
+
+    # Can be called by a AJAX request to return the job data
+    # For applications pass 0 to return all jobs
+    @app.route('/getJobs', methods=('GET', 'POST'))
+    def getJobs():
+        if request.method == "POST":
+            no = request.form['page']
+            division = request.form['division']
+            role = request.form['role']
+            location = request.form['location']
+            error = None
+
+            # ERROR checks
+
+            if error is not None:
+                return None
+
+            db = get_db()
+            return jsonify(db.getJobs(no, division, role, location))
+        return None
 
     return app
