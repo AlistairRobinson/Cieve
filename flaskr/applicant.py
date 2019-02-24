@@ -14,7 +14,7 @@ bp = Blueprint('applicant', __name__, url_prefix='/apl')
 @login_required_A
 def dashboard():
     # Generate post data and pass to front end
-    
+
     userData = get_db().getApplicantUserID(g.user)
 
     return render_template('/apl/Dashboard.html', userData=userData)
@@ -42,13 +42,13 @@ def newApplication():
 
         if other not in ["T", "F"]:
             error = 'Error! Other is not T or F'
-        
+
         if skills == None:
             error = "No skills"
 
         if jobs == None:
             error = "No jobs selected"
-        
+
         # STANDARD SCORE + DB UPDATE
 
         if error is not None:
@@ -59,14 +59,14 @@ def newApplication():
                 for job, prefered in jobs.items():
                     if prefered == 0:
                         del jobs[job]
-            
+
             for jobID, prefered in jobs.items():
                 db = get_db()
                 userID = session.get('user_id')[1:]
                 score = 0 #CALCLUATE JOB SPECIFIC SCORE
 
                 db.applyJob(userID, jobID, score, prefered)
-            
+
             # APPLY SKILS SCORE ....
 
             # APPLICANT SCORING FUNCTION HERE
