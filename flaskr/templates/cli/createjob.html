@@ -110,7 +110,7 @@
 
                 <h3 class="title is-3">Create Your Job</h3>
 
-                <form id="create-job" action="{{url_for(filename='client.py')}}">
+                <form id="create-job" action="{{url_for('client.newJob')}}" method = "POST">
                     <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                     <div class="field">
                         <label class="label">Job Title</label>
@@ -180,7 +180,7 @@
                         <div class="field-body" id="stages-fb">
                             <div class="field has-addons">
                                 <div class="control is-expanded">
-                                    <input class="input" type="text" name="Stage_Description[]" value="Online Application" disabled>
+                                    <input class="input" type="text" name="Stage_Description" value="Online Application" readonly="readonly">
                                 </div>
                             </div>
                           </div>
@@ -203,7 +203,7 @@
                                 <label class="label">Skill</label>
                                 <div class="control">
                                     <div class="select is-fullwidth">
-                                        <select name="skill[]">
+                                        <select name="skill">
                                             <option>Python</option>
                                             <option>Java</option>
                                             <option>Haskell</option>
@@ -235,7 +235,7 @@
                                           <option>10</option>
                                       </select>
                                   </div> -->
-                                  <input id="sliderWithValue" class="slider has-output is-fullwidth is-circle" min="1" max="10" value="1" step="1" type="range">
+                                  <input name="skillVal" id="sliderWithValue" class="slider has-output is-fullwidth is-circle" min="1" max="10" value="1" step="1" type="range">
                                   <output for="sliderWithValue">1</output>
                                 </div>
                             </div>
@@ -276,7 +276,7 @@
               var stage_counter = 1;
               var counter2 = 1;
               $('#add-stage').click(function(e) {
-                  $('#stages-fb').append('<div class="field" id="st' + stage_counter + '"> <div class="control"> <input class="input" type="text" name="Stage_Description[]" placeholder="Description"> </div></div> ');
+                  $('#stages-fb').append('<div class="field" id="st' + stage_counter + '"> <div class="control"> <input class="input" type="text" name="Stage_Description" placeholder="Description"> </div></div> ');
                   stage_counter++;
 
               });
@@ -294,7 +294,7 @@
   							<label class="label">Skill</label>
   								<div class="control">
   									<div class="select is-fullwidth">
-  										<select name="skill[]">
+  										<select name="skill">
   											<option>Python</option>
   											<option>Java</option>
   											<option>Haskell</option>
@@ -311,21 +311,8 @@
   							<div class="column">
   							<label class="label">Proficiency</label>
   								<div class="control">
-                  <div class="select is-fullwidth">
-                      <select name="prof[]">
-                          <option>0</option>
-                          <option>1</option>
-                          <option>2</option>
-                          <option>3</option>
-                          <option>4</option>
-                          <option>5</option>
-                          <option>6</option>
-                          <option>7</option>
-                          <option>8</option>
-                          <option>9</option>
-                          <option>10</option>
-                      </select>
-                  </div>
+                                    <input name="skillVal" id="sliderWithValue" class="slider has-output is-fullwidth is-circle" min="1" max="10" value="1" step="1" type="range">
+                                  <output for="sliderWithValue">1</output>
   								</div>
   							</div>
   					</div>

@@ -9,7 +9,7 @@ def get_db():
 
 class Mongo:
     def __init__(self, db):
-        self.db = db
+        self.db = db.db
     
     
     # Return an account class
@@ -113,5 +113,9 @@ class Mongo:
                                         "preferred": preferred,
                                         "specialized score": score,
                                         "completed": False})
+
+    # Return all stages title
+    def getStages(self):
+        return ""
 
 get_db().insertApplicantUser("name", "user", "123", "abc")
