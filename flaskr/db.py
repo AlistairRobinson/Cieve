@@ -9,7 +9,7 @@ def get_db():
 
 class Mongo:
     def __init__(self, db):
-        self.db = db.db
+        self.db = db
     
     
     # Return an account class
@@ -87,7 +87,11 @@ class Mongo:
         query = self.db.vacancy.find(queryMaker, {"_id": 0, "positions available": 0, "applicants recieved": 0})
         for doc in query:
             Jobs.append(doc)
-        return Jobs[(number-1)*20:((number-1)*20)+20]
+        
+        if number == 0:
+            return Jobs
+        else:
+            return Jobs[(number-1)*20:((number-1)*20)+20]
 
     # Wiil accept a json parameter which will be defined by the input, adds the new job to the DB
     def addNewJob(self, json):
@@ -109,3 +113,5 @@ class Mongo:
                                         "preferred": preferred,
                                         "specialized score": score,
                                         "completed": False})
+
+get_db().insertApplicantUser("name", "user", "123", "abc")
