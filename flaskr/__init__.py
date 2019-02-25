@@ -38,6 +38,11 @@ def create_app(test_config=None):
             if not token or token != request.form.get('_csrf_token'):
                 abort(403)
 
+    @app.after_request
+    def enforce_https(response):
+        response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+        return response
+
     # Allows templates to set unique CSRF tokens on load
                 
     app.jinja_env.globals['csrf_token'] = csrf.generate_csrf_token 
