@@ -119,7 +119,16 @@ class Mongo:
 
     # Wiil accept a json parameter which will be defined by the input, adds the new job to the DB
     def addNewJob(self, json, clientID):
-        self.db.vacancy.insert_one(json)
+        skillDic = {}
+        skillVal = json.popitem()
+        skills = json.popitem()
+        for i in range(len(skills)+1):
+            skillDic[skills[1][i]] = skillVal[1][i]
+        json['skills'] = skillDic
+        jobID = self.db.vacancy.insert_one(json).inserted_id
+        
+        self.db.client.update_one({"_id": clientID}, {"$push": {"vacancies": jobID}})
+
 
 
     # Given an ID return all vacancies an applicant has applied too (including non-preferenced ones)
@@ -132,29 +141,54 @@ class Mongo:
                 applications.append(title)
         return applications
 
+
     def applyJob(self, userID, jobID, preferred, score):
         self.db.application.insert_one({"applicant id": userID,
                                         "vacancy id": jobID,
                                         "preferred": preferred,
                                         "specialized score": score,
-                                        "completed": False})
+                                        "completed": True})
+
+
+    def addNewStage(self, stageType, title, description):
+        self.db.stage.insert_one({"type": stageType,
+                                  "title": title,
+                                  "description": description})
+
 
     # Return all stages, dictionary of stage id and title
     def getStages(self):
-        return ""
+        stageDic = {}
+        query = self.db.stage.find({}, {"title": 1})
+        for doc in query:
+            stageDic[doc['_id']] = doc['title']
+        return stageDic
+
 
     # Return the details for all jobs the client is linked too
     def getClientJobs(self, clientID):
-        return ""
+        jobDetails = []
+        clientQuery = self.db.client.find({"_id": clientID}, {"vacancies": 1, "_id": 0})
+        for doc in clientQuery:
+            for id in doc['vacancies']:
+                jobQuery = self.db.vacancy.find({"_id": id})
+                for job in jobQuery:
+                    jobDetails.append(job)
+        return jobDetails
+
 
     # Return a list of all applicants applying to a role for a specific step (1 = First stages, etc)
     # In order of job related score
     def getApplicantsJob(self, jobID, stepOrder):
-        return ""
+        applicantList = []
+        applicationQuery = self.db.application.find({"vacancy id": jobID, "current step": stepOrder}).sort({"specialized score": -1})
+        for doc in applicationQuery:
+            applicantList.append(doc)
+        return applicantList
     
-    #Move applicants to the next stage in the steps for the jobs and update complted flag
-    def moveToNextStage(self, applicantID, JobID):
-        return ""
+    
+    #Move applicants to the next stage in the steps for the jobs and update completed flag
+    def moveToNextStage(self, applicationID, jobID):
+        self.db.application.update_one({"_id": applicationID}, {"$inc": {"current step": 1}}, {"$set": {"completed": False}})
         
-get_db().insertApplicantUser("name", "user", "123", "abc")
-print(get_db().getApplicantAccount("user"))
+

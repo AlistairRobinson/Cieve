@@ -32,7 +32,7 @@ db.db.accountInfo.insert_one({"username": 0,
 
 db.db.application.insert_one({"applicant id": 0,
                               "vacancy id": 0,
-                              "current stage": 0,
+                              "current step": 0,
                               "specialized score": 0,
                               "preferred": 0,
                               "completed": 0})
@@ -43,8 +43,27 @@ db.db.vacancy.insert_one({"vacancy title": 0,
                           "division": 0,
                           "location": 0,
                           "role type": 0,
-                          "stage order": 0,
-                          "applications receieved": 0})
+                          "stages" : 0,
+                          "skills": 0})
+
+db.db.stage.insert_one({"type": 0,
+                        "title": 0,
+                        "description": 0})
+
+db.db.questionStage.insert_one({"stage id": 0,
+                                "questions": 0})
+
+#[QUESTIONS [ answer,  (WRONG ANSWERS)]]]
+
+db.db.interviewStage.insert_one({"stage id": 0,
+                                 "slot": 0})
+
+#SLOT
+#{
+#    "DD/MM/YYYY : HH:MM" : APPLICATIONID
+#    "21/10/20 12:00" : ""
+#}
+
 
 db.db.stage.insert_one({"vacancy id": 0,
                         "type": 0,
