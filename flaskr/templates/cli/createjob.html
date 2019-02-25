@@ -87,7 +87,7 @@
                                 </span>Dashboard</a>
                         </li>
                         <li>
-                            <a href="">
+                            <a href="/cli/jobs">
                                 <span class="icon">
                                     <i class="fa fa-search"></i>
                                 </span>
@@ -110,8 +110,8 @@
 
                 <h3 class="title is-3">Create Your Job</h3>
 
-                <form id="create-job" action="client.py">
-
+                <form id="create-job" action="{{url_for('client.newJob')}}" method = "POST">
+                    <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                     <div class="field">
                         <label class="label">Job Title</label>
                         <div class="control">
@@ -183,7 +183,7 @@
                         <div class="field-body" id="stages-fb">
                             <div class="field has-addons">
                                 <div class="control is-expanded">
-                                    <input class="input" type="text" name="Stage_Description[]" value="Online Application" disabled>
+                                    <input class="input" type="text" name="Stage_Description" value="Online Application" disabled>
                                 </div>
                             </div>
                           </div>
@@ -206,7 +206,7 @@
                                 <label class="label">Skill</label>
                                 <div class="control">
                                     <div class="select is-fullwidth">
-                                        <select name="skill[]">
+                                        <select name="skill">
                                             <option>Python</option>
                                             <option>Java</option>
                                             <option>Haskell</option>
@@ -238,7 +238,7 @@
                                           <option>10</option>
                                       </select>
                                   </div> -->
-                                  <input id="sliderWithValue" class="slider has-output is-fullwidth is-circle" min="1" max="10" value="1" step="1" type="range">
+                                  <input name="skillVal" id="sliderWithValue" class="slider has-output is-fullwidth is-circle" min="1" max="10" value="1" step="1" type="range">
                                   <output for="sliderWithValue">1</output>
                                 </div>
                             </div>
@@ -309,7 +309,7 @@
   							<label class="label">Skill</label>
   								<div class="control">
   									<div class="select is-fullwidth">
-  										<select name="skill[]">
+  										<select name="skill">
   											<option>Python</option>
   											<option>Java</option>
   											<option>Haskell</option>
@@ -326,9 +326,8 @@
   							<div class="column">
   							<label class="label">Proficiency</label>
   								<div class="control">
-                  <input id="sliderWithValueone" class="slider has-output is-fullwidth is-circle" min="1" max="10" value="1" step="1" type="range">
-                  <output for="sliderWithValueone">1</output>
-                  </div>
+                                    <input name="skillVal" id="sliderWithValue" class="slider has-output is-fullwidth is-circle" min="1" max="10" value="1" step="1" type="range">
+                                  <output for="sliderWithValue">1</output>
   								</div>
   							</div>
   					</div>
