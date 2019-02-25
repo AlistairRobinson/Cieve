@@ -117,7 +117,7 @@
                 <br><br>
 
                 <form action="" method="POST">
-                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+                <input name=_csrf_token id="_csrf_token" type=hidden value="{{ csrf_token() }}">
 
                   <!-- <div class="field is-grouped is-fullwidth">
                       <div class="control">
@@ -185,7 +185,7 @@
 
             <div class="columns">
                 <div class="column">
-                  <b>Search Results</b></b>
+                  <b>Search Results Page 1 of x</b></b>
                 </div>
                 <div class="column">
                   <span class="select is-pulled-right">
@@ -213,6 +213,7 @@
           $(document).ready(function() {
               var pagenumber = 1;
               // $('#searchBttn').click(function(e) {
+                  var token = document.getElementById('_csrf_token').value;
                   var selectedDivision = $('#divisionDropDown').val();
                   if (selectedDivision == "Any") {
                     selectedDivision = "";
@@ -232,7 +233,8 @@
                         page: pagenumber,
                         division: selectedDivision,
                         role: selectedRole,
-                        location: selectedLocation
+                        location: selectedLocation,
+                        _csrf_token: token
                       },
                       type: 'POST',
                       success: function(response) {
@@ -244,53 +246,6 @@
                           console.log(error);
                       }
                   });
-                // });
-
-
-
-              // $.ajax({
-              //     url: '/getJobs',
-              //     contentType: 'application/json',
-              //     data: {
-              //       "page":pagenumber,
-              //       "division":selectedDivision,
-              //       "role":selectedRole,
-              //       "location":selectedLocation,
-              //       csrfmiddlewaretoken: '{{ csrf_token }}',
-              //     },
-              //     type: 'POST',
-              //     success: function(response) {
-              //         console.log(response);
-              //         alert("test")
-              //     },
-              //     error: function(error) {
-              //         console.log(error);
-              //     }
-              // });
-
-
-              // $.post("/getJobs",
-              // {"page":pagenumber, "division":selectedDivision, "role":selectedRole, "location":selectedLocation},
-              // function(data) {
-              //   var item = JSON.parse(data)
-              //   alert("test");
-              // });
-
-
-
-              // var counter2 = 1;
-              // $('#add-stage').click(function(e) {
-              //     $('#stages-fb').append('<div class="field" id="st' + stage_counter + '"> <div class="control"> <input class="input" type="text" name="Stage_Description[]" placeholder="Description"> </div></div> ');
-              //     stage_counter++;
-              //
-              // });
-              //
-              // $('body').on('click', '#delete-stage', function(e) {
-              //     e.preventDefault();
-              //     $('#st' + (stage_counter - 1)).remove();
-              //     stage_counter--;
-              //
-              // });
           });
       </script>
 
