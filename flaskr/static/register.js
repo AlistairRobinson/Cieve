@@ -11,8 +11,7 @@ $(function () {
     $.ajax({
       type: 'post',
       url: '/apl/auth/register',
-      header: {'_csrf_token': token},
-      data: {name: names, email: emails, password: passwords},
+      data: {email: emails, email: passwords, _csrf_token: token},
       success: function () {
         alert('form was submitted');
       }
