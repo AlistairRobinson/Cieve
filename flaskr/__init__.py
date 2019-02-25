@@ -38,12 +38,14 @@ def create_app(test_config=None):
             if not token or token != request.form.get('_csrf_token'):
                 abort(403)
 
+    # Enforce security standards in all HTTP responses
+
     @app.after_request
     def enforce_security(response):
-        response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
-        response.headers['X-Frame-Options'] = 'SAMEORIGIN'
-        response.headers['Content-Security-Policy'] = "default-src 'self'"
-        return response
+        response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'  # Enforce HTTPS in browser
+        response.headers['X-Frame-Options'] = 'SAMEORIGIN'                                     # Only allow frames from this origin
+        response.headers['Content-Security-Policy'] = "default-src 'self'"                     # Prevent content loading from outside origin
+        return response                                                                        # ^ This is very strict and may cause issues, edit if necessary
 
     # Allows templates to set unique CSRF tokens on load
                 
