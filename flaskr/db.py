@@ -53,6 +53,29 @@ class Mongo:
         return clientID
     
     
+    # Create an application, return the applicationID if completed (None if not)
+    def createApplication(self, applicantID, jobID, stage, score):
+        query = self.db.applicant.find_one({"preferred vacancies": jobID})
+        if query != None:
+            preferred = True
+        else:
+            preferred = False
+
+        applicationData = {"applicant id": applicantID,
+                           "vacancy id": jobID,
+                           "current stage": stage,
+                           "specialized score": score,
+                           "preferred": preferred,
+                           "completed": False}
+        applicationID = self.db.application.insert_one(applicationData).inserted_id
+        return applicationID
+    
+    
+    
+    def updateApplication(self, applicantID, stage, completed):
+        self.db.application.update_one({"applicant id": applicantID}, {"$set": {"stage": stage, "completed": completed}})
+    
+    
     # Return JSON of applicant info populated based on id
     def getApplicantUserID(self, id):
         query = self.db.applicantInfo.find_one({"applicant_id": ObjectId(id)})
@@ -93,6 +116,7 @@ class Mongo:
         else:
             return Jobs[(number-1)*20:((number-1)*20)+20]
 
+
     # Wiil accept a json parameter which will be defined by the input, adds the new job to the DB
     def addNewJob(self, json, clientID):
         skillDic = {}
@@ -104,6 +128,7 @@ class Mongo:
         jobID = self.db.vacancy.insert_one(json).inserted_id
         
         self.db.client.update_one({"_id": clientID}, {"$push": {"vacancies": jobID}})
+
 
 
     # Given an ID return all vacancies an applicant has applied too (including non-preferenced ones)
@@ -167,23 +192,3 @@ class Mongo:
         self.db.application.update_one({"_id": applicationID}, {"$inc": {"current step": 1}}, {"$set": {"completed": False}})
         
 
-clientID = get_db().insertClientUser("testClient", "testPassword", "testSalt")
-get_db().addNewJob({"vacancy title": "title1",
-                    "division": "1",
-                    "role type": "2",
-                    "location": "Germany",
-                    "vacancy description": "abc",
-                    "positions available": 1,
-                    "stages" : [1, 2, 3],
-                    "skills": ["a", "b", "c"],
-                    "skillVals": [1, 2, 3]}, clientID)
-get_db().addNewJob({"vacancy title": "title2",
-                    "division": "2",
-                    "role type": "3",
-                    "location": "UK",
-                    "vacancy description": "zyx",
-                    "positions available": 2,
-                    "stages" : [2, 3, 4],
-                    "skills": ["z", "y", "x"],
-                    "skillVals": [2, 3, 4]}, clientID)
-print(get_db().getClientJobs(clientID))

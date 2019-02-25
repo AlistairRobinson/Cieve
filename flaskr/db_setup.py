@@ -64,6 +64,12 @@ db.db.interviewStage.insert_one({"stage id": 0,
 #    "21/10/20 12:00" : ""
 #}
 
+
+db.db.stage.insert_one({"vacancy id": 0,
+                        "type": 0,
+                        "questions": 0,
+                        "description": 0})
+
 db.db.assessment.insert_one({"stage id": 0,
                              "application id": 0,
                              "correct answers": 0,
