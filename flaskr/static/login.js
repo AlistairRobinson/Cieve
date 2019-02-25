@@ -10,7 +10,7 @@ $(function () {
     $.ajax({
       type: 'post',
       url: '/apl/auth/login',
-      data: {email: emails, email: passwords, _csrf_token: token},
+      data: {email: emails, password: passwords, _csrf_token: token},
       success: function () {
         alert('form was submitted');
       }
