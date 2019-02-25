@@ -126,10 +126,8 @@ class Mongo:
             skillDic[skills[1][i]] = skillVal[1][i]
         json['skills'] = skillDic
         jobID = self.db.vacancy.insert_one(json).inserted_id
-        
+        print "Hey"
         self.db.client.update_one({"_id": clientID}, {"$push": {"vacancies": jobID}})
-
-
 
     # Given an ID return all vacancies an applicant has applied too (including non-preferenced ones)
     def getApplications(self, applicantID):
@@ -191,4 +189,6 @@ class Mongo:
     def moveToNextStage(self, applicationID, jobID):
         self.db.application.update_one({"_id": applicationID}, {"$inc": {"current step": 1}}, {"$set": {"completed": False}})
         
-
+    # Return the total number of pages for a specific job sort
+    def getPageTotal(self, division, role, location):
+        return ""

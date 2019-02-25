@@ -41,7 +41,7 @@ def newJob():
 
        
         error = None
-        
+        """
         if jobTitle == "":
             error = "Empty Job Title"
         
@@ -72,11 +72,11 @@ def newJob():
                     error = "Score out of range"
             else:
                 error = "Score is not a number"
-
+        
         for stage in stages:
             if stage not in get_db().getStages():
                 error = "Wrong stage"
-
+        """
         if error is not None:
             flash(error)
         else:
