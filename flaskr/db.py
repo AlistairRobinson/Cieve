@@ -132,5 +132,11 @@ class Mongo:
                 applications.append(title)
         return applications
 
+#delete all applications older than 6 months along with all application info
+
+#cascade with deleting vacancies and also applications
+
+#retreive all applications older than 6 months
+
 get_db().insertApplicantUser("name", "user", "123", "abc")
 print(get_db().getApplicantAccount("user"))
