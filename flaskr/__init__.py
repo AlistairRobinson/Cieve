@@ -1,9 +1,11 @@
 import os
+import json
 
 from flask import Flask
 from flask import render_template
 from flask import request, session, abort
 from flaskr import csrf
+from flaskr.db import get_db
 
 def create_app(test_config=None):
 
@@ -28,16 +30,16 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    @app.before_request
+    # @app.before_request
     def csrf_protect():
         if request.method == "POST":
             token = session['_csrf_token']
             session['_csrf_token'] = csrf.generate_csrf_token()
             if not token or token != request.form.get('_csrf_token'):
                 abort(403)
-                
-    app.jinja_env.globals['csrf_token'] = csrf.generate_csrf_token 
-    
+
+    app.jinja_env.globals['csrf_token'] = csrf.generate_csrf_token
+
     @app.route('/LandingPage')
     @app.route('/index')
     @app.route('/')
@@ -65,7 +67,9 @@ def create_app(test_config=None):
                 return None
 
             db = get_db()
-            return jsonify(db.getJobs(no, division, role, location))
+            x = (db.getJobs(no, division, role, location))
+            print(x)
+            return json.dumps(x)
         return None
 
     return app
