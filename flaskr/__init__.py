@@ -42,9 +42,11 @@ def create_app(test_config=None):
 
     @app.after_request
     def enforce_security(response):
+        csp = "default-src 'self' https://*.googleapis.com https://*.gstatic.com https://maxcdn.bootstrapcdn.com https://cdnjs.cloudflare.com"
         response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'  # Enforce HTTPS in browser
-        response.headers['X-Frame-Options'] = 'SAMEORIGIN'                                     # Only allow frames from this origin
-        response.headers['Content-Security-Policy'] = "default-src 'self'"                     # Prevent content loading from outside origin
+        response.headers['X-Frame-Options'] = 'SAMEORIGIN'                                     # Only allow HTML frames from this origin
+        response.headers['X-Content-Type-Options'] = 'nosniff'                                 # Prevent browsers from autodetecting content
+        response.headers['Content-Security-Policy'] = csp                                      # Prevent content loading from outside origin
         return response                                                                        # ^ This is very strict and may cause issues, edit if necessary
 
     # Allows templates to set unique CSRF tokens on load
