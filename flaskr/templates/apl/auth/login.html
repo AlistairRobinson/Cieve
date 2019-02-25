@@ -86,7 +86,7 @@
           <div class ="column is-5-tablet is-4-desktop is-4-widescreen">
 
             <form class = "box" action="{{ url_for('auth.applicantLogin') }}" method="POST">
-                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+                <input name="_csrf_token" id="_csrf_token" type=hidden value="{{ csrf_token() }}">
                 <div class = "field has-text-centered">
                   <h5 class="title is-5">Applicant Login</h5>
                 </div>
