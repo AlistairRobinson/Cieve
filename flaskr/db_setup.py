@@ -32,7 +32,7 @@ db.db.accountInfo.insert_one({"username": 0,
 
 db.db.application.insert_one({"applicant id": 0,
                               "vacancy id": 0,
-                              "current stage": 0,
+                              "current step": 0,
                               "specialized score": 0,
                               "preferred": 0,
                               "completed": 0})
@@ -42,9 +42,28 @@ db.db.vacancy.insert_one({"vacancy title": 0,
                           "positions available": 0,
                           "division": 0,
                           "location": 0,
-                          "role type": 0
-                          "stage order": 0,
-                          "applications receieved": 0})
+                          "role type": 0,
+                          "stages" : 0,
+                          "skills": 0})
+
+db.db.stage.insert_one({"type": 0,
+                        "title": 0,
+                        "description": 0})
+
+db.db.questionStage.insert_one({"stage id": 0,
+                                "questions": 0})
+
+#[QUESTIONS [ answer,  (WRONG ANSWERS)]]]
+
+db.db.interviewStage.insert_one({"stage id": 0,
+                                 "slot": 0})
+
+#SLOT
+#{
+#    "DD/MM/YYYY : HH:MM" : APPLICATIONID
+#    "21/10/20 12:00" : ""
+#}
+
 
 db.db.stage.insert_one({"vacancy id": 0,
                         "type": 0,
@@ -56,3 +75,63 @@ db.db.assessment.insert_one({"stage id": 0,
                              "correct answers": 0,
                              "incorrect answers": 0,
                              "score": 0})
+
+db.db.feedbackWeights.insert_one({
+   "Education Weight": 0.3,
+   "Experience Weight": 0.3,
+   "Skills Weight": 0.3,
+   "University experience Weight": 0.3,
+   "Subjects Weight" : 0.7,
+   "Degree Qualification": [
+     {
+       "Qualification": "Physics, MPhys",
+       "Weight": 1
+     },
+     {
+       "Qualification": "Mathematics and Statistics, MMathStat",
+       "Weight": 0.7
+     }
+   ],
+   "Degree Level Weight": 0.3,
+   "University Attended Weight": 0.7,
+   "A-Level Qualifications": [
+     {
+       "Subject": "Mathematics",
+       "Weight": 0.3
+     },
+     {
+       "Subject": "Japanese",
+       "Weight": 0.1
+     }
+   ],
+
+   "Languages weight": 0.6,
+   "Skillset weight": 0.3,
+   "Languages Known": [
+     {
+       "Language": "Visual Basic .NET",
+       "Weight": 1.1
+     },
+     {
+       "Language": "Ruby",
+       "Weight": 0.7
+     }
+   ],
+   "Skills": [
+     {
+       "Skill": "Data Entry",
+       "Weight": 0.3
+     },
+     {
+       "Skill": "Maya",
+       "Weight": 0.2
+     }
+   ],
+
+   "Previous Employment": [
+     {
+       "Position": "Senior Architect",
+       "Weight": 0.3
+     }
+   ]
+ }
