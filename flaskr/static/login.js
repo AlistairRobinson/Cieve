@@ -11,7 +11,7 @@ $(function () {
       type: 'post',
       url: '/apl/auth/login',
       header: {'_csrf_token': token},
-      data: {email: emaisl, email: passwords},
+      data: {email: emails, email: passwords},
       success: function () {
         alert('form was submitted');
       }
