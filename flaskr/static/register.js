@@ -6,11 +6,12 @@ $(function () {
     var names = document.getElementById('regName').value;
     var emails = document.getElementById('regEmail').value;
     var passwords = document.getElementById('regPasswd').value;
+    var token = document.getElementById('_csrf_token').value;
 
     $.ajax({
       type: 'post',
       url: '/apl/auth/register',
-      data: {name: names, email: emails, password: passwords},
+      data: {name: names, email: emails, password: passwords, _csrf_token: token},
       success: function () {
         alert('form was submitted');
       }
