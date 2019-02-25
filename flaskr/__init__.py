@@ -39,8 +39,9 @@ def create_app(test_config=None):
                 abort(403)
 
     @app.after_request
-    def enforce_https(response):
+    def enforce_security(response):
         response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+        response.headers['X-Frame-Options'] = 'SAMEORIGIN'
         return response
 
     # Allows templates to set unique CSRF tokens on load
