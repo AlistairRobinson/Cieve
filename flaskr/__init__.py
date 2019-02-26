@@ -80,13 +80,7 @@ def create_app(test_config=None):
                 return None
 
             db = get_db()
-<<<<<<< HEAD
             return jsonify(db.getJobs(no, division, role, location)).append({"pageTotal" : db.getPageTotal()})
-=======
-            x = (db.getJobs(no, division, role, location))
-            print(x)
-            return json.dumps(x)
->>>>>>> frontend
         return None
 
     return app
