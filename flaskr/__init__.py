@@ -31,12 +31,16 @@ def create_app(test_config=None):
         pass
 
     # @app.before_request
+    # Protects application against CSRF attacks, suspicious post requests will be rejected
+    @app.before_request
     def csrf_protect():
         if request.method == "POST":
             token = session['_csrf_token']
             session['_csrf_token'] = csrf.generate_csrf_token()
             if not token or token != request.form.get('_csrf_token'):
                 abort(403)
+
+    # Allows templates to set unique CSRF tokens on load
 
     app.jinja_env.globals['csrf_token'] = csrf.generate_csrf_token
 
