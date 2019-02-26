@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <link rel="stylesheet" href="../../static/main.css" />
+    <script src="../../static/js/jquery-3.3.1.min.js"></script>
   </head>
   <body>
 
@@ -116,7 +117,7 @@
                 <br><br>
 
                 <form action="" method="POST">
-                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+                <input name=_csrf_token id="_csrf_token" type=hidden value="{{ csrf_token() }}">
 
                   <!-- <div class="field is-grouped is-fullwidth">
                       <div class="control">
@@ -134,7 +135,7 @@
                             <div class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltiptext">What area in the company would you like to work in?</span></div></label>
                           <div class="control">
                               <div class="select is-fullwidth">
-                                  <select name="divisions">
+                                  <select name="divisions" id="divisionDropDown">
                                       <option>Any</option>
                                       <option>Tech</option>
                                       <option>Hr</option>
@@ -147,7 +148,7 @@
                             <div class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltiptext">What role do you want to work as?</span></div></label>
                           <div class="control">
                               <div class="select is-fullwidth">
-                                  <select name="roles">
+                                  <select name="roles" id="roleDropDown">
                                       <option>Any</option>
                                       <option>Full-Time</option>
                                       <option>Grad.</option>
@@ -161,7 +162,7 @@
                             <div class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltiptext">Which country do you want to work in?</span></div></label>
                           <p class="control has-icons-left">
                             <span class="select is-fullwidth">
-                              <select>
+                              <select id="countryDropDown">
                                 <option selected>Any</option>
                                 <option>United Kingdom</option>
                                 <option>America</option>
@@ -176,7 +177,7 @@
                   </div>
               </div>
               <div class="control">
-                <button class="button is-link">Search</button>
+                <button class="button is-link" id="searchBttn">Search</button>
               </div>
                 </form>
 
@@ -184,7 +185,7 @@
 
             <div class="columns">
                 <div class="column">
-                  <b>Search Results</b></b>
+                  <b>Search Results Page 1 of x</b></b>
                 </div>
                 <div class="column">
                   <span class="select is-pulled-right">
@@ -207,10 +208,47 @@
             </div>
 
       </section>
-    </div>
+
+      <script>
+          $(document).ready(function() {
+              var pagenumber = 1;
+              // $('#searchBttn').click(function(e) {
+                  var token = document.getElementById('_csrf_token').value;
+                  var selectedDivision = $('#divisionDropDown').val();
+                  if (selectedDivision == "Any") {
+                    selectedDivision = "";
+                  }
+                  var selectedRole = $('#roleDropDown').val();
+                  if (selectedRole == "Any") {
+                    selectedRole = "";
+                  }
+                  var selectedLocation = $('#countryDropDown').val();
+                  if (selectedLocation == "Any") {
+                    selectedLocation = "";
+                  }
+
+                  $.ajax({
+                      url: '/getJobs',
+                      data: {
+                        page: pagenumber,
+                        division: selectedDivision,
+                        role: selectedRole,
+                        location: selectedLocation,
+                        _csrf_token: token
+                      },
+                      type: 'POST',
+                      success: function(response) {
+                          console.log(response);
+                          alert(response)
+                      },
+                      error: function(error) {
+                          alert("error")
+                          console.log(error);
+                      }
+                  });
+          });
+      </script>
 
 
-    </div>
-  </section
   </body>
 </html>

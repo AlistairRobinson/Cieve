@@ -1,9 +1,11 @@
 import os
+import json
 
 from flask import Flask
 from flask import render_template
 from flask import request, session, abort
 from flaskr import csrf
+from flaskr.db import get_db
 
 def create_app(test_config=None):
 
@@ -28,9 +30,7 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # Protects application against CSRF attacks, suspicious post requests will be rejected
-
-    @app.before_request
+    # @app.before_request
     def csrf_protect():
         if request.method == "POST":
             token = session['_csrf_token']
@@ -80,7 +80,13 @@ def create_app(test_config=None):
                 return None
 
             db = get_db()
+<<<<<<< HEAD
             return jsonify(db.getJobs(no, division, role, location)).append({"pageTotal" : db.getPageTotal()})
+=======
+            x = (db.getJobs(no, division, role, location))
+            print(x)
+            return json.dumps(x)
+>>>>>>> frontend
         return None
 
     return app

@@ -85,7 +85,7 @@
         <div class = "columns is-centered">
           <div class ="column is-5-tablet is-4-desktop is-4-widescreen">
             <form class = "box" action="{{ url_for('auth.cliRegister') }}" method="POST">
-                  <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+                  <input name="_csrf_token" id="_csrf_token" type=hidden value="{{ csrf_token() }}">
                   <input class="input" type="email" id="emailBox" placeholder="e.g. alexjohn-son@gmail.com" name="username">
 
                   <input class="input" type="password" id="psswdBox" placeholder="********" name="password"required>
