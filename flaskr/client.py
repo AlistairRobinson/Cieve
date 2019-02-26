@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for, jsonify
+    Blueprint, flash, g, redirect, render_template, request, url_for, jsonify, session
 )
 from werkzeug.exceptions import abort
 from werkzeug.datastructures import ImmutableMultiDict
@@ -35,13 +35,17 @@ def newJob():
         
         
         data = request.form.to_dict(flat=False)
-        stages = data['Stage_Description']
+        try:
+            stages = data['Stage_Description']
+        except:
+            stages = []
         skills = data['skill']
         skillVal = data['skillVal']
-
-       
-        error = None
         
+        stages.insert(0,"0") #Onboarding Stage
+        
+        error = None
+        """
         if jobTitle == "":
             error = "Empty Job Title"
         
@@ -72,24 +76,24 @@ def newJob():
                     error = "Score out of range"
             else:
                 error = "Score is not a number"
-
+        
         for stage in stages:
             if stage not in get_db().getStages():
                 error = "Wrong stage"
-
+        """
         if error is not None:
             flash(error)
         else:
             db = get_db()
-            json = {jobTitle,
-                    division,
-                    role,
-                    country,
-                    jobDescription,
-                    noVacancies,
-                    stages,
-                    skills,
-                    skillVal}
+            json = {'jobTitle':jobTitle,
+                    'division':division,
+                    'role':role,
+                    'country':country,
+                    'jobDescription':jobDescription,
+                    'noVacancies':noVacancies,
+                    'stages':stages,
+                    'skills':skills,
+                    'skillVal':skillVal}
                     
             # Populate json with job data
             db.addNewJob(json, session.get('user_id')[1:])

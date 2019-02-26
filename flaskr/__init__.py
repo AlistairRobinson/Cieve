@@ -30,8 +30,6 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # @app.before_request
-    # Protects application against CSRF attacks, suspicious post requests will be rejected
     @app.before_request
     def csrf_protect():
         if request.method == "POST":
@@ -40,10 +38,21 @@ def create_app(test_config=None):
             if not token or token != request.form.get('_csrf_token'):
                 abort(403)
 
+    # Enforce security standards in all HTTP responses
+
+    @app.after_request
+    def enforce_security(response):
+        csp = "default-src 'self' 'unsafe-inline' https://*.googleapis.com https://*.gstatic.com https://maxcdn.bootstrapcdn.com https://cdnjs.cloudflare.com https://use.fontawesome.com"
+        response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'  # Enforce HTTPS in browser
+        response.headers['X-Frame-Options'] = 'SAMEORIGIN'                                     # Only allow HTML frames from this origin
+        response.headers['X-Content-Type-Options'] = 'nosniff'                                 # Prevent browsers from autodetecting content
+        response.headers['Content-Security-Policy'] = csp                                      # Prevent content loading from outside origin
+        return response                                                                        # ^ This is very strict and may cause issues, edit if necessary
+
     # Allows templates to set unique CSRF tokens on load
-
-    app.jinja_env.globals['csrf_token'] = csrf.generate_csrf_token
-
+                
+    app.jinja_env.globals['csrf_token'] = csrf.generate_csrf_token 
+    
     @app.route('/LandingPage')
     @app.route('/index')
     @app.route('/')
@@ -71,9 +80,7 @@ def create_app(test_config=None):
                 return None
 
             db = get_db()
-            x = (db.getJobs(no, division, role, location))
-            print(x)
-            return json.dumps(x)
+            return jsonify(db.getJobs(no, division, role, location)).append({"pageTotal" : db.getPageTotal()})
         return None
 
     return app
