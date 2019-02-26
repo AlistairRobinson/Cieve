@@ -30,7 +30,7 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # @app.before_request
+    @app.before_request
     def csrf_protect():
         if request.method == "POST":
             token = session['_csrf_token']
