@@ -64,7 +64,6 @@ db.db.interviewStage.insert_one({"stage id": 0,
 #    "21/10/20 12:00" : ""
 #}
 
-
 db.db.stage.insert_one({"vacancy id": 0,
                         "type": 0,
                         "questions": 0,
@@ -75,3 +74,63 @@ db.db.assessment.insert_one({"stage id": 0,
                              "correct answers": 0,
                              "incorrect answers": 0,
                              "score": 0})
+
+db.db.feedbackWeights.insert_one({
+   "Education Weight": 0.3,
+   "Experience Weight": 0.3,
+   "Skills Weight": 0.3,
+   "University experience Weight": 0.3,
+   "Subjects Weight" : 0.7,
+   "Degree Qualification": [
+     {
+       "Qualification": "Physics, MPhys",
+       "Weight": 1
+     },
+     {
+       "Qualification": "Mathematics and Statistics, MMathStat",
+       "Weight": 0.7
+     }
+   ],
+   "Degree Level Weight": 0.3,
+   "University Attended Weight": 0.7,
+   "A-Level Qualifications": [
+     {
+       "Subject": "Mathematics",
+       "Weight": 0.3
+     },
+     {
+       "Subject": "Japanese",
+       "Weight": 0.1
+     }
+   ],
+
+   "Languages weight": 0.6,
+   "Skillset weight": 0.3,
+   "Languages Known": [
+     {
+       "Language": "Visual Basic .NET",
+       "Weight": 1.1
+     },
+     {
+       "Language": "Ruby",
+       "Weight": 0.7
+     }
+   ],
+   "Skills": [
+     {
+       "Skill": "Data Entry",
+       "Weight": 0.3
+     },
+     {
+       "Skill": "Maya",
+       "Weight": 0.2
+     }
+   ],
+
+   "Previous Employment": [
+     {
+       "Position": "Senior Architect",
+       "Weight": 0.3
+     }
+   ]
+ }
