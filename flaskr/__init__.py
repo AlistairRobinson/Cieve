@@ -63,6 +63,10 @@ def create_app(test_config=None):
     def about():
         return render_template("about.html")
 
+    @app.route('/privacy')
+    def privacy():
+        return render_template("privacy.html")
+
     # Can be called by a AJAX request to return the job data
     # For applications pass 0 to return all jobs
     @app.route('/getJobs', methods=('GET', 'POST'))
