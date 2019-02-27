@@ -83,6 +83,9 @@ class JobActions(object):
                 'country': vacancy['country'],
                 'job_desc': vacancy['job_desc'],
                 'numVacancies': vacancy['numVacancies'],
+                'Stage_Description': vacancy['Stage_Description'],
+                'skill': vacancy['skill'],
+                'skillVal': vacancy['skillVal'],
                 '_csrf_token': token
             }
         )
