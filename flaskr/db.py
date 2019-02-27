@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 from bson.objectid import ObjectId
+from flask import jsonify
 
 def get_db():
     uri = "mongodb+srv://cieve:N3gNW20iJNqwL0fC@cievedatabase-gzmjp.mongodb.net/test?retryWrites=true"
@@ -191,12 +192,9 @@ class Mongo:
         
     # Return the total number of pages for a specific job sort
     def getPageTotal(self, division, role, location):
-        return ""
+        return 0
 #delete all applications older than 6 months along with all application info
 
 #cascade with deleting vacancies and also applications
 
 #retreive all applications older than 6 months
-
-get_db().insertApplicantUser("name", "user", "123", "abc")
-print(get_db().getApplicantAccount("user"))

@@ -4,6 +4,7 @@ import json
 from flask import Flask
 from flask import render_template
 from flask import request, session, abort
+from flask import jsonify
 from flaskr import csrf
 from flaskr.db import get_db
 
@@ -63,6 +64,10 @@ def create_app(test_config=None):
     def about():
         return render_template("about.html")
 
+    @app.route('/privacy')
+    def privacy():
+        return render_template("privacy.html")
+
     # Can be called by a AJAX request to return the job data
     # For applications pass 0 to return all jobs
     @app.route('/getJobs', methods=('GET', 'POST'))
@@ -80,7 +85,9 @@ def create_app(test_config=None):
                 return None
 
             db = get_db()
-            return jsonify(db.getJobs(no, division, role, location)).append({"pageTotal" : db.getPageTotal()})
+            x = db.getJobs(no, division, role, location)
+            x.append({"pageTotal" : db.getPageTotal(division, role, location)})
+            return jsonify(x)
         return None
 
     return app
