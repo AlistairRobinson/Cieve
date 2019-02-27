@@ -96,7 +96,9 @@ class JobActions(object):
         return self._client.post(
             '/apl/newapplication',
             data={
-                # TODO
+                'skills': application['skills'],
+                'jobs': application['jobs'],
+                'other': application['other'],
                 '_csrf_token': token
             }
         )

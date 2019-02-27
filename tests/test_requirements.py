@@ -60,6 +60,8 @@ json['other'] = None
     (json, 'Application post successful'),
 ))
 def test_post_application(client, jobs, data, message):
+    token = csrf.generate_csrf_token_with_session(jobs._client)
+    jobs._client.post('/apl/auth/login', data={'username': '1@1', 'password': '1', '_csrf_token': token})
     response = jobs.apply_to_vacancy(data)
     with jobs._client.session_transaction() as session:
         try:
