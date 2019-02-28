@@ -198,3 +198,7 @@ class Mongo:
 #cascade with deleting vacancies and also applications
 
 #retreive all applications older than 6 months
+    
+    # Return true if a userID exists for either client or applicants
+    def userExists(self, user_id):
+        return ""

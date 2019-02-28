@@ -146,16 +146,17 @@ def clientLogin():
 @bp.before_app_request
 def load_logged_in_user():
     user_id = session.get('user_id')
-
-    if user_id is None:
-        g.user = None
-    elif user_id[0] == "A":
-        g.user = user_id[1:]
-    elif user_id[0] == "C":
-        g.user = user_id[1:]
-    else:
-        g.user = None
-        session['user_id'] = None
+    
+    if get_db().userExists(user_id):
+        if user_id is None:
+            g.user = None
+        elif user_id[0] == "A":
+            g.user = user_id[1:]
+        elif user_id[0] == "C":
+            g.user = user_id[1:]
+        else:
+            g.user = None
+            session['user_id'] = None
 
 @bp.route('/logout')
 def logout():

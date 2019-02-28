@@ -36,7 +36,7 @@ def newApplication():
     others = ""
     if request.method == 'POST':
         skills = request.form['skills']
-        jobs = request.form['jobs'] # Dictionary of jobID to prefered or not (1 or 0)
+        jobs = request.form['jobs']
         other = request.form['other']
         error = None
 
