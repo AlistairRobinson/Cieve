@@ -43,7 +43,7 @@ def create_app(test_config=None):
 
     @app.after_request
     def enforce_security(response):
-        csp = "default-src 'self' 'unsafe-inline' https://*.googleapis.com https://*.gstatic.com https://maxcdn.bootstrapcdn.com https://cdnjs.cloudflare.com https://use.fontawesome.com"
+        csp = "default-src 'self' 'unsafe-inline' https://*.googleapis.com https://*.gstatic.com https://maxcdn.bootstrapcdn.com https://cdnjs.cloudflare.com https://use.fontawesome.com https://cdn.jsdelivr.net"
         response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'  # Enforce HTTPS in browser
         response.headers['X-Frame-Options'] = 'SAMEORIGIN'                                     # Only allow HTML frames from this origin
         response.headers['X-Content-Type-Options'] = 'nosniff'                                 # Prevent browsers from autodetecting content
