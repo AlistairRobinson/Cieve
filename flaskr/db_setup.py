@@ -58,6 +58,10 @@ db.db.questionStage.insert_one({"stage id": 0,
 db.db.interviewStage.insert_one({"stage id": 0,
                                  "slot": 0})
 
+db.db.metaData.insert_one(  { "divisions" : ["Technology", "HR", "Finance"],
+                              "roles" : ["Internship", "Graduate", "Full-Time", "Part-Time"],
+                              "locations" : ["London, United Kingdom", "New York, United States", "Paris, France"]})
+
 #SLOT
 #{
 #    "DD/MM/YYYY : HH:MM" : APPLICATIONID

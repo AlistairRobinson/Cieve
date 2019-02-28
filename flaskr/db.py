@@ -159,7 +159,7 @@ class Mongo:
         stageDic = {}
         query = self.db.stage.find({}, {"title": 1})
         for doc in query:
-            stageDic[doc['_id']] = doc['title']
+            stageDic[str(doc['_id'])] = doc['title']
         return stageDic
 
 
@@ -201,3 +201,22 @@ class Mongo:
     # Return true if a userID exists for either client or applicants
     def userExists(self, user_id):
         return ""
+
+    # Return a list of all divisions
+    def getDivisions(self):
+        return
+
+    def getRoles(self):
+        return
+
+    def getLocations(self):
+        return
+
+    def newDivision(self, division):
+        return
+
+    def newRole(self, role):
+        return
+
+    def newLocation(self, location):
+        return

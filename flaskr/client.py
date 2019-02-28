@@ -49,14 +49,14 @@ def newJob():
         if jobTitle == "":
             error = "Empty Job Title"
         
-        if division not in ["HR", "Technology", "Finance"]:
-            error = "Incorrect Division"
+        if division not in db.getDivisions():
+            db.addDivision(division)
 
-        if role not in ["Full-Time", "Part-Time", "Internship", "Graduate", "Insight Program"]:
-            error = "Incorrect Role"
+        if role not in db.getRoles():
+            db.addRole(role)
 
-        if country not in ["United Kingdom", "United States", "Germany"]:
-            error = "Incorrect Country"
+        if country not in db.getLocations():
+            db.addLocation(country)
 
         if jobDescription == "":
             error = "No Job description"
@@ -82,6 +82,7 @@ def newJob():
                 error = "Wrong stage"
         
         if error is not None:
+            print 
             flash(error)
         else:
             db = get_db()
@@ -100,7 +101,7 @@ def newJob():
             flash("Vacancy post successful")
             return redirect(url_for('client.jobs'))
     # Generate post data and pass to front end
-    return render_template('/cli/createJob.html', stages=stages)
+    return render_template('/cli/createJob.html', stages=stages,divisons = db.getDivisions(), roles = db.getRoles(), locations = db.getLocations())
 
 #Definition for the application
 @bp.route('/jobs')
