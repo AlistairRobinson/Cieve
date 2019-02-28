@@ -4,6 +4,7 @@ import json
 from flask import Flask
 from flask import render_template
 from flask import request, session, abort
+from flask import jsonify
 from flaskr import csrf
 from flaskr.db import get_db
 
@@ -30,7 +31,7 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # @app.before_request
+    @app.before_request
     def csrf_protect():
         if request.method == "POST":
             token = session['_csrf_token']
@@ -38,8 +39,21 @@ def create_app(test_config=None):
             if not token or token != request.form.get('_csrf_token'):
                 abort(403)
 
-    app.jinja_env.globals['csrf_token'] = csrf.generate_csrf_token
+    # Enforce security standards in all HTTP responses
 
+    @app.after_request
+    def enforce_security(response):
+        csp = "default-src 'self' 'unsafe-inline' https://*.googleapis.com https://*.gstatic.com https://maxcdn.bootstrapcdn.com https://cdnjs.cloudflare.com https://use.fontawesome.com"
+        response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'  # Enforce HTTPS in browser
+        response.headers['X-Frame-Options'] = 'SAMEORIGIN'                                     # Only allow HTML frames from this origin
+        response.headers['X-Content-Type-Options'] = 'nosniff'                                 # Prevent browsers from autodetecting content
+        response.headers['Content-Security-Policy'] = csp                                      # Prevent content loading from outside origin
+        return response                                                                        # ^ This is very strict and may cause issues, edit if necessary
+
+    # Allows templates to set unique CSRF tokens on load
+                
+    app.jinja_env.globals['csrf_token'] = csrf.generate_csrf_token 
+    
     @app.route('/LandingPage')
     @app.route('/index')
     @app.route('/')
@@ -49,6 +63,10 @@ def create_app(test_config=None):
     @app.route('/about')
     def about():
         return render_template("about.html")
+
+    @app.route('/privacy')
+    def privacy():
+        return render_template("privacy.html")
 
     # Can be called by a AJAX request to return the job data
     # For applications pass 0 to return all jobs
@@ -67,9 +85,9 @@ def create_app(test_config=None):
                 return None
 
             db = get_db()
-            x = (db.getJobs(no, division, role, location))
-            print(x)
-            return json.dumps(x)
+            x = db.getJobs(no, division, role, location)
+            x.append({"pageTotal" : db.getPageTotal(division, role, location)})
+            return jsonify(x)
         return None
 
     return app

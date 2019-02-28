@@ -14,14 +14,15 @@ def test_cli_login(client, jobs):
 
 # Vacany posting tests (R8, R14)
 
-json = {}                       # TODO
-json['user_id'] = 1
-json['name'] = 'test'
-json['skills'] = 'something'
-
 @pytest.mark.parametrize(('data', 'message'), (
-    (json, 'Vacany post successful'),
-    ({}, 'Vacancy post unsuccessful'),
+    ({
+        'job_title': 'test',
+        'division': 'HR',
+        'roles': 'Graduate',
+        'country': 'Germany',
+        'job_desc': 'test',
+        'numVacancies': 1
+    }, 'Vacany post successful'),
 ))
 def test_post_vacancy(client, jobs, data, message):
     response = jobs.post_vacancy(data)
@@ -34,23 +35,25 @@ def test_post_vacancy(client, jobs, data, message):
     
 # Vacancy retrieval tests (R15)
 
-json = {}           # TODO
-json['user_id'] = 1
-
 def test_get_vacancies(client, jobs):
+    json = {}
+    json['page'] = 0
+    json['division'] = 'HR'
+    json['role'] = 'Graduate'
+    json['location'] = 'Germany'
+    print(json)
     response = jobs.get_vacancies(json)
     assert b'test' in response.data
 
 # Application posting tests (R15)
 
-json = {}                       # TODO
-json['user_id'] = 1
-json['name'] = 'applicant'
-json['skills'] = 'something'
+json = {} # TODO
+json['skills'] = None
+json['jobs'] = None
+json['other'] = None
 
 @pytest.mark.parametrize(('data', 'message'), (
     (json, 'Application post successful'),
-    ({}, 'Application post unsuccessful'),
 ))
 def test_post_application(client, jobs, data, message):
     response = jobs.apply_to_vacancy(data)
@@ -60,12 +63,3 @@ def test_post_application(client, jobs, data, message):
         except KeyError:
             raise AssertionError('nothing flashed')
         assert message in error[1]
-
-# Application retrival tests (R5)
-
-json = {}               # TODO
-json['user_id'] = 1
-
-def test_get_applications(client, jobs):
-    response = jobs.retrieve_application(json)
-    assert b'applicant' in response.data

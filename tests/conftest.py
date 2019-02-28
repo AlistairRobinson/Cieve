@@ -77,7 +77,12 @@ class JobActions(object):
         return self._client.post(
             '/cli/newjob', # TODO
             data={
-                # TODO
+                'job_title': vacancy['job_title'],
+                'divisions': vacancy['division'],
+                'roles': vacancy['roles'],
+                'country': vacancy['country'],
+                'job_desc': vacancy['job_desc'],
+                'numVacancies': vacancy['numVacancies'],
                 '_csrf_token': token
             }
         )
@@ -86,18 +91,7 @@ class JobActions(object):
     def apply_to_vacancy(self, application):
         token = csrf.generate_csrf_token_with_session(self._client)
         return self._client.post(
-            '/apl/apply', # TODO
-            data={
-                # TODO
-                '_csrf_token': token
-            }
-        )
-
-    # Retrieve an application from the database
-    def retrieve_application(self, info):
-        token = csrf.generate_csrf_token_with_session(self._client)
-        return self._client.post(
-            '/cli/applications', # TODO
+            '/apl/newapplication',
             data={
                 # TODO
                 '_csrf_token': token
@@ -108,9 +102,12 @@ class JobActions(object):
     def get_vacancies(self, info):
         token = csrf.generate_csrf_token_with_session(self._client)
         return self._client.post(
-            '/apl/vacancies', # TODO
+            '/getJobs',
             data={
-                # TODO
+                'page': info['page'],
+                'division': info['division'],
+                'role': info['role'],
+                'location': info['location'],
                 '_csrf_token': token
             }
         )
