@@ -85,12 +85,12 @@ def newJob():
             flash(error)
         else:
             db = get_db()
-            json = {'jobTitle':jobTitle,
+            json = {'vacancy title':jobTitle,
                     'division':division,
-                    'role':role,
-                    'country':country,
-                    'jobDescription':jobDescription,
-                    'noVacancies':noVacancies,
+                    'role type':role,
+                    'location':country,
+                    'vacancy description':jobDescription,
+                    'positions available':noVacancies,
                     'stages':stage_list,
                     'skills':skills,
                     'skillVal':skillVal}

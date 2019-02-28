@@ -43,10 +43,11 @@ def test_post_vacancy(client, jobs, data, message):
 def test_get_vacancies(client, jobs):
     json = {}
     json['page'] = 0
-    json['division'] = 'HR'
-    json['role'] = 'Graduate'
-    json['location'] = 'Germany'
+    json['division'] = ''
+    json['role'] = ''
+    json['location'] = ''
     response = jobs.get_vacancies(json)
+    print(response.data)
     assert b'test' in response.data
 
 # Application posting tests (R15)

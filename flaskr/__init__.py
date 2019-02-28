@@ -86,7 +86,10 @@ def create_app(test_config=None):
 
             db = get_db()
             x = db.getJobs(no, division, role, location)
+            for o in x:
+                o['_id'] = str(o['_id'])
             x.append({"pageTotal" : db.getPageTotal(division, role, location)})
+            print(x)
             return jsonify(x)
         return None
 

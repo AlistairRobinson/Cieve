@@ -99,7 +99,7 @@ class Mongo:
     def getJobs(self, number, division, role, location):
         Jobs = []
         number = int(number)
-        queryMaker = {"positions available": {"$gt": 0}}
+        queryMaker = {"positions available": {"$gt": "0"}}
         if division != "":
             queryMaker['division'] = division
 
@@ -108,8 +108,7 @@ class Mongo:
 
         if location != "":
             queryMaker['location'] = location
-
-        query = self.db.vacancy.find(queryMaker, {"_id": 0, "positions available": 0, "applicants recieved": 0})
+        query = self.db.vacancy.find(queryMaker, {"positions available": 0})
         for doc in query:
             Jobs.append(doc)
 
