@@ -7,7 +7,7 @@ from flaskr import db, csrf
 
 def test_cli_login(client, jobs):
     token = csrf.generate_csrf_token_with_session(jobs._client)
-    response = jobs._client.post('/cli/auth/login', data={'username': 'test@test.tet', 'password': '123', '_csrf_token': token})
+    response = jobs._client.post('/cli/auth/login', data={'username': '1@1', 'password': '1', '_csrf_token': token})
     with jobs._client:
         client.get('/')
         assert 'C' in session['user_id']
@@ -21,10 +21,15 @@ def test_cli_login(client, jobs):
         'roles': 'Graduate',
         'country': 'Germany',
         'job_desc': 'test',
-        'numVacancies': 1
-    }, 'Vacany post successful'),
+        'numVacancies': 1,
+        'Stage_Description': [1, 2, 3],
+        'skill': ['Python', 'C'],
+        'skillVal': [7, 6]
+    }, 'Vacancy post successful'),
 ))
 def test_post_vacancy(client, jobs, data, message):
+    token = csrf.generate_csrf_token_with_session(jobs._client)
+    jobs._client.post('/cli/auth/login', data={'username': '1@1', 'password': '1', '_csrf_token': token})
     response = jobs.post_vacancy(data)
     with jobs._client.session_transaction() as session:
         try:
@@ -38,11 +43,11 @@ def test_post_vacancy(client, jobs, data, message):
 def test_get_vacancies(client, jobs):
     json = {}
     json['page'] = 0
-    json['division'] = 'HR'
-    json['role'] = 'Graduate'
-    json['location'] = 'Germany'
-    print(json)
+    json['division'] = ''
+    json['role'] = ''
+    json['location'] = ''
     response = jobs.get_vacancies(json)
+    print(response.data)
     assert b'test' in response.data
 
 # Application posting tests (R15)
@@ -56,6 +61,8 @@ json['other'] = None
     (json, 'Application post successful'),
 ))
 def test_post_application(client, jobs, data, message):
+    token = csrf.generate_csrf_token_with_session(jobs._client)
+    jobs._client.post('/apl/auth/login', data={'username': '1@1', 'password': '1', '_csrf_token': token})
     response = jobs.apply_to_vacancy(data)
     with jobs._client.session_transaction() as session:
         try:

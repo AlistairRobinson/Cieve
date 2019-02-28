@@ -167,6 +167,7 @@ def login_required_A(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None or session.get('user_id')[0] != "A":
+            flash("Authentication error")
             return redirect(url_for('auth.login'))
 
         return view(**kwargs)
@@ -177,6 +178,7 @@ def login_required_C(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None or session.get('user_id')[0] != "C":
+            flash("Authentication error")
             return redirect(url_for('auth.login'))
 
         return view(**kwargs)

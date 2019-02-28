@@ -227,7 +227,7 @@
                             <div class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltiptext">Which country do you want to work in?</span></div></label>
                           <p class="control has-icons-left">
                             <span class="select is-fullwidth">
-                              <select id="countryDropDown">
+                              <select id="unviersityDropDown">
                                 <option selected>Warwick University</option>
                                 <option>Coventry University</option>
                               </select>
@@ -605,7 +605,7 @@
                   <script>
                       $(document).ready(function() {
                           $('#searchBttn').click(function(e) {
-                              var pagenumber = 1;
+                              var pagenumber = 0;
                               var token = document.getElementById('_csrf_token').value;
                               var selectedDivision = $('#divisionDropDown').val();
                               if (selectedDivision == "Any") {
@@ -624,7 +624,6 @@
                                   url: '/getJobs',
                                   data: {
                                     page: pagenumber,
-                                    dataType: "json",
                                     division: selectedDivision,
                                     role: selectedRole,
                                     location: selectedLocation,
@@ -633,9 +632,13 @@
                                   type: 'POST',
                                   success: function(response) {
                                       console.log(response);
-                                      alert(response)
+                                      obj = jQuery.parseJSON(JSON.stringify(response));
+                                      numJobs = obj.length;
+                                      var jobCounter = 1;
                                       $.each(jQuery.parseJSON(JSON.stringify(response)), function(index, element) {
-                                          alert(element["division"]);
+                                          if (jobCounter!=numJobs) {
+                                            $('#jobsTable').append('<tr><td>'+element["vacancy title"]+'</td><td>'+element["location"]+'</td><td><input type="checkbox"></td></tr>');
+                                          }
                                       });
                                   },
                                   error: function(error) {
@@ -648,7 +651,7 @@
                   </script>
 
                   <label class="label">Matching positions:</label>
-                  <table class="table is-fullwidth is-scrollable">
+                  <table class="table is-fullwidth is-scrollable" id="jobsTable">
                   <thead>
                     <tr>
                       <th>Job Title</th>
@@ -657,21 +660,6 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>Lorem ipsum - cell A1</td>
-                      <td>Lorem ipsum - cell B1</td>
-                      <td><input type="checkbox"></td>
-
-                    </tr>
-                    <tr>
-                      <td>Lorem ipsum - cell A2</td>
-                      <td>Lorem ipsum - cell B2</td>
-                      <td><input type="checkbox"></td>
-                    </tr><tr>
-                      <td>Lorem ipsum - cell A3</td>
-                      <td>Lorem ipsum - cell B3</td>
-                      <td><input type="checkbox"></td>
-                    </tr>
 
                   </tbody>
                 </table>

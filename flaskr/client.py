@@ -36,13 +36,13 @@ def newJob():
         
         data = request.form.to_dict(flat=False)
         try:
-            stages = data['Stage_Description']
+            stage_list = data['Stage_Description']
         except:
-            stages = []
+            stage_list = []
         skills = data['skill']
         skillVal = data['skillVal']
         
-        stages.insert(0,"0") #Onboarding Stage
+        stage_list.insert(0,"0") #Onboarding Stage
         
         error = None
         
@@ -62,7 +62,7 @@ def newJob():
             error = "No Job description"
 
         if str.isdigit(str(noVacancies)):
-            if int(noVacancies) > 0:
+            if int(noVacancies) <= 0:
                 error = "Number of vacancies must be positive"
         else:
             error = "Non-integer value for number of vacancies"
@@ -85,18 +85,19 @@ def newJob():
             flash(error)
         else:
             db = get_db()
-            json = {'jobTitle':jobTitle,
+            json = {'vacancy title':jobTitle,
                     'division':division,
-                    'role':role,
-                    'country':country,
-                    'jobDescription':jobDescription,
-                    'noVacancies':noVacancies,
-                    'stages':stages,
+                    'role type':role,
+                    'location':country,
+                    'vacancy description':jobDescription,
+                    'positions available':noVacancies,
+                    'stages':stage_list,
                     'skills':skills,
                     'skillVal':skillVal}
                     
             # Populate json with job data
             db.addNewJob(json, session.get('user_id')[1:])
+            flash("Vacancy post successful")
             return redirect(url_for('client.jobs'))
     # Generate post data and pass to front end
     return render_template('/cli/createJob.html', stages=stages)

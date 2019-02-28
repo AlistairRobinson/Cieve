@@ -113,20 +113,11 @@
             </div>
             <div class="column">
             <h3 class="title is-3">Job Listings</h3>
-                You can <a>view all the open positions</a> or use the following form to narrow down your options.
+                You can <a href="#jobNarrow">view all the open positions below</a> or use the following form to narrow down your options.
                 <br><br>
 
                 <form action="" method="POST">
                 <input name=_csrf_token id="_csrf_token" type=hidden value="{{ csrf_token() }}">
-
-                  <!-- <div class="field is-grouped is-fullwidth">
-                      <div class="control">
-                        <input class="input" type="text" placeholder="Enter any keywords">
-                      </div>
-                      <div class="control">
-                        <button class="button is-link">Search</button>
-                      </div>
-                  </div> -->
 
                   <div class="field">
                   <div class="columns">
@@ -183,7 +174,7 @@
 
             <br>
 
-            <div class="columns">
+            <div class="columns" id="jobNarrow">
                 <div class="column">
                   <b>Search Results Page 1 of x</b></b>
                 </div>
@@ -210,6 +201,23 @@
                   </div>
               </div>
             </div>
+            <br>
+
+            <nav class="pagination" role="navigation" aria-label="pagination">
+              <a class="pagination-previous" title="This is the first page" disabled>Previous</a>
+              <a class="pagination-next" id="nextPage">Next page</a>
+              <ul class="pagination-list">
+                <li>
+                  <a class="pagination-link is-current" aria-label="Page 1" aria-current="page">1</a>
+                </li>
+                <li>
+                  <a class="pagination-link" aria-label="Goto page 2">2</a>
+                </li>
+                <li>
+                  <a class="pagination-link" aria-label="Goto page 3">3</a>
+                </li>
+              </ul>
+            </nav>
 
 
 
@@ -220,7 +228,11 @@
 
       <script>
           $(document).ready(function() {
-              var pagenumber = 1;
+                  var pagenumber=1;
+                  $("#divisionDropDown").change(function () {
+                    var end = this.value;
+                    alert(pagenumber);
+                  });
               // $('#searchBttn').click(function(e) {
                   var token = document.getElementById('_csrf_token').value;
                   var selectedDivision = $('#divisionDropDown').val();
@@ -248,38 +260,18 @@
                       type: 'POST',
                       success: function(response) {
                           console.log(response);
-                          alert(response)
+                          obj = jQuery.parseJSON(JSON.stringify(response));
+                          numJobs = obj.length;
                           var jobCounter = 1;
                           $.each(jQuery.parseJSON(JSON.stringify(response)), function(index, element) {
-                              if (jobCounter%2==0) {
+                              if (jobCounter == numJobs){
+                              }
+                              else if (jobCounter%2==1) {
                                 $('#first10').append(' <div class="box"> <div><h5 class="title is-5">'+element["vacancy title"]+'</h5> '+ element["vacancy description"] + '</div> <span class="tag is-light"><b> Division </b> &nbsp'+element["division"]+'</span> <span class="tag is-light"><b> Role Type </b> &nbsp'+ element["role type"]+'</span> <span class="tag is-light"><b> <i class="fas fa-map-marker-alt"> </i> </b> &nbsp'+ element["location"]+'</span></div>');
                               } else {
                                 $('#second10').append(' <div class="box"> <div><h5 class="title is-5">'+element["vacancy title"]+'</h5> '+ element["vacancy description"] + '</div> <span class="tag is-light"><b> Division </b> &nbsp'+element["division"]+'</span> <span class="tag is-light"><b> Role Type </b> &nbsp'+ element["role type"]+'</span> <span class="tag is-light"><b> <i class="fas fa-map-marker-alt"> </i> </b> &nbsp'+ element["location"]+'</span></div>');
                               }
                               jobCounter++;
-                              // alert(element["division"]);
-                        //       $('#skillsSection').append(` <div class="columns" id="skill` + skillCounter + `">
-              					// 		<div class="column">
-                        //     <label class="label">Skill Name</label>
-                        //     <div class="control">
-                        //         <div class="select is-fullwidth">
-                        //             <select name="skill">
-                        //                 <option>Public Speaking</option>
-                        //                 <option>Excel</option>
-                        //                 <option>Word</option>
-                        //             </select>
-                        //         </div>
-                        //     </div>
-              					// 		</div>
-              					// 		<div class="column">
-              					// 		<label class="label">Proficiency</label>
-              					// 			<div class="control">
-                        //                         <input name="skillVal" id="sliderWithValue" class="slider has-output is-fullwidth is-circle" min="1" max="10" value="1" step="1" type="range">
-                        //                       <output for="sliderWithValue">1</output>
-              					// 			</div>
-              					// 		</div>
-              					// </div>
-              					// 	`);
                           });
                       },
                       error: function(error) {
