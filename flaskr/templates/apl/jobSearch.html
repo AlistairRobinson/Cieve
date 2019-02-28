@@ -240,6 +240,12 @@
                       success: function(response) {
                           console.log(response);
                           alert(response)
+                          $.each(jQuery.parseJSON(JSON.stringify(response)), function(index, element) {
+                              alert(element["division"]);
+                              // $('body').append($('<div>', {
+                              //     text: element.name
+                              // }));
+                          });
                       },
                       error: function(error) {
                           alert("error")
