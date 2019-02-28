@@ -7,6 +7,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <link rel="stylesheet" href="../../static/main.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-steps@2.2.1/dist/css/bulma-steps.min.css">
+    <script src="../../static/js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="../../static/js/bulma-slider.min.js"></script>
+    <link rel="stylesheet" href="../../static/css/bulma-slider.min.css">
+    <link href="../../static/bulma-calendar-master/dist/css/bulma-calendar.min.css" rel="stylesheet">
+    <script src="../../static/bulma-calendar-master/dist/js/bulma-calendar.min.js"></script>
+    <link href="../../static/dist/css/bulma-steps.min.css" rel="stylesheet">
+    <script src="../../static/dist/js/bulma-steps.js"></script>
   </head>
   <body>
 
@@ -117,134 +126,587 @@
               <div class="step-item is-active is-success">
                 <div class="step-marker">1</div>
                 <div class="step-details">
-                  <p class="step-title">Account</p>
+                  <p class="step-title">Personal Details</p>
                 </div>
               </div>
               <div class="step-item">
                 <div class="step-marker">2</div>
                 <div class="step-details">
-                  <p class="step-title">Profile</p>
+                  <p class="step-title">Education</p>
                 </div>
               </div>
               <div class="step-item">
                 <div class="step-marker">3</div>
                 <div class="step-details">
-                  <p class="step-title">Social</p>
+                  <p class="step-title">Employment</p>
                 </div>
               </div>
               <div class="step-item">
                 <div class="step-marker">4</div>
                 <div class="step-details">
+                  <p class="step-title">Attributes</p>
+                </div>
+              </div>
+              <div class="step-item">
+                <div class="step-marker">5</div>
+                <div class="step-details">
+                  <p class="step-title">Job Selector</p>
+                </div>
+              </div>
+              <div class="step-item">
+                <div class="step-marker">6</div>
+                <div class="step-details">
                   <p class="step-title">Finish</p>
                 </div>
               </div>
               <div class="steps-content">
+
                 <div class="step-content has-text-centered is-active">
                   <div class="field is-horizontal">
                     <div class="field-label is-normal">
-                      <label class="label">Username</label>
+                      <label class="label">Phone Number</label>
                     </div>
                     <div class="field-body">
                       <div class="field">
                         <div class="control">
-                          <input class="input" name="username" id="username" type="text" placeholder="Username" autofocus data-validate="require">
+                          <input class="input" id="phoneNumber" type="text" placeholder="Number" autofocus data-validate="require">
                         </div>
                       </div>
                     </div>
                   </div>
                   <div class="field is-horizontal">
                     <div class="field-label is-normal">
-                      <label class="label">Password</label>
+                      <label class="label">Address</label>
                     </div>
                     <div class="field-body">
                       <div class="field">
                         <div class="control has-icon has-icon-right">
-                          <input class="input" type="password" name="password" id="password" placeholder="Password" data-validate="require">
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="field is-horizontal">
-                    <div class="field-label is-normal">
-                      <label class="label">Confirm password</label>
-                    </div>
-                    <div class="field-body">
-                      <div class="field">
-                        <div class="control has-icon has-icon-right">
-                          <input class="input" type="password" name="password_confirm" id="password_confirm" placeholder="Confirm password" data-validate="require">
+                          <textarea class="textarea" placeholder="Textarea"></textarea>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
+
+                <div class="step-content">
+                  <center><h4 class="title is-4">University</h4></center><br>
+
+                  <div class="columns">
+                      <div class="column">
+                          <label class="label">Degree Qualification
+                            <div class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltiptext">What area in the company would you like to work in?</span></div></label>
+                          <p class="control has-icons-left">
+                              <span class="select is-fullwidth">
+                                  <select name="degreeQualification" id="degreeQualification">
+                                      <option>Computer Science</option>
+                                      <option>Mathematics</option>
+                                  </select>
+                              </span>
+                              <span class="icon is-small is-left">
+                                <i class="fas fa-book"></i>
+                              </span>
+                          </p>
+                      </div>
+                      <div class="column">
+                          <label class="label">Degree Level
+                            <div class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltiptext">What role do you want to work as?</span></div></label>
+                          <p class="control has-icons-left">
+                              <span class="select is-fullwidth">
+                                  <select name="degreeLevel" id="degreeLevel">
+                                      <option>1:1</option>
+                                      <option>2:1</option>
+                                  </select>
+                              </span>
+                              <span class="icon is-small is-left">
+                                <i class="fas fa-user-graduate"></i>
+                              </span>
+                          </p>
+                      </div>
+                      <div class="column">
+                          <label class="label">University Attended
+                            <div class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltiptext">Which country do you want to work in?</span></div></label>
+                          <p class="control has-icons-left">
+                            <span class="select is-fullwidth">
+                              <select id="unviersityDropDown">
+                                <option selected>Warwick University</option>
+                                <option>Coventry University</option>
+                              </select>
+                            </span>
+                            <span class="icon is-small is-left">
+                              <i class="fas fa-university"></i>
+                            </span>
+                          </p>
+                      </div>
+                  </div>
+
+
+
+                  <br><center><h4 class="title is-4">A Level Qualifications</h4></center><br>
+
+                  <center>
+                  <div class="table-responsive">
+                       <table class="table is-fullwidth" id="dynamic_field_aLevels">
+                           <tr>
+                                <td><b>A Level</b></td>
+                                <td><b>Grade</b></td>
+                                <td></td>
+                           </tr>
+                            <tr>
+                                 <td><input class="input" type="text" placeholder="A Level Name"></td>
+                                 <td><input class="input" type="text" placeholder="Grade"></td>
+                                 <td><a class="button is-link" name="add" id="add" value="Add Row">Add More</a></td>
+                            </tr>
+                       </table>
+                  </div>
+                </center>
+
+                </div>
+
                 <div class="step-content has-text-centered">
-                  <div class="field is-horizontal">
-                    <div class="field-label is-normal">
-                      <label class="label">Firstname</label>
-                    </div>
-                    <div class="field-body">
-                      <div class="field">
-                        <div class="control">
-                          <input class="input" name="firstname" id="firstname" type="text" placeholder="Firstname" autofocus data-validate="require">
-                        </div>
-                      </div>
-                    </div>
+                  <div class="table-responsive">
+                       <table class="table is-fullwidth" id="dynamic_field_employment">
+                           <tr>
+                                <td><b>Company/Institue</b></td>
+                                <td><b>Position</b></td>
+                                <td><b>Start Date</b></td>
+                                <td><b>End Date <div class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltiptext">If you are still employeed, please leave blank.</span></div></b></td>
+                                <td><b></b></td>
+                                <td></td>
+                           </tr>
+                            <tr>
+                                 <td><input class="input" type="text" placeholder="Company/Institute Name"></td>
+                                 <td><input class="input" type="text" placeholder="Position"></td>
+                                 <td><input type="date"></td>
+                                 <td><input type="date"></td>
+                                 <td><a class="button is-link" name="add" id="addEmployment" value="Add Row">Add More</a></td>
+                            </tr>
+                       </table>
                   </div>
-                  <div class="field is-horizontal">
-                    <div class="field-label is-normal">
-                      <label class="label">Last name</label>
-                    </div>
-                    <div class="field-body">
-                      <div class="field">
-                        <div class="control has-icon has-icon-right">
-                          <input class="input" type="text" name="lastname" id="lastname" placeholder="Last name" data-validate="require">
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="field is-horizontal">
-                    <div class="field-label is-normal">
-                      <label class="label">Email</label>
-                    </div>
-                    <div class="field-body">
-                      <div class="field">
-                        <div class="control has-icon has-icon-right">
-                          <input class="input" type="email" name="email" id="email" placeholder="Email" data-validate="require">
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <!-- <script>
+                  // Initialize all input of date type.
+                  bulmaCalendar.attach();
+                  </script> -->
+                  <script>
+                   $(document).ready(function(){
+                         var i=1;
+                         $('#add').click(function(){
+                              i++;
+                              $('#dynamic_field_aLevels').append('<tr id="row'+i+'"><td><input class="input" type="text" placeholder="A Level Name"></td><td><input class="input" type="text" placeholder="Grade"></td><td><a class="button is-danger btn_remove" name="remove" id="'+i+'">X</a></td></tr>');
+                         });
+
+                        $('#addEmployment').click(function(){
+                             i++;
+                             $('#dynamic_field_employment').append('<tr id="row'+i+'"><td><input class="input" type="text" placeholder="Company/Institute Name"></td><td><input class="input" type="text" placeholder="Position"></td><td><input class="input" type="text" placeholder="Length of Employment"></td><td><a class="button is-danger btn_employment_remove" name="remove" id="'+i+'">X</a></td></tr>');
+                        });
+
+                        $(document).on('click', '.btn_employment_remove', function(){
+                             var button_id = $(this).attr("id");
+                             $('#row'+button_id+'').remove();
+                        });
+                        $(document).on('click', '.btn_remove', function(){
+                             var button_id = $(this).attr("id");
+                             $('#row'+button_id+'').remove();
+                        });
+                   });
+                   </script>
                 </div>
-                <div class="step-content has-text-centered">
-                  <div class="field is-horizontal">
-                    <div class="field-label is-normal">
-                      <label class="label">Facebook account</label>
-                    </div>
-                    <div class="field-body">
-                      <div class="field">
-                        <div class="control">
-                          <input class="input" name="facebook" id="facebook" type="text" placeholder="Facebook account url" autofocus data-validate="require">
-                        </div>
+
+
+                <div class="step-content">
+                  <center><h4 class="title is-4">Languages</h4></center><br>
+                  <div class="field" id="languagesSection">
+                      <div class="columns">
+                          <div class="column">
+                              <label class="label">Language Name</label>
+                              <div class="control">
+                                  <div class="select is-fullwidth">
+                                      <select name="skill">
+                                          <option>Python</option>
+                                          <option>Java</option>
+                                          <option>Haskell</option>
+                                          <option>C</option>
+                                          <option>HTML</option>
+                                          <option>CSS</option>
+                                          <option>javascript</option>
+                                          <option>PHP</option>
+                                          <option>C++</option>
+                                      </select>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="column">
+                              <label class="label">Proficiency <div class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltiptext">Rate your experience on a scale from 1 to 10 where 1 is a beginner and 10 is expert. 1 is new to the language.</span></div></label>
+                              <div class="control">
+                                <input name="skillVal" id="sliderWithValue" class="slider has-output is-fullwidth is-circle" min="1" max="10" value="1" step="1" type="range">
+                                <output for="sliderWithValue">1</output>
+                              </div>
+                          </div>
                       </div>
-                    </div>
                   </div>
-                  <div class="field is-horizontal">
-                    <div class="field-label is-normal">
-                      <label class="label">Twitter account</label>
-                    </div>
-                    <div class="field-body">
-                      <div class="field">
-                        <div class="control">
-                          <input class="input" name="twitter" id="twitter" type="text" placeholder="Twitter account url" autofocus data-validate="require">
-                        </div>
+                  <div class="field is-grouped ">
+                      <p class="control">
+                          <a class="button is-primary" id="add-language">
+                  Add Language
+                </a>
+                      </p>
+                      <p class="control">
+                          <a class="button is-light" id="delete-language">
+                  Delete Language
+                </a>
+                      </p>
+                  </div>
+
+                  <br><center><h4 class="title is-4">Skills</h4></center><br>
+                  <div class="field" id="skillsSection">
+                      <div class="columns">
+                          <div class="column">
+                              <label class="label">Skill Name</label>
+                              <div class="control">
+                                  <div class="select is-fullwidth">
+                                      <select name="skill">
+                                          <option>Public Speaking</option>
+                                          <option>Excel</option>
+                                          <option>Word</option>
+                                      </select>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="column">
+                              <label class="label">Proficiency <div class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltiptext">Rate your experience on a scale from 1 to 10 where 1 is a beginner and 10 is expert. 1 is new to the language.</span></div></label>
+                              <div class="control">
+                                <input name="skillVal" id="sliderWithValue" class="slider has-output is-fullwidth is-circle" min="1" max="10" value="1" step="1" type="range">
+                                <output for="sliderWithValue">1</output>
+                              </div>
+                          </div>
                       </div>
-                    </div>
                   </div>
+                  <div class="field is-grouped ">
+                      <p class="control">
+                          <a class="button is-primary" id="add-skill">
+                  Add Skill
+                </a>
+                      </p>
+                      <p class="control">
+                          <a class="button is-light" id="delete-skill">
+                  Delete Skill
+                </a>
+                      </p>
+                  </div>
+
                 </div>
-                <div class="step-content has-text-centered">
-                  <h1 class="title is-4">Your account is now created!</h1>
+                <script>
+                    $(document).ready(function() {
+                        var languageCounter = 1;
+                        var skillCounter = 1;
+                        $('#add-language').click(function(e) {
+                            $('#languagesSection').append(`		<div class="columns" id="language` + languageCounter + `">
+            							<div class="column">
+            							<label class="label">Language Name</label>
+            								<div class="control">
+            									<div class="select is-fullwidth">
+            										<select name="skill">
+            											<option>Python</option>
+            											<option>Java</option>
+            											<option>Haskell</option>
+            											<option>C</option>
+            											<option>HTML</option>
+            											<option>CSS</option>
+            											<option>javascript</option>
+            											<option>PHP</option>
+            											<option>C++</option>
+            										</select>
+            									</div>
+            								</div>
+            							</div>
+            							<div class="column">
+            							<label class="label">Proficiency</label>
+            								<div class="control">
+                                              <input name="skillVal" id="sliderWithValue" class="slider has-output is-fullwidth is-circle" min="1" max="10" value="1" step="1" type="range">
+                                            <output for="sliderWithValue">1</output>
+            								</div>
+            							</div>
+            					</div>
+            						`);
+                            languageCounter++;
+
+                        });
+
+                        $('#add-skill').click(function(e) {
+                            $('#skillsSection').append(`		<div class="columns" id="skill` + skillCounter + `">
+            							<div class="column">
+                          <label class="label">Skill Name</label>
+                          <div class="control">
+                              <div class="select is-fullwidth">
+                                  <select name="skill">
+                                      <option>Public Speaking</option>
+                                      <option>Excel</option>
+                                      <option>Word</option>
+                                  </select>
+                              </div>
+                          </div>
+            							</div>
+            							<div class="column">
+            							<label class="label">Proficiency</label>
+            								<div class="control">
+                                              <input name="skillVal" id="sliderWithValue" class="slider has-output is-fullwidth is-circle" min="1" max="10" value="1" step="1" type="range">
+                                            <output for="sliderWithValue">1</output>
+            								</div>
+            							</div>
+            					</div>
+            						`);
+                            skillCounter++;
+
+                        });
+
+                        $('body').on('click', '#delete-language', function(e) {
+                            e.preventDefault();
+                            $('#language' + (languageCounter - 1)).remove();
+                            languageCounter--;
+                        });
+
+                        $('body').on('click', '#delete-skill', function(e) {
+                            e.preventDefault();
+                            $('#skill' + (skillCounter - 1)).remove();
+                            skillCounter--;
+                        });
+
+                        $(document).on('change', 'input.slider',function () {
+                            $(this).next().html($(this).val());
+                        });
+                    });
+
+                    // Find output DOM associated to the DOM element passed as parameter
+                    function findOutputForSlider(element) {
+                        var idVal = element.id;
+                        outputs = document.getElementsByTagName('output');
+                        for (var i = 0; i < outputs.length; i++) {
+                            if (outputs[i].htmlFor == idVal)
+                                return outputs[i];
+                        }
+                    }
+
+                    function getSliderOutputPosition(slider) {
+                        // Update output position
+                        var newPlace,
+                            minValue;
+
+                        var style = window.getComputedStyle(slider, null);
+                        // Measure width of range input
+                        sliderWidth = parseInt(style.getPropertyValue('width'), 10);
+
+                        // Figure out placement percentage between left and right of input
+                        if (!slider.getAttribute('min')) {
+                            minValue = 0;
+                        } else {
+                            minValue = slider.getAttribute('min');
+                        }
+                        var newPoint = (slider.value - minValue) / (slider.getAttribute('max') - minValue);
+
+                        // Prevent bubble from going beyond left or right (unsupported browsers)
+                        if (newPoint < 0) {
+                            newPlace = 0;
+                        } else if (newPoint > 1) {
+                            newPlace = sliderWidth;
+                        } else {
+                            newPlace = sliderWidth * newPoint;
+                        }
+
+                        return {
+                            'position': newPlace + 'px'
+                        }
+                    }
+
+                    document.addEventListener('DOMContentLoaded', function() {
+                        // Get all document sliders
+                        var sliders = document.querySelectorAll('input[type="range"].slider');
+                        [].forEach.call(sliders, function(slider) {
+                            var output = findOutputForSlider(slider);
+                            if (output) {
+                                if (slider.classList.contains('has-output-tooltip')) {
+                                    // Get new output position
+                                    var newPosition = getSliderOutputPosition(slider);
+
+                                    // Set output position
+                                    output.style['left'] = newPosition.position;
+                                }
+
+                                // Add event listener to update output when slider value change
+                                slider.addEventListener('input', function(event) {
+                                    if (event.target.classList.contains('has-output-tooltip')) {
+                                        // Get new output position
+                                        var newPosition = getSliderOutputPosition(event.target);
+
+                                        // Set output position
+                                        output.style['left'] = newPosition.position;
+                                    }
+
+                                    // Update output with slider value
+                                    output.value = event.target.value;
+                                });
+                            }
+                        });
+                    });
+                </script>
+
+                <div class="step-content">
+                  <div class="field">
+                      <div class="columns">
+                          <div class="column">
+                              <label class="label">Division
+                                <div class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltiptext">What area in the company would you like to work in?</span></div></label>
+                              <div class="control">
+                                  <div class="select is-fullwidth">
+                                      <select name="divisions" id="divisionDropDown">
+                                          <option>Any</option>
+                                          <option>Tech</option>
+                                          <option>Hr</option>
+                                      </select>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="column">
+                              <label class="label">Role
+                                <div class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltiptext">What role do you want to work as?</span></div></label>
+                              <div class="control">
+                                  <div class="select is-fullwidth">
+                                      <select name="roles" id="roleDropDown">
+                                          <option>Any</option>
+                                          <option>Full-Time</option>
+                                          <option>Grad.</option>
+                                          <option>Intern</option>
+                                      </select>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="column">
+                              <label class="label">Country
+                                <div class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltiptext">Which country do you want to work in?</span></div></label>
+                              <p class="control has-icons-left">
+                                <span class="select is-fullwidth">
+                                  <select id="countryDropDown">
+                                    <option selected>Any</option>
+                                    <option>United Kingdom</option>
+                                    <option>America</option>
+                                    <option>France</option>
+                                  </select>
+                                </span>
+                                <span class="icon is-small is-left">
+                                  <i class="fas fa-globe"></i>
+                                </span>
+                              </p>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="control">
+                    <button class="button is-link" id="searchBttn">Search</button>
+                  </div>
+                  <br>
+                  <input name=_csrf_token id="_csrf_token" type=hidden value="{{ csrf_token() }}">
+                  <script>
+                      $(document).ready(function() {
+                          $('#searchBttn').click(function(e) {
+                              var pagenumber = 0;
+                              var token = document.getElementById('_csrf_token').value;
+                              var selectedDivision = $('#divisionDropDown').val();
+                              if (selectedDivision == "Any") {
+                                selectedDivision = "";
+                              }
+                              var selectedRole = $('#roleDropDown').val();
+                              if (selectedRole == "Any") {
+                                selectedRole = "";
+                              }
+                              var selectedLocation = $('#countryDropDown').val();
+                              if (selectedLocation == "Any") {
+                                selectedLocation = "";
+                              }
+
+                              $.ajax({
+                                  url: '/getJobs',
+                                  data: {
+                                    page: pagenumber,
+                                    division: selectedDivision,
+                                    role: selectedRole,
+                                    location: selectedLocation,
+                                    _csrf_token: token
+                                  },
+                                  type: 'POST',
+                                  success: function(response) {
+                                      console.log(response);
+                                      obj = jQuery.parseJSON(JSON.stringify(response));
+                                      numJobs = obj.length;
+                                      var jobCounter = 1;
+                                      $.each(jQuery.parseJSON(JSON.stringify(response)), function(index, element) {
+                                          if (jobCounter!=numJobs) {
+                                            $('#jobsTable').append('<tr><td>'+element["vacancy title"]+'</td><td>'+element["location"]+'</td><td><input type="checkbox"></td></tr>');
+                                          }
+                                      });
+                                  },
+                                  error: function(error) {
+                                      alert("error")
+                                      console.log(error);
+                                  }
+                              });
+                            });
+                      });
+                  </script>
+
+                  <label class="label">Matching positions:</label>
+                  <table class="table is-fullwidth is-scrollable" id="jobsTable">
+                  <thead>
+                    <tr>
+                      <th>Job Title</th>
+                      <th>Location</th>
+                      <th>Select</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+
+                  </tbody>
+                </table>
                 </div>
+
+                <div class="step-content">
+                  <div>
+                  <h4 class="title is-4">Your application is almost complete...</h4>
+                   Before you submit your application you can provide a cover letter along with an interesting fact about yourself.
+                 </div> <br>
+
+                  <div class="field is-horizontal">
+                     <div class="field-label -is-normal">
+                       <label class="label">Cover Letter</label>
+                     </div>
+                     <div class="field-body">
+                       <div class="field">
+                         <div class="control has-icon has-icon-right">
+                           <textarea class="textarea" placeholder="Cover Letter"></textarea>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                  <div class="field is-horizontal">
+                     <div class="field-label -is-normal">
+                       <label class="label">Interesting Facts</label>
+                     </div>
+                     <div class="field-body">
+                       <div class="field">
+                         <div class="control has-icon has-icon-right">
+                           <textarea class="textarea" placeholder="Interesting Facts"></textarea>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+
+                <center>
+                <a class="button is-success">Submit Application</a>
+                </center>
+
+                </div>
+
+
               </div>
+
+
+
               <div class="steps-actions">
                 <div class="steps-action">
                   <a href="#" data-nav="previous" class="button is-light">Previous</a>
@@ -254,226 +716,20 @@
                 </div>
               </div>
             </div>
+            <script src="https://cdn.jsdelivr.net/npm/bulma-steps@2.2.1/dist/js/bulma-steps.js"></script>
+            <script>document.addEventListener("DOMContentLoaded", function(event) {
+                      console.log("DOM fully loaded and parsed");
+                      bulmaSteps.attach();
+                    }); //bulmaCalendar.attach();</script>
 
                 <form action="{{ url_for('applicant.newApplication') }}" method="POST">
-                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
-                <h4 class="title is-4">Personal details</h4>
-
-                <div class="field">
-                  <label class="label">Name</label>
-                  <div class="control">
-                    <input class="input" type="text" placeholder="John Doe">
-                  </div>
-                </div>
-
-                <div class="field">
-                  <label class="label">Address</label>
-                  <div class="control">
-                    <textarea class="textarea" placeholder="Textarea"></textarea>
-                  </div>
-                </div>
 
 
-                <h4 class="title is-4">Job Selector</h4>
-                <div class="field">
-                    <div class="columns">
-                        <div class="column">
-                            <label class="label">Division
-                              <div class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltiptext">What area in the company would you like to work in?</span></div></label>
-                            <div class="control">
-                                <div class="select is-fullwidth">
-                                    <select name="divisions">
-                                        <option>Any</option>
-                                        <option>Tech</option>
-                                        <option>Hr</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="column">
-                            <label class="label">Role
-                              <div class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltiptext">What role do you want to work as?</span></div></label>
-                            <div class="control">
-                                <div class="select is-fullwidth">
-                                    <select name="roles">
-                                        <option>Any</option>
-                                        <option>Full-Time</option>
-                                        <option>Grad.</option>
-                                        <option>Intern</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="column">
-                            <label class="label">Country
-                              <div class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltiptext">Which country do you want to work in?</span></div></label>
-                            <p class="control has-icons-left">
-                              <span class="select is-fullwidth">
-                                <select>
-                                  <option selected>Any</option>
-                                  <option>United Kingdom</option>
-                                  <option>America</option>
-                                  <option>France</option>
-                                </select>
-                              </span>
-                              <span class="icon is-small is-left">
-                                <i class="fas fa-globe"></i>
-                              </span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="control">
-                  <button class="button is-link">Search</button>
-                </div>
-                <br>
-
-                <label class="label">Matching positions:</label>
-                <table class="table is-fullwidth is-scrollable">
-                <thead>
-                  <tr>
-                    <th>Job Title</th>
-                    <th>Location</th>
-                    <th>Select</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Lorem ipsum - cell A1</td>
-                    <td>Lorem ipsum - cell B1</td>
-                    <td><input type="checkbox"></td>
-
-                  </tr>
-                  <tr>
-                    <td>Lorem ipsum - cell A2</td>
-                    <td>Lorem ipsum - cell B2</td>
-                    <td><input type="checkbox"></td>
-                  </tr><tr>
-                    <td>Lorem ipsum - cell A3</td>
-                    <td>Lorem ipsum - cell B3</td>
-                    <td><input type="checkbox"></td>
-                  </tr>
-
-                </tbody>
-              </table>
-
-              <!-- <label class="checkbox">
-                <input type="checkbox">
-                I would like to be considered for other roles.
-              </label> -->
-
-              <h4 class="title is-4">Your Skills</h4>
-              <div class="field" id="row">
-                  <div class="columns">
-                      <div class="column">
-                          <label class="label">Skill</label>
-                          <div class="control">
-                              <div class="select is-fullwidth">
-                                  <select name="skill[]">
-                                      <option>Python</option>
-                                      <option>Java</option>
-                                      <option>Haskell</option>
-                                      <option>C</option>
-                                      <option>HTML</option>
-                                      <option>CSS</option>
-                                      <option>javascript</option>
-                                      <option>PHP</option>
-                                      <option>C++</option>
-                                  </select>
-                              </div>
-                          </div>
-                      </div>
-                      <div class="column">
-                          <label class="label">Proficiency</label>
-                          <div class="control">
-                              <div class="select is-fullwidth">
-                                  <select name="prof[]">
-                                      <option>Beginner</option>
-                                      <option>Intermediate</option>
-                                      <option>Advanced</option>
-                                  </select>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-
-              <div class="field is-grouped ">
-                  <p class="control">
-                      <a class="button is-primary" id="add-skill">
-              Add Skill
-            </a>
-                  </p>
-                  <p class="control">
-                      <a class="button is-light" id="delete-skill">
-              Delete Skill
-            </a>
-                  </p>
-              </div>
-
-              <div class="field">
-                  <div class="control">
-                      <div class="box has-text-centered is-shadowless">
-
-                          <button class="button is-info">
-                              Submit Application
-                          </button>
-                      </div>
-                  </div>
-              </div>
 
             </div>
 
       </section>
     </div>
-
-      <!-- <div class = "container">
-        <div class = "columns is-centered">
-          <div class ="column is-5-tablet is-4-desktop is-4-widescreen">
-            <form class = "box">
-              <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
-              <div class = "field has-text-centered">
-                <img src = "Cieve.png" width="150">
-              </div>
-              <div class="field">
-                <label class="label">Email</label>
-                <div class="control has-icons-left">
-                  <input class="input" type="email" placeholder="e.g. alexjohn-son@gmail.com" >
-                  <span class="icon is-small is-left">
-                    <i class="fa fa-envelope"></i>
-                  </span>
-                </div>
-              </div>
-              <div class="field">
-                <label class="label">Password</label>
-                <div class="control has-icons-left">
-                  <input class="input" type="password" placeholder="********" required>
-                  <span class="icon is-small is-left">
-                    <i class="fa fa-lock"></i>
-                  </span>
-                </div>
-              </div>
-
-              <div class="field">
-                <button class="button is-success is-fullwidth">
-                  Login
-                </button>
-              </div>
-
-              <center><a class="button is-text">Forgot password?</a></center>
-              <div>
-                <center>
-                  Don't have an account?
-                  <a href="url"><u>Sign up<u></a>
-                </center>
-              </div>
-
-
-
-            </form>
-          </div>
-        </div>
-      </div> -->
 
     </div>
   </section
