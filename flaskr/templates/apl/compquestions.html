@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Questions</title>
+		<link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.0/css/bulma.min.css">
+		<script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+		<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='bulma-checkradio.min.css') }}">
+        <!-- <link rel="stylesheet" href="styles/debug.css"> -->
+	</head>
+	<body>
+		<nav class="navbar has-shadow">
+			<div class="container">
+				<div class="navbar-brand">
+						<a class="navbar-item" href="/cli">
+								<img src="../../static/CieveNavBar.png" alt="Cieve: an automated applicant solution">
+						</a>
+						<div class="navbar-burger burger" data-target="navMenuColorprimary-example">
+								<span></span>
+								<span></span>
+								<span></span>
+						</div>
+				</div>
+
+				<div id="navMenuColorprimary-example" class="navbar-menu">
+
+						<div class="navbar-start">
+							<a class="navbar-item" href="/cli">
+								<strong>Home</strong>
+							</a>
+
+							<a class="navbar-item" href="/about">
+								About
+							</a>
+						</div>
+
+						<div class="navbar-end">
+
+								<div class="navbar-item has-dropdown is-hoverable">
+										<a class="navbar-link" href="#">
+												Josh Hankins
+										</a>
+										<div class="navbar-dropdown">
+												<a class="navbar-item is-leveled " href="#">
+														<span class="icon ">
+																		<i class="fa fa-user-circle "></i>
+																</span>
+														Edit Details
+												</a>
+												<a class="navbar-item is-leveled " href="# ">
+														<span class="icon ">
+																		<i class="fa fa-key "></i>
+																</span>
+														Change Password
+												</a>
+												<a class="navbar-item is-leveled " href="/logout">
+														<span class="icon ">
+																		<i class="fa fa-sign-out-alt"></i>
+																</span>
+														Sign Out
+												</a>
+										</div>
+								</div>
+						</div>
+				</div>
+				</div>
+		</nav>
+		<section class="section">
+			<div class="container">
+				<h1 class="title">
+					Division specific questions
+				</h1>
+        <form>
+
+        {%for question in questions%}
+        <div class="field">
+          <label class="label">{{question.Number}}) {{question.Question}}</label>
+          {% if question.Possibleansw|length ==0%}
+          <div class="control">
+
+            <input class="textarea" placeholder="Enter Your Answer" name="Question{{question.Number}}">
+          </div>
+          {% else %}
+          <div class="control">
+						<div class="field">
+            {% for option in question.Possibleansw%}
+						<input class="is-checkradio" id="{{question.Number}},{{option}}" type="radio" name="Question{{question.Number}}">
+						<label for="{{question.Number}},{{option}}">{{option}}</label>
+            {%endfor%}
+					</div>
+          </div>
+          {% endif %}
+        </div>
+        {%endfor%}
+				<div class="field">
+                        <div class="control">
+                            <div class="box has-text-centered is-shadowless">
+
+                                <button class="button is-success is-large">
+                                    Submit
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+        </form>
+			</div>
+		</section>
+	</body>
+</html>
