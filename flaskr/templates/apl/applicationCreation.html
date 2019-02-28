@@ -633,11 +633,9 @@
                                   type: 'POST',
                                   success: function(response) {
                                       console.log(response);
-                                      $.each(jQuery.parseJSON(response), function(index, element) {
-                                          alert(element["vacancy title"]);
-                                          // $('body').append($('<div>', {
-                                          //     text: element.name
-                                          // }));
+                                      alert(response)
+                                      $.each(jQuery.parseJSON(JSON.stringify(response)), function(index, element) {
+                                          alert(element["division"]);
                                       });
                                   },
                                   error: function(error) {
@@ -679,8 +677,48 @@
                 </table>
                 </div>
 
+                <div class="step-content">
+                  <div>
+                  <h4 class="title is-4">Your application is almost complete...</h4>
+                   Before you submit your application you can provide a cover letter along with an interesting fact about yourself.
+                 </div> <br>
+
+                  <div class="field is-horizontal">
+                     <div class="field-label -is-normal">
+                       <label class="label">Cover Letter</label>
+                     </div>
+                     <div class="field-body">
+                       <div class="field">
+                         <div class="control has-icon has-icon-right">
+                           <textarea class="textarea" placeholder="Cover Letter"></textarea>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                  <div class="field is-horizontal">
+                     <div class="field-label -is-normal">
+                       <label class="label">Interesting Facts</label>
+                     </div>
+                     <div class="field-body">
+                       <div class="field">
+                         <div class="control has-icon has-icon-right">
+                           <textarea class="textarea" placeholder="Interesting Facts"></textarea>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+
+                <center>
+                <a class="button is-success">Submit Application</a>
+                </center>
+
+                </div>
+
 
               </div>
+
+
+
               <div class="steps-actions">
                 <div class="steps-action">
                   <a href="#" data-nav="previous" class="button is-light">Previous</a>
@@ -697,7 +735,6 @@
                     }); //bulmaCalendar.attach();</script>
 
                 <form action="{{ url_for('applicant.newApplication') }}" method="POST">
-                <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
 
 
 
