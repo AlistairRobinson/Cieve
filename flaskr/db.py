@@ -108,7 +108,7 @@ class Mongo:
 
         if location != "":
             queryMaker['location'] = location
-        query = self.db.vacancy.find(queryMaker, {"positions available": 0})
+        query = self.db.vacancy.find(queryMaker, {"positions available": 0, "skills": 0})
         for doc in query:
             Jobs.append(doc)
 
