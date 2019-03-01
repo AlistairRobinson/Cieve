@@ -134,8 +134,9 @@ class Mongo:
         return applications
 
 
-    def applyJob(self, userID, jobID, preferred, score):
+    def applyJob(self, userID, username, jobID, preferred, score):
         self.db.application.insert_one({"applicant id": userID,
+                                        "username": username,
                                         "vacancy id": jobID,
                                         "preferred": preferred,
                                         "specialized score": score,
@@ -215,6 +216,7 @@ class Mongo:
     def newLocation(self, location):
         return
 
+<<<<<<< HEAD
     # Return the id's of the stages of type "Interview"
     def getInterviewStages():
         return
@@ -222,3 +224,21 @@ class Mongo:
     def insertStageAvailability():
         return
                 
+=======
+    def deleteApplicantAccount(self, username):
+        query = self.db.applicantInfo.delete_many({"username": username})
+        query = self.db.application.delete_many({"username": username})
+        return True
+
+    def deleteClientAccount(self, username):
+        query = self.db.client.delete_many({"username": username})
+        return True
+
+    def deleteApplication(self, username):
+        query = self.db.application.delete_many({"username": username})
+        return True
+
+    def deleteJob(self, title):
+        query = self.db.vacancy.delete_many({"vacancy title": title})
+        return True
+>>>>>>> ac1d91cf2a4740f20d64570ed7923b44240f1b62

@@ -1,6 +1,7 @@
 import pytest
 from flask import g, session, flash
 from flaskr import csrf
+from flaskr.db import get_db
 
 # Client login tests (R1)
 
@@ -69,7 +70,7 @@ def test_register_validate_input(client, auth, username, password, message):
     ('abc', '[%24ne]=', 'Incorrect username or password'),
     ('abc', '{"&gt": ""}', 'Incorrect username or password'),
 ))
-def test_cli_login(client, auth, username, password, message):
+def test_cli_nosql_injection(client, auth, username, password, message):
     token = csrf.generate_csrf_token_with_session(auth._client)
     auth._client.post('/cli/auth/login', data={'username': username, 'password': password, '_csrf_token': token})
     with auth._client.session_transaction() as session:
@@ -78,3 +79,7 @@ def test_cli_login(client, auth, username, password, message):
         except KeyError:
             raise AssertionError('nothing flashed')
         assert message in error[1]
+
+def test_cleanup(client, auth):
+    db = get_db()
+    assert db.deleteApplicantAccount("test")
