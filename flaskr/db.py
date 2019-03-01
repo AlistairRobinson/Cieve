@@ -1,6 +1,9 @@
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from flask import jsonify
+from datetime import date
+from dateutil.relativedelta import relativedelta
+
 
 def get_db():
     uri = "mongodb+srv://cieve:N3gNW20iJNqwL0fC@cievedatabase-gzmjp.mongodb.net/test?retryWrites=true"
@@ -67,7 +70,8 @@ class Mongo:
                            "current stage": stage,
                            "specialized score": score,
                            "preferred": preferred,
-                           "completed": False}
+                           "completed": False
+                           "dateInputted": date.today()}
         applicationID = self.db.application.insert_one(applicationData).inserted_id
         return applicationID
 
@@ -189,11 +193,43 @@ class Mongo:
     def moveToNextStage(self, applicationID, jobID):
         self.db.application.update_one({"_id": applicationID}, {"$inc": {"current step": 1}}, {"$set": {"completed": False}})
         
+        
     # Return the total number of pages for a specific job sort
     def getPageTotal(self, division, role, location):
         return 0
-#delete all applications older than 6 months along with all application info
 
-#cascade with deleting vacancies and also applications
 
-#retreive all applications older than 6 months
+    #Return list of applications older than 6 months, delete the applications and relevent info
+    def gdprCompliance(self):
+        oldApplications = []
+        query = self.db.applications.find({"dateInputted": {"$lt": (date.today() - relativedelta(months=6))}}, {"applicant id": 1, "vacancy id": 1})
+        for doc in query:
+            oldApplications.append(doc)
+            self.db.applicantInfo.delete_one({"applicant id": doc['applicant id']})
+        self.db.application.delete_many({"dateInputted": {"$lt": (date.today() - relativedelta(months=6))}})
+        return oldApplications
+    
+    
+    def deleteJob(self, jobID):
+        query = self.db.application.find_one({"vacancy id": jobID}, {"applicant id": 1, "_id": 0})
+        for doc in query:
+            self.db.applicantInfo.delete_one({"applicant id": doc['applicant id']})
+        self.db.application.delete_many({"vacancy id": jobID})
+        self.db.vacancies.delete_one{{"_id": jobID})
+    
+    
+    #Returns the weights stored
+    def getWeights(self):
+        return self.db.feedbackWeights.find({}, {"_id": 0})
+    
+    
+    def updateWeights(self, json):
+        self.db.feedbackWeights.update_one({"$set": json})
+    
+    #Retuns the applicants who have been accepted for the first stage or had a specialized score higher than 0.8
+    def getFeedbackApplicants(self):
+        return self.db.application.find({"current step": 1, "$or": [{"completed": True, "specialized score": {"$gt": 0.8}}]}, {"applicant id": 1, "_id": 0})
+    
+    #Returns the percentage of applicants that were accepted for the first stage
+    def getAcceptedRate(self):
+        return float(self.db.application.find({"current step": 1, "completed": True}).size())/float(self.db.application.find({"current step": 1}.size())
