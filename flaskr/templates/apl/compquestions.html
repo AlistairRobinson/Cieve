@@ -87,7 +87,7 @@
 						<div class="field">
             {% for option in question.Possibleansw%}
 						<input class="is-checkradio" id="{{question.Number}},{{option}}" type="radio" name="Question{{question.Number}}">
-						<label for="{{question.Number}},{{option}}">{{option}}</label>
+						<label for="{{question.Number}},{{option}}">{{option}}</label><br>
             {%endfor%}
 					</div>
           </div>
