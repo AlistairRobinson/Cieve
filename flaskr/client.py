@@ -31,9 +31,9 @@ def newJob():
         country = request.form['country']
         jobDescription = request.form['job_desc']
         noVacancies = request.form['numVacancies']
-        
-        
-        
+
+
+
         data = request.form.to_dict(flat=False)
         try:
             stage_list = data['Stage_Description']
@@ -41,14 +41,14 @@ def newJob():
             stage_list = []
         skills = data['skill']
         skillVal = data['skillVal']
-        
+
         stage_list.insert(0,"0") #Onboarding Stage
-        
+
         error = None
         """
         if jobTitle == "":
             error = "Empty Job Title"
-        
+
         if division not in db.getDivisions():
             db.addDivision(division)
 
@@ -69,20 +69,20 @@ def newJob():
 
         if len(skills) != len(skillVal):
             error = "Skills and scores don't match"
-        
+
         for val in skillVal:
             if str.isdigit(str(val)):
                 if int(val) <= 0 or int(val) > 10:
                     error = "Score out of range"
             else:
                 error = "Score is not a number"
-        
+
         for stage in stages:
             if stage not in get_db().getStages():
                 error = "Wrong stage"
         """
         if error is not None:
-            print 
+            print
             flash(error)
         else:
             db = get_db()
@@ -95,7 +95,7 @@ def newJob():
                     'stages':stage_list,
                     'skills':skills,
                     'skillVal':skillVal}
-                    
+
             skillDic = {}
             skillVal = json.pop('skillVal', None)
             skills = json.pop('skills', None)
@@ -111,7 +111,7 @@ def newJob():
                 if stage in db.getInterviewStages():
                     interviews["Stage " + str(i)] = [title, str(stage)]
                     i += 1
-            
+
             return render_template('/cli/createjobsummary.html', json = json, interviews = interviews)
     # Generate post data and pass to front end
     return render_template('/cli/createJob.html', stages=stages,divisons = db.getDivisions(), roles = db.getRoles(), locations = db.getLocations())
@@ -119,9 +119,9 @@ def newJob():
 @bp.route('/newJobSummary' , methods=('GET', 'POST'))
 @login_required_C
 def newJobSummary():
-    if request.method = "POST":
+    if request.method == "POST":
             data = request.form.to_dict(flat=False)
-            
+
             json = data['json']
             del data[json]
 
