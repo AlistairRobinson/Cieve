@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -161,7 +162,7 @@
               </div>
               <div class="steps-content">
 
-                <form id="create-application" action="{{url_for('applicant.newApplication')}}" method = "POST">
+                <form id="create-application" action="/apl/newapplication" method = "POST">
 
                 <div class="step-content has-text-centered is-active">
                   <div class="field is-horizontal">
@@ -183,7 +184,7 @@
                     <div class="field-body">
                       <div class="field">
                         <div class="control has-icon has-icon-right">
-                          <textarea class="textarea" placeholder="Address" name="address"></textarea>
+                          <textarea class="textarea" placeholder="Address" name="address" id="address"></textarea>
                         </div>
                       </div>
                     </div>
@@ -195,21 +196,28 @@
 
                   <div class="columns">
                       <div class="column">
+                          <div class="field">
                           <label class="label">Degree Qualification
                             <div class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltiptext">What area in the company would you like to work in?</span></div></label>
                           <p class="control has-icons-left">
                               <span class="select is-fullwidth">
-                                  <select name="degreeQualification" id="degreeQualification">
+                                  <select name="degreeQualification" id="degreeQualification" onchange='CheckDegree(this.value);'>
                                       <option>Computer Science</option>
                                       <option>Mathematics</option>
+                                      <option>Other</option>
                                   </select>
                               </span>
                               <span class="icon is-small is-left">
                                 <i class="fas fa-book"></i>
                               </span>
                           </p>
+                        </div>
+                        <div class="field">
+                          <input class="input" type="text" id="otherDegree" style='display:none;' placeholder="Please specify the Degree">
+                        </div>
                       </div>
                       <div class="column">
+                          <div class="field">
                           <label class="label">Degree Level
                             <div class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltiptext">What role do you want to work as?</span></div></label>
                           <p class="control has-icons-left">
@@ -223,14 +231,39 @@
                                 <i class="fas fa-user-graduate"></i>
                               </span>
                           </p>
+                        </div>
+                        <div class="field">
+                          <label class="label">Is this your predicted level?</label>
+                          <label class="checkbox">
+                            <input type="checkbox" id="predictedLevel" onchange='CheckPredicted();'>
+                            Yes
+                          </label>
+                        </div>
+                        <div class="field" style='display:none;' id="YearOfGraduation">
+                        <label class="label">Year of Graduation</label>
+                        <p class="control has-icons-left">
+                          <span class="select is-fullwidth">
+                            <select name="yearGraduation" id="yearGraduation">
+                              <option selected>2020</option>
+                              <option>2021</option>
+                              <option>2022</option>
+                              <option>2023</option>
+                            </select>
+                          </span>
+                          <span class="icon is-small is-left">
+                            <i class="fas fa-calendar-alt"></i>
+                          </span>
+                        </p>
                       </div>
+                      </div>
+
                       <div class="column">
                           <div class="field">
                           <label class="label">University Attended
                             <div class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltiptext">Which country do you want to work in?</span></div></label>
                           <p class="control has-icons-left">
                             <span class="select is-fullwidth">
-                              <select name="universityAttended" onchange='CheckUniversity(this.value);'>
+                              <select name="universityAttended" id="universityAttended" onchange='CheckUniversity(this.value);'>
                                 <option selected>Warwick University</option>
                                 <option>Coventry University</option>
                                 <option>Other</option>
@@ -252,6 +285,21 @@
                          else
                            element.style.display='none';
                         }
+
+                        function CheckDegree(val){
+                         var element=document.getElementById('otherDegree');
+                         if(val=='Other')
+                           element.style.display='block';
+                         else
+                           element.style.display='none';
+                        }
+
+                        function CheckPredicted(){
+                          if($('#predictedLevel').is(":checked"))
+                               $("#YearOfGraduation").show();
+                           else
+                               $("#YearOfGraduation").hide();
+                       }
                         </script>
                       </div>
                   </div>
@@ -313,7 +361,7 @@
 
                         $('#addEmployment').click(function(){
                              i++;
-                             $('#dynamic_field_employment').append('<tr id="row'+i+'"><td><input class="input" type="text" placeholder="Company/Institute Name"></td><td><input class="input" type="text" placeholder="Position"></td><td><input class="input" type="text" placeholder="Length of Employment"></td><td><a class="button is-danger btn_employment_remove" name="remove" id="'+i+'">X</a></td></tr>');
+                             $('#dynamic_field_employment').append('<tr id="row'+i+'"><td><input class="input" type="text" placeholder="Company/Institute Name"></td><td><input class="input" type="text" placeholder="Position"></td><td><input type="date"></td><td><input type="date"></td><td><a class="button is-danger btn_employment_remove" name="remove" id="'+i+'">X</a></td></tr>');
                         });
 
                         $(document).on('click', '.btn_employment_remove', function(){
@@ -337,7 +385,7 @@
                               <label class="label">Language Name</label>
                               <div class="control">
                                   <div class="select is-fullwidth">
-                                      <select name="skill">
+                                      <select name="languages" id="language0">
                                           <option>Python</option>
                                           <option>Java</option>
                                           <option>Haskell</option>
@@ -354,7 +402,7 @@
                           <div class="column">
                               <label class="label">Proficiency <div class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltiptext">Rate your experience on a scale from 1 to 10 where 1 is a beginner and 10 is expert. 1 is new to the language.</span></div></label>
                               <div class="control">
-                                <input name="skillVal" id="sliderWithValue" class="slider has-output is-fullwidth is-circle" min="1" max="10" value="1" step="1" type="range">
+                                <input name="languageVal" id="sliderWithValue" class="slider has-output is-fullwidth is-circle" min="1" max="10" value="1" step="1" type="range">
                                 <output for="sliderWithValue">1</output>
                               </div>
                           </div>
@@ -380,7 +428,7 @@
                               <label class="label">Skill Name</label>
                               <div class="control">
                                   <div class="select is-fullwidth">
-                                      <select name="skill">
+                                      <select name="skills">
                                           <option>Public Speaking</option>
                                           <option>Excel</option>
                                           <option>Word</option>
@@ -415,13 +463,94 @@
                     $(document).ready(function() {
                         var languageCounter = 1;
                         var skillCounter = 1;
+
+                        $('body').on('click', '#submitApplicationBttn', function(e) {
+                            var applicationData = {};
+                            applicationData["Phone_Number"] = $('#phoneNumber').val();
+                            applicationData["Address"] = $('#address').val();
+                            if ($("#degreeQualification").val()=="Other") {
+                              applicationData["Degree_Qualification"] = $('#otherDegree').val();
+                            } else {
+                              applicationData["Degree_Qualification"] = $("#degreeQualification").val();
+                            }
+                            applicationData["Degree_Level"] = $('#degreeLevel').val();
+                            if ($('#predictedLevel').is(":checked")) {
+                              applicationData["Graduation_Year"] = $("#yearGraduation").val();
+                            } else {
+                              applicationData["Graduation_Year"] = 0;
+                            }
+                            if ($("#universityAttended").val()=="Other") {
+                              applicationData["University_Attended"] = $('#otherUni').val();
+                            } else {
+                              applicationData["University_Attended"] = $("#universityAttended").val();
+                            }
+
+                            var a_levels_array = new Array();
+                            var aLevel = new Array();
+                            var x = 1;
+                            $("#dynamic_field_aLevels input").each(function(){
+                               if (x%2 == 0) {
+                                 aLevel.push($(this).val());
+                                 a_levels_array.push(aLevel);
+                                 aLevel = [];
+                                 x = 1;
+                               } else {
+                                 aLevel.push($(this).val());
+                                 x++;
+                               }
+                            });
+
+                            applicationData["a_levels"] = a_levels_array;
+
+                            var languageName = new Array();
+                            $('[name=languages]').each(function(index) {
+                              languageName.push($(this).val());
+                            });
+
+                            var languageProficiency = new Array();
+                            $('[name=languageVal]').each(function(index) {
+                              languageProficiency.push($(this).val());
+                            });
+
+                            var languages = new Array();
+                            $.each(languageName, function( index, value ) {
+                              languages.push([value, languageProficiency[index]]);
+                            });
+
+                            applicationData["languages"] = languages;
+
+
+                            var skillName = new Array();
+                            $('[name=skills]').each(function(index) {
+                              skillName.push($(this).val());
+                            });
+
+                            var skillProficiency = new Array();
+                            $('[name=skillVal]').each(function(index) {
+                              skillProficiency.push($(this).val());
+                            });
+
+                            var skills = new Array();
+                            $.each(skillName, function( index, value ) {
+                              skills.push([value, skillProficiency[index]]);
+                            });
+
+                            applicationData["skills"] = skills;
+
+
+                            console.log(a_levels_array);
+
+                            console.log(applicationData);
+                        });
+
+
                         $('#add-language').click(function(e) {
                             $('#languagesSection').append(`		<div class="columns" id="language` + languageCounter + `">
             							<div class="column">
             							<label class="label">Language Name</label>
             								<div class="control">
             									<div class="select is-fullwidth">
-            										<select name="skill">
+            										<select name="languages" id="language` + languageCounter + `">
             											<option>Python</option>
             											<option>Java</option>
             											<option>Haskell</option>
@@ -438,7 +567,7 @@
             							<div class="column">
             							<label class="label">Proficiency</label>
             								<div class="control">
-                                              <input name="skillVal" id="sliderWithValue" class="slider has-output is-fullwidth is-circle" min="1" max="10" value="1" step="1" type="range">
+                                              <input name="languageVal" id="sliderWithValue" class="slider has-output is-fullwidth is-circle" min="1" max="10" value="1" step="1" type="range">
                                             <output for="sliderWithValue">1</output>
             								</div>
             							</div>
@@ -454,7 +583,7 @@
                           <label class="label">Skill Name</label>
                           <div class="control">
                               <div class="select is-fullwidth">
-                                  <select name="skill">
+                                  <select name="skills">
                                       <option>Public Speaking</option>
                                       <option>Excel</option>
                                       <option>Word</option>
@@ -616,7 +745,7 @@
                   </div>
 
                   <br>
-                  <input name=_csrf_token id="_csrf_token" type=hidden value="{{ csrf_token() }}">
+                  <input name=_csrf_token id="_csrf_token" type=hidden value="b&#39;$2b$20$uVrPFwHssRhA7LNCO5n01u&#39;">
                   <script>
                       $(document).ready(function() {
 
@@ -636,21 +765,15 @@
                               var pagenumber = 0;
                               var token = document.getElementById('_csrf_token').value;
                               var selectedDivision = $('#divisionDropDown').val();
-                              if (selectedDivision == "Please Select") {
-                                $('#jobSelection').hide();
-                                return;
-                              }
                               var selectedRole = $('#roleDropDown').val();
-                              if (selectedRole == "Please Select") {
-                                $('#jobSelection').hide();
-                                return;
-                              }
                               var selectedLocation = $('#countryDropDown').val();
-                              if (selectedLocation == "Please Select") {
+                              if ((selectedDivision == "Please Select")||(selectedRole == "Please Select")||(selectedLocation == "Please Select")) {
                                 $('#jobSelection').hide();
+                                $('#noMatchingJobs').hide();
+                                $('#notAllFiltersSelected').fadeIn('slow');
                                 return;
                               }
-                              $('#jobSelection').fadeIn('slow');
+                              $('#notAllFiltersSelected').hide();
                               $.ajax({
                                   url: '/getJobs',
                                   data: {
@@ -672,6 +795,13 @@
                                           }
                                           jobCounter++;
                                       });
+                                      if (jobCounter == 2){
+                                        $('#jobSelection').hide();
+                                        $('#noMatchingJobs').fadeIn('slow');
+                                      } else {
+                                        $('#noMatchingJobs').hide();
+                                        $('#jobSelection').fadeIn('slow');
+                                      }
                                   },
                                   error: function(error) {
                                       alert("error")
@@ -679,8 +809,17 @@
                                   }
                               });
                             }
+
                           });
                   </script>
+
+                  <div id="notAllFiltersSelected">
+                    Please select a division, role and country!
+                  </div>
+
+                  <div id="noMatchingJobs" style='display:none;'>
+                    There are currently no open positions that match your chosen criteria. Try changing the division, role or country to find open positions.
+                  </div>
 
                   <div id="jobSelection">
                   <label class="label">Matching positions:</label>
@@ -699,6 +838,10 @@
 
 
                   <label class="label">Want to be considered for other roles?</label>
+                  <label class="checkbox" id="considerForOtherRoles">
+                    <input type="checkbox">
+                    Would you like us to considered you for roles that you may be better suited for, within your matching criteria of division, role and location.
+                  </label>
                 </div>
 
                 </div>
@@ -706,7 +849,7 @@
                 <div class="step-content">
                   <div>
                   <h4 class="title is-4">Your application is almost complete...</h4>
-                   Before you submit your application you can provide a cover letter along with an interesting fact about yourself.
+                   Before you submit your application you can provide a cover letter along with an interesting fact about yourself?
                  </div> <br>
 
                   <div class="field is-horizontal">
@@ -735,7 +878,7 @@
                    </div>
 
                 <center>
-                <a class="button is-success">Submit Application</a>
+                <a class="button is-success" id="submitApplicationBttn">Submit Application</a>
                 </center>
 
                 </div>
@@ -760,7 +903,7 @@
                       bulmaSteps.attach();
                     }); //bulmaCalendar.attach();</script>
 
-                <form action="{{ url_for('applicant.newApplication') }}" method="POST">
+                <form action="/apl/newapplication" method="POST">
 
 
 
