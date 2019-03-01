@@ -120,12 +120,6 @@ class Mongo:
 
     # Wiil accept a json parameter which will be defined by the input, adds the new job to the DB
     def addNewJob(self, json, clientID):
-        skillDic = {}
-        skillVal = json.pop('skillVal', None)
-        skills = json.pop('skills', None)
-        for i in range(len(skills)):
-            skillDic[skills[i]] = skillVal[i]
-        json['skills'] = skillDic
         jobID = self.db.vacancy.insert_one(json).inserted_id
         self.db.client.update_one({"_id": clientID}, {"$push": {"vacancies": jobID}})
 
@@ -220,3 +214,11 @@ class Mongo:
 
     def newLocation(self, location):
         return
+
+    # Return the id's of the stages of type "Interview"
+    def getInterviewStages():
+        return
+    
+    def insertStageAvailability():
+        return
+                

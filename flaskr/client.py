@@ -45,7 +45,7 @@ def newJob():
         stage_list.insert(0,"0") #Onboarding Stage
         
         error = None
-        
+        """
         if jobTitle == "":
             error = "Empty Job Title"
         
@@ -80,7 +80,7 @@ def newJob():
         for stage in stages:
             if stage not in get_db().getStages():
                 error = "Wrong stage"
-        
+        """
         if error is not None:
             print 
             flash(error)
@@ -96,12 +96,43 @@ def newJob():
                     'skills':skills,
                     'skillVal':skillVal}
                     
-            # Populate json with job data
+            skillDic = {}
+            skillVal = json.pop('skillVal', None)
+            skills = json.pop('skills', None)
+            for i in range(len(skills)):
+                skillDic[skills[i]] = skillVal[i]
+            json['skills'] = skillDic
+            json['stagesDetail'] = []
+            interviews = {}
+            for stage in json['stages']:
+                i = 1
+                title = db.getStageTitle(stage)
+                json['stagesDetail'].append(title)
+                if stage in db.getInterviewStages():
+                    interviews["Stage " + str(i)] = [title, str(stage)]
+                    i += 1
+            
+            return render_template('/cli/createjobsummary.html', json = json, interviews = interviews)
+    # Generate post data and pass to front end
+    return render_template('/cli/createJob.html', stages=stages,divisons = db.getDivisions(), roles = db.getRoles(), locations = db.getLocations())
+
+@bp.route('/newJobSummary' , methods=('GET', 'POST'))
+@login_required_C
+def newJobSummary():
+    if request.method = "POST":
+            data = request.form.to_dict(flat=False)
+            
+            json = data['json']
+            del data[json]
+
+            db = get_db()
+            for stage in data:
+                db.insertStageAvailability(stage) #Stage = [of ["dd/mm/yy", start time, end time, number of slots]]
+
             db.addNewJob(json, session.get('user_id')[1:])
             flash("Vacancy post successful")
             return redirect(url_for('client.jobs'))
-    # Generate post data and pass to front end
-    return render_template('/cli/createJob.html', stages=stages,divisons = db.getDivisions(), roles = db.getRoles(), locations = db.getLocations())
+    render_template(url_for('client.dashboard'))
 
 #Definition for the application
 @bp.route('/jobs')
