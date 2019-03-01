@@ -1,7 +1,8 @@
 import pytest
 import json
 from flask import g, session, jsonify
-from flaskr import db, csrf
+from flaskr import csrf
+from flaskr.db import get_db
 
 # Client login tests (to ensure security)
 
@@ -70,3 +71,7 @@ def test_post_application(client, jobs, data, message):
         except KeyError:
             raise AssertionError('nothing flashed')
         assert message in error[1]
+
+def test_cleanup():
+    db = get_db()
+    assert db.deleteJob("test") & db.deleteApplication("test")

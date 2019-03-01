@@ -56,7 +56,12 @@ db.db.questionStage.insert_one({"stage id": 0,
 #[QUESTIONS [ answer,  (WRONG ANSWERS)]]]
 
 db.db.interviewStage.insert_one({"stage id": 0,
-                                 "slot": 0})
+                                 "job id": 0, 
+                                 "slots": ["dd/mm/yy", "hh:mm", "hh:mm", 0]})
+
+db.db.metaData.insert_one(  { "divisions" : ["Technology", "HR", "Finance"],
+                              "roles" : ["Internship", "Graduate", "Full-Time", "Part-Time"],
+                              "locations" : ["London, United Kingdom", "New York, United States", "Paris, France"]})
 
 #SLOT
 #{
