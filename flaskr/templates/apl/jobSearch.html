@@ -116,7 +116,6 @@
                 You can <a href="#jobNarrow">view all the open positions below</a> or use the following form to narrow down your options.
                 <br><br>
 
-                <form action="" method="POST">
                 <input name=_csrf_token id="_csrf_token" type=hidden value="{{ csrf_token() }}">
 
                   <div class="field">
@@ -167,10 +166,6 @@
                       </div>
                   </div>
               </div>
-              <div class="control">
-                <button class="button is-link" id="searchBttn">Search</button>
-              </div>
-                </form>
 
             <br>
 
@@ -229,56 +224,68 @@
       <script>
           $(document).ready(function() {
                   var pagenumber=1;
+                  updateSearch();
                   $("#divisionDropDown").change(function () {
-                    var end = this.value;
-                    alert(pagenumber);
+                    updateSearch();
+                  });
+                  $("#roleDropDown").change(function () {
+                    updateSearch();
+                  });
+                  $("#countryDropDown").change(function () {
+                    updateSearch();
                   });
               // $('#searchBttn').click(function(e) {
-                  var token = document.getElementById('_csrf_token').value;
-                  var selectedDivision = $('#divisionDropDown').val();
-                  if (selectedDivision == "Any") {
-                    selectedDivision = "";
-                  }
-                  var selectedRole = $('#roleDropDown').val();
-                  if (selectedRole == "Any") {
-                    selectedRole = "";
-                  }
-                  var selectedLocation = $('#countryDropDown').val();
-                  if (selectedLocation == "Any") {
-                    selectedLocation = "";
+                  function updateSearch() {
+                    $('#first10').empty();
+                    $('#second10').empty();
+                    var token = document.getElementById('_csrf_token').value;
+                    var selectedDivision = $('#divisionDropDown').val();
+                    if (selectedDivision == "Any") {
+                      selectedDivision = "";
+                    }
+                    var selectedRole = $('#roleDropDown').val();
+                    if (selectedRole == "Any") {
+                      selectedRole = "";
+                    }
+                    var selectedLocation = $('#countryDropDown').val();
+                    if (selectedLocation == "Any") {
+                      selectedLocation = "";
+                    }
+
+                    $.ajax({
+                        url: '/getJobs',
+                        data: {
+                          page: pagenumber,
+                          division: selectedDivision,
+                          role: selectedRole,
+                          location: selectedLocation,
+                          _csrf_token: token
+                        },
+                        type: 'POST',
+                        success: function(response) {
+                            console.log(response);
+                            obj = jQuery.parseJSON(JSON.stringify(response));
+                            numJobs = obj.length;
+                            var jobCounter = 1;
+                            $.each(jQuery.parseJSON(JSON.stringify(response)), function(index, element) {
+                                if (jobCounter == numJobs){
+                                }
+                                else if (jobCounter%2==1) {
+                                  $('#first10').append(' <div class="box"> <div><h5 class="title is-5">'+element["vacancy title"]+'</h5> '+ element["vacancy description"] + '</div> <span class="tag is-light"><b> Division </b> &nbsp'+element["division"]+'</span> <span class="tag is-light"><b> Role Type </b> &nbsp'+ element["role type"]+'</span> <span class="tag is-light"><b> <i class="fas fa-map-marker-alt"> </i> </b> &nbsp'+ element["location"]+'</span></div>');
+                                } else {
+                                  $('#second10').append(' <div class="box"> <div><h5 class="title is-5">'+element["vacancy title"]+'</h5> '+ element["vacancy description"] + '</div> <span class="tag is-light"><b> Division </b> &nbsp'+element["division"]+'</span> <span class="tag is-light"><b> Role Type </b> &nbsp'+ element["role type"]+'</span> <span class="tag is-light"><b> <i class="fas fa-map-marker-alt"> </i> </b> &nbsp'+ element["location"]+'</span></div>');
+                                }
+                                jobCounter++;
+                            });
+                        },
+                        error: function(error) {
+                            alert("error")
+                            console.log(error);
+                        }
+                    });
                   }
 
-                  $.ajax({
-                      url: '/getJobs',
-                      data: {
-                        page: pagenumber,
-                        division: selectedDivision,
-                        role: selectedRole,
-                        location: selectedLocation,
-                        _csrf_token: token
-                      },
-                      type: 'POST',
-                      success: function(response) {
-                          console.log(response);
-                          obj = jQuery.parseJSON(JSON.stringify(response));
-                          numJobs = obj.length;
-                          var jobCounter = 1;
-                          $.each(jQuery.parseJSON(JSON.stringify(response)), function(index, element) {
-                              if (jobCounter == numJobs){
-                              }
-                              else if (jobCounter%2==1) {
-                                $('#first10').append(' <div class="box"> <div><h5 class="title is-5">'+element["vacancy title"]+'</h5> '+ element["vacancy description"] + '</div> <span class="tag is-light"><b> Division </b> &nbsp'+element["division"]+'</span> <span class="tag is-light"><b> Role Type </b> &nbsp'+ element["role type"]+'</span> <span class="tag is-light"><b> <i class="fas fa-map-marker-alt"> </i> </b> &nbsp'+ element["location"]+'</span></div>');
-                              } else {
-                                $('#second10').append(' <div class="box"> <div><h5 class="title is-5">'+element["vacancy title"]+'</h5> '+ element["vacancy description"] + '</div> <span class="tag is-light"><b> Division </b> &nbsp'+element["division"]+'</span> <span class="tag is-light"><b> Role Type </b> &nbsp'+ element["role type"]+'</span> <span class="tag is-light"><b> <i class="fas fa-map-marker-alt"> </i> </b> &nbsp'+ element["location"]+'</span></div>');
-                              }
-                              jobCounter++;
-                          });
-                      },
-                      error: function(error) {
-                          alert("error")
-                          console.log(error);
-                      }
-                  });
+
           });
       </script>
 
