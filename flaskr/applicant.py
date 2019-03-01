@@ -23,7 +23,8 @@ def dashboard():
 @bp.route('/jobsearch', methods=('GET', 'POST'))
 @login_required_A
 def jobSearch():
-    return render_template('/apl/jobSearch.html')
+    db = get_db()
+    return render_template('/apl/jobSearch.html', divisons = db.getDivisions(), roles = db.getRoles(), locations = db.getLocations())
             # Return first 20 (use a page count, get[1,2,...])
 
 #Definition for the application
@@ -34,9 +35,10 @@ def newApplication():
     skills = {}
     jobs = {}
     others = ""
+    db = get_db()
     if request.method == 'POST':
         skills = request.form['skills']
-        jobs = request.form['jobs'] # Dictionary of jobID to prefered or not (1 or 0)
+        jobs = request.form['jobs']
         other = request.form['other']
         error = None
 
@@ -61,7 +63,6 @@ def newApplication():
                         del jobs[job]
 
             for jobID, prefered in jobs.items():
-                db = get_db()
                 userID = session.get('user_id')[1:]
                 score = 0 #CALCLUATE JOB SPECIFIC SCORE
 
@@ -72,7 +73,7 @@ def newApplication():
             # APPLICANT SCORING FUNCTION HERE
             return render_template(url_for('apl.applications'))
 
-    return render_template('/apl/applicationCreation.html')
+    return render_template('/apl/applicationCreation.html', divisons = db.getDivisions(), roles = db.getRoles(), locations = db.getLocations())
 
 #Definition for the application
 @bp.route('/applications')

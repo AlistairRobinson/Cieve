@@ -8,15 +8,19 @@ $(function () {
     var passwords = document.getElementById('regPasswd').value;
     var token = document.getElementById('_csrf_token').value;
 
-    $.ajax({
-      type: 'post',
-      url: '/apl/auth/register',
-      data: {name: names, email: emails, password: passwords, _csrf_token: token},
-      success: function () {
-        alert('form was submitted');
-      }
-    });
-
+    var regex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+    if (!regex.test(passwords)) {
+      //Feed back to user that password is too weak
+    } else {
+      $.ajax({
+        type: 'post',
+        url: '/apl/auth/register',
+        data: {name: names, email: emails, password: passwords, _csrf_token: token},
+        success: function () {
+          alert('form was submitted');
+        }
+      });
+    }
   });
 
 });

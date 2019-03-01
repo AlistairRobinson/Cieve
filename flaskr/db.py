@@ -144,8 +144,9 @@ class Mongo:
         return applications
 
 
-    def applyJob(self, userID, jobID, preferred, score):
+    def applyJob(self, userID, username, jobID, preferred, score):
         self.db.application.insert_one({"applicant id": userID,
+                                        "username": username,
                                         "vacancy id": jobID,
                                         "preferred": preferred,
                                         "specialized score": score,
@@ -163,7 +164,7 @@ class Mongo:
         stageDic = {}
         query = self.db.stage.find({}, {"title": 1})
         for doc in query:
-            stageDic[doc['_id']] = doc['title']
+            stageDic[str(doc['_id'])] = doc['title']
         return stageDic
 
 
@@ -210,7 +211,7 @@ class Mongo:
         return oldApplications
     
     
-    def deleteJob(self, jobID):
+    def deleteJobByID(self, jobID):
         query = self.db.application.find_one({"vacancy id": jobID}, {"applicant id": 1, "_id": 0})
         for doc in query:
             self.db.applicantInfo.delete_one({"applicant id": doc['applicant id']})
@@ -233,3 +234,44 @@ class Mongo:
     #Returns the percentage of applicants that were accepted for the first stage
     def getAcceptedRate(self):
         return float(self.db.application.find({"current step": 1, "completed": True}).size())/float(self.db.application.find({"current step": 1}.size())
+#retreive all applications older than 6 months
+    
+    # Return true if a userID exists for either client or applicants
+    def userExists(self, user_id):
+        return ""
+
+    # Return a list of all divisions
+    def getDivisions(self):
+        return
+
+    def getRoles(self):
+        return
+
+    def getLocations(self):
+        return
+
+    def newDivision(self, division):
+        return
+
+    def newRole(self, role):
+        return
+
+    def newLocation(self, location):
+        return
+
+    def deleteApplicantAccount(self, username):
+        query = self.db.applicantInfo.delete_many({"username": username})
+        query = self.db.application.delete_many({"username": username})
+        return True
+
+    def deleteClientAccount(self, username):
+        query = self.db.client.delete_many({"username": username})
+        return True
+
+    def deleteApplication(self, username):
+        query = self.db.application.delete_many({"username": username})
+        return True
+
+    def deleteJob(self, title):
+        query = self.db.vacancy.delete_many({"vacancy title": title})
+        return True
