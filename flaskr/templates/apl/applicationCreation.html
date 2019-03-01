@@ -161,6 +161,8 @@
               </div>
               <div class="steps-content">
 
+                <form id="create-application" action="{{url_for('applicant.newApplication')}}" method = "POST">
+
                 <div class="step-content has-text-centered is-active">
                   <div class="field is-horizontal">
                     <div class="field-label is-normal">
@@ -169,7 +171,7 @@
                     <div class="field-body">
                       <div class="field">
                         <div class="control">
-                          <input class="input" id="phoneNumber" type="text" placeholder="Number" autofocus data-validate="require">
+                          <input class="input" id="phoneNumber" type="text" name="phone_number" placeholder="Number" autofocus data-validate="require">
                         </div>
                       </div>
                     </div>
@@ -181,7 +183,7 @@
                     <div class="field-body">
                       <div class="field">
                         <div class="control has-icon has-icon-right">
-                          <textarea class="textarea" placeholder="Textarea"></textarea>
+                          <textarea class="textarea" placeholder="Address" name="address"></textarea>
                         </div>
                       </div>
                     </div>
@@ -223,19 +225,34 @@
                           </p>
                       </div>
                       <div class="column">
+                          <div class="field">
                           <label class="label">University Attended
                             <div class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltiptext">Which country do you want to work in?</span></div></label>
                           <p class="control has-icons-left">
                             <span class="select is-fullwidth">
-                              <select id="unviersityDropDown">
+                              <select name="universityAttended" onchange='CheckUniversity(this.value);'>
                                 <option selected>Warwick University</option>
                                 <option>Coventry University</option>
+                                <option>Other</option>
                               </select>
                             </span>
                             <span class="icon is-small is-left">
                               <i class="fas fa-university"></i>
                             </span>
                           </p>
+                        </div>
+                        <div class="field">
+                          <input class="input" type="text" id="otherUni" style='display:none;' placeholder="Please specify the University">
+                        </div>
+                        <script>
+                        function CheckUniversity(val){
+                         var element=document.getElementById('otherUni');
+                         if(val=='Other')
+                           element.style.display='block';
+                         else
+                           element.style.display='none';
+                        }
+                        </script>
                       </div>
                   </div>
 
@@ -550,14 +567,14 @@
 
                 <div class="step-content">
                   <div class="field">
-                      <div class="columns">
+                      <div class="columns" id="filterSection">
                           <div class="column">
                               <label class="label">Division
                                 <div class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltiptext">What area in the company would you like to work in?</span></div></label>
                               <div class="control">
                                   <div class="select is-fullwidth">
                                       <select name="divisions" id="divisionDropDown">
-                                          <option>Any</option>
+                                          <option>Please Select</option>
                                           <option>Tech</option>
                                           <option>Hr</option>
                                       </select>
@@ -570,7 +587,7 @@
                               <div class="control">
                                   <div class="select is-fullwidth">
                                       <select name="roles" id="roleDropDown">
-                                          <option>Any</option>
+                                          <option>Please Select</option>
                                           <option>Full-Time</option>
                                           <option>Grad.</option>
                                           <option>Intern</option>
@@ -584,7 +601,7 @@
                               <p class="control has-icons-left">
                                 <span class="select is-fullwidth">
                                   <select id="countryDropDown">
-                                    <option selected>Any</option>
+                                    <option selected>Please Select</option>
                                     <option>United Kingdom</option>
                                     <option>America</option>
                                     <option>France</option>
@@ -597,29 +614,43 @@
                           </div>
                       </div>
                   </div>
-                  <div class="control">
-                    <button class="button is-link" id="searchBttn">Search</button>
-                  </div>
+
                   <br>
                   <input name=_csrf_token id="_csrf_token" type=hidden value="{{ csrf_token() }}">
                   <script>
                       $(document).ready(function() {
-                          $('#searchBttn').click(function(e) {
+
+                            updateSearch();
+                            $("#divisionDropDown").change(function () {
+                              updateSearch();
+                            });
+                            $("#roleDropDown").change(function () {
+                              updateSearch();
+                            });
+                            $("#countryDropDown").change(function () {
+                              updateSearch();
+                            });
+
+                            function updateSearch() {
+                              $("#jobsTable tbody > tr").remove();
                               var pagenumber = 0;
                               var token = document.getElementById('_csrf_token').value;
                               var selectedDivision = $('#divisionDropDown').val();
-                              if (selectedDivision == "Any") {
-                                selectedDivision = "";
+                              if (selectedDivision == "Please Select") {
+                                $('#jobSelection').hide();
+                                return;
                               }
                               var selectedRole = $('#roleDropDown').val();
-                              if (selectedRole == "Any") {
-                                selectedRole = "";
+                              if (selectedRole == "Please Select") {
+                                $('#jobSelection').hide();
+                                return;
                               }
                               var selectedLocation = $('#countryDropDown').val();
-                              if (selectedLocation == "Any") {
-                                selectedLocation = "";
+                              if (selectedLocation == "Please Select") {
+                                $('#jobSelection').hide();
+                                return;
                               }
-
+                              $('#jobSelection').fadeIn('slow');
                               $.ajax({
                                   url: '/getJobs',
                                   data: {
@@ -637,8 +668,9 @@
                                       var jobCounter = 1;
                                       $.each(jQuery.parseJSON(JSON.stringify(response)), function(index, element) {
                                           if (jobCounter!=numJobs) {
-                                            $('#jobsTable').append('<tr><td>'+element["vacancy title"]+'</td><td>'+element["location"]+'</td><td><input type="checkbox"></td></tr>');
+                                            $('#jobsTable').append('<tr><td>'+element["vacancy title"]+'</td><td>'+element["location"]+'</td><td><input type="checkbox" '+element["_id"]+'></td></tr>');
                                           }
+                                          jobCounter++;
                                       });
                                   },
                                   error: function(error) {
@@ -646,10 +678,11 @@
                                       console.log(error);
                                   }
                               });
-                            });
-                      });
+                            }
+                          });
                   </script>
 
+                  <div id="jobSelection">
                   <label class="label">Matching positions:</label>
                   <table class="table is-fullwidth is-scrollable" id="jobsTable">
                   <thead>
@@ -663,6 +696,11 @@
 
                   </tbody>
                 </table>
+
+
+                  <label class="label">Want to be considered for other roles?</label>
+                </div>
+
                 </div>
 
                 <div class="step-content">
