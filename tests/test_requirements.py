@@ -72,6 +72,6 @@ def test_post_application(client, jobs, data, message):
             raise AssertionError('nothing flashed')
         assert message in error[1]
 
-def cleanup():
+def test_cleanup():
     db = get_db()
     assert db.deleteJob("test") & db.deleteApplication("test")

@@ -80,6 +80,6 @@ def test_cli_nosql_injection(client, auth, username, password, message):
             raise AssertionError('nothing flashed')
         assert message in error[1]
 
-def cleanup(client, auth):
+def test_cleanup(client, auth):
     db = get_db()
     assert db.deleteApplicantAccount("test")
