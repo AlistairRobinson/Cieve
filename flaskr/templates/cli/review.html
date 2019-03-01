@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Review Job</title>
+		<link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.0/css/bulma.min.css">
+		<script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+    <script src="../../static/js/jquery-3.3.1.min.js"></script>
+	</head>
+	<body>
+    <nav class="navbar has-shadow">
+      <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/cli">
+                <img src="../../static/CieveNavBar.png" alt="Cieve: an automated applicant solution">
+            </a>
+            <div class="navbar-burger burger" data-target="navMenuColorprimary-example">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+
+        <div id="navMenuColorprimary-example" class="navbar-menu">
+
+            <div class="navbar-start">
+              <a class="navbar-item" href="/cli">
+                <strong>Home</strong>
+              </a>
+
+              <a class="navbar-item" href="/about">
+                About
+              </a>
+            </div>
+
+            <div class="navbar-end">
+
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link" href="#">
+                        Josh Hankins
+                    </a>
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item is-leveled " href="#">
+                            <span class="icon ">
+                                    <i class="fa fa-user-circle "></i>
+                                </span>
+                            Edit Details
+                        </a>
+                        <a class="navbar-item is-leveled " href="# ">
+                            <span class="icon ">
+                                    <i class="fa fa-key "></i>
+                                </span>
+                            Change Password
+                        </a>
+                        <a class="navbar-item is-leveled " href="/logout">
+                            <span class="icon ">
+                                    <i class="fa fa-sign-out-alt"></i>
+                                </span>
+                            Sign Out
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </nav>
+
+      <div class="container">
+      <section class="section">
+
+        <div class="columns ">
+            <div class="column is-4-tablet is-3-desktop is-2-widescreen">
+
+                <aside class="menu ">
+                    <p class="menu-label ">
+                        General
+                    </p>
+                    <ul class="menu-list">
+                        <li>
+                            <a href="/cli"><span class="icon ">
+                                    <i class="fa fa-tachometer-alt"></i>
+                                </span>Dashboard</a>
+                        </li>
+                        <li>
+                            <a href="/cli/jobs">
+                                <span class="icon">
+                                    <i class="fa fa-search"></i>
+                                </span>
+                                Your Jobs
+                            </a>
+                        </li>
+                        <li>
+                            <a class="is-active" href="">
+                                <span class="icon">
+                                    <i class="fa fa-plus"></i>
+                                </span>
+                                New Job
+                            </a>
+                        </li>
+                    </ul>
+                </aside>
+
+            </div>
+            <div class="column ">
+			<h1 class='title is-1'>Review your answers</h1>
+      <form id="revform">
+      {% if answers %}
+        {% for answer in answers%}
+        <h3 class="title is-5">Division</h3>
+        <p>{{answer.Division}}</p><br>
+        <h3 class="title is-5">Role</h3>
+        <p>{{answer.Role}}</p><br>
+        <h3 class="title is-5">Country<h3>
+        <p>{{answer.Country}}</p><br>
+        <h3 class="title is-5">Number of Vacancies</h3>
+        <p>{{answer.numberofvacancies}}</p><br>
+        <h3 class="title is-5">Stages</h3>
+        <ul type="1">
+        {%for stage in answer.Stages%}
+
+          <li>{{stage.StageDesc}}</li>
+        {%endfor%}
+        </ul><br>
+        <h3 class="title is-5">Skills<h3>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Skill</th>
+              <th>Proficiency</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            {% for skill in answer.Skills %}
+            <tr>
+              <td>{{skill.Skill}}</td>
+              <td>{{skill.Proficiency}}</td>
+            </tr>
+
+            {%endfor%}
+          </tbody>
+        </table><br>
+        {%endfor%}
+
+      {%endif%}
+
+      {% if interview == True%}
+    <center>  <h3 class="title is-5">Interview Availability<h3></center>
+          <table class="table is-fullwidth" id="dynamic_field_interview">
+            <thead>
+              <tr>
+                <th>Interview Date</th>
+                <th>Interview Start Time</th>
+                <th>Interview End Time</th>
+                <th>Number of Slots</th>
+                <th>---</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>  <input class="input" type="date" name="Date[]" placeholder="Enter the Interview date"> </td>
+                <td>  <input class="input" type="time" name="startTime[]" placeholder="Enter your start time"></td>
+                <td>  <input class="input" type="time" name="endTime[]" placeholder="Enter your end time"></td>
+                <td>  <input class="input" type="number" name="vacancies[]" placeholder="#"></td>
+                <td><a class="button is-primary" id="add-interview">
+            Add Interview Date
+          </a></td>
+              </tr>
+            </tbody>
+          </table>
+
+      {% endif %}
+      <div class="field">
+                      <div class="control">
+                          <div class="box has-text-centered is-shadowless">
+
+                              <button class="button is-link is-medium">
+                                  Submit
+                              </button>
+                          </div>
+                      </div>
+                  </div>
+      </form>
+			</div>
+      </div>
+		</section>
+	</body>
+  <script type="text/javascript">
+  $(document).ready(function() {
+      var stage_counter = 1;
+      $('body').on('click', '#add-interview', function(e) {
+        e.preventDefault();
+          $('table#dynamic_field_interview tbody').append(`
+          <tr>
+            <td>  <input class="input" type="date" name="Date[]" placeholder="Enter the Interview date"> </td>
+            <td>  <input class="input" type="time" name="startTime[]" placeholder="Enter your start time"></td>
+            <td>  <input class="input" type="time" name="endTime[]" placeholder="Enter your end time"></td>
+            <td>  <input class="input" type="number" name="vacancies[]" placeholder="#"></td>
+            <td><a class="button is-secondary" id="delete-interview">
+        Delete Interview Date
+      </a></td>
+          </tr>
+          `)
+          stage_counter++;
+
+      });
+
+      $('body').on('click', '#delete-interview', function(e) {
+
+          $(this).parent().parent().remove();
+          stage_counter--;
+
+      });
+
+      });
+</script>
+</html>
