@@ -3,6 +3,7 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 from werkzeug.datastructures import ImmutableMultiDict
+from bson.objectid import ObjectId
 
 from flaskr.auth import login_required_C
 from flaskr.db import get_db
@@ -42,7 +43,7 @@ def newJob():
         skills = data['skill']
         skillVal = data['skillVal']
 
-        stage_list.insert(0,"0") #Onboarding Stage
+        stage_list.insert(0,'000000000000000000000000') #Onboarding Stage
 
         error = None
 
@@ -82,7 +83,6 @@ def newJob():
                 error = "Wrong stage"
 
         if error is not None:
-            print(error)
             flash(error)
         else:
             flash("Vacancy data accepted")
@@ -107,11 +107,12 @@ def newJob():
             interviews = {}
             for stage in json['stages']:
                 i = 1
-                title = db.getStageTitle(stage)
-                json['stagesDetail'].append(title)
-                if stage in db.getInterviewStages():
-                    interviews[i] = [title, str(stage)]
-                    i += 1
+                if stage != '000000000000000000000000':
+                    title = db.getStageTitle(stage)
+                    json['stagesDetail'].append(title)
+                    if stage in db.getInterviewStages():
+                        interviews[i] = [title, str(stage)]
+                i += 1
 
 
             return render_template('cli/review.html', json = json, interviews = interviews)

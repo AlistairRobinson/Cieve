@@ -3,6 +3,7 @@ from bson.objectid import ObjectId
 from flask import jsonify
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+import math
 
 
 def get_db():
@@ -118,6 +119,7 @@ class Mongo:
 
         if location != "":
             queryMaker['location'] = location
+
         query = self.db.vacancy.find(queryMaker, {"positions available": 0, "skills": 0})
         for doc in query:
             Jobs.append(doc)
@@ -131,14 +133,15 @@ class Mongo:
     # Wiil accept a json parameter which will be defined by the input, adds the new job to the DB
     def addNewJob(self, json, clientID):
         jobID = self.db.vacancy.insert_one(json).inserted_id
-        self.db.client.update_one({"_id": clientID}, {"$push": {"vacancies": jobID}})
+        self.db.client.update_one({"_id": ObjectId(clientID)}, {"$push": {"vacancies": jobID}})
+        return jobID
 
     # Given an ID return all vacancies an applicant has applied too (including non-preferenced ones)
     def getApplications(self, applicantID):
         applications = []
         idQuery = self.db.application.find({"applicant id": ObjectId(applicantID)}, {"vacancy id": 1, "_id": 0})
         for id in idQuery:
-            titleQuery = self.db.vacancy.find({"_id": id}, {"vacancy title": 1, "_id": 0})
+            titleQuery = self.db.vacancy.find({"_id": ObjectId(id)}, {"vacancy title": 1, "_id": 0})
             for title in titleQuery:
                 applications.append(title)
         return applications
@@ -164,17 +167,18 @@ class Mongo:
         stageDic = {}
         query = self.db.stage.find({}, {"title": 1})
         for doc in query:
-            stageDic[str(doc['_id'])] = doc['title']
+            if str(doc['_id']) != '000000000000000000000000':
+                stageDic[str(doc['_id'])] = doc['title']
         return stageDic
 
 
     # Return the details for all jobs the client is linked too
     def getClientJobs(self, clientID):
         jobDetails = []
-        clientQuery = self.db.client.find({"_id": clientID}, {"vacancies": 1, "_id": 0})
+        clientQuery = self.db.client.find({"_id": ObjectId(clientID)}, {"vacancies": 1, "_id": 0})
         for doc in clientQuery:
             for id in doc['vacancies']:
-                jobQuery = self.db.vacancy.find({"_id": id})
+                jobQuery = self.db.vacancy.find({"_id": ObjectId(id)})
                 for job in jobQuery:
                     jobDetails.append(job)
         return jobDetails
@@ -192,12 +196,23 @@ class Mongo:
 
     #Move applicants to the next stage in the steps for the jobs and update completed flag
     def moveToNextStage(self, applicationID, jobID):
-        self.db.application.update_one({"_id": applicationID}, {"$inc": {"current step": 1}}, {"$set": {"completed": False}})
+        self.db.application.update_one({"_id": ObjectId(applicationID)}, {"$inc": {"current step": 1}}, {"$set": {"completed": False}})
 
 
     # Return the total number of pages for a specific job sort
     def getPageTotal(self, division, role, location):
-        return 0
+        queryMaker = {"positions available": {"$gt": "0"}}
+        if division != "":
+            queryMaker['division'] = division
+
+        if role != "":
+            queryMaker['role type'] = role
+
+        if location != "":
+            queryMaker['location'] = location
+
+        availableJobs = list(self.db.vacancy.find(queryMaker))
+        return math.ceil(len(availableJobs)/20)
 
 
     #Return list of applications older than 6 months, delete the applications and relevent info
@@ -216,7 +231,7 @@ class Mongo:
         for doc in query:
             self.db.applicantInfo.delete_one({"applicant id": doc['applicant id']})
         self.db.application.delete_many({"vacancy id": jobID})
-        self.db.vacancies.delete_one({"_id": jobID})
+        self.db.vacancies.delete_one({"_id": ObjectId(jobID)})
         return True
 
 
@@ -247,11 +262,21 @@ class Mongo:
 
     # Return true if a userID exists for either client or applicants
     def userExists(self, user_id):
-        if self.db.applicant.find({"_id": user_id}) != None:
+        if self.db.applicant.find({"_id": ObjectId(user_id)}) != None:
             return True
         else:
-            if self.db.client.find({"_id": user_id}) != None:
+            if self.db.client.find({"_id": ObjectId(user_id)}) != None:
                 return True
+        return False
+
+    def clientExists(self, user_id):
+        if self.db.client.find({"_id": ObjectId(user_id)}) != None:
+            return True
+        return False
+
+    def applicantExists(self, user_id):
+        if self.db.applicant.find({"_id": ObjectId(user_id)}) != None:
+            return True
         return False
 
     # Return a list of all divisions
@@ -301,22 +326,20 @@ class Mongo:
 
     #Given an id will return the title of the stage
     def getStageTitle(self, id):
-        print(id)
-        return self.db.stage.find_one({"_id": id}, {"title": 1, "_id": 0})['title']
+        return self.db.stage.find_one({"_id": ObjectId(id)}, {"title": 1, "_id": 0})['title']
 
     def deleteApplicantAccount(self, username):
-        self.db.applicantInfo.delete_many({"username": username})
-        self.db.application.delete_many({"username": username})
+        self.db.accountInfo.delete_many({"username": username})
         return True
 
     def deleteClientAccount(self, username):
-        self.db.client.delete_many({"username": username})
+        self.db.client.delete_one({"username": username})
         return True
 
     def deleteApplication(self, username):
-        self.db.application.delete_many({"username": username})
+        self.db.application.delete_one({"username": username})
         return True
 
     def deleteJob(self, title):
-        self.db.vacancy.delete_many({"vacancy title": title})
+        self.db.vacancy.delete_one({"vacancy title": title})
         return True

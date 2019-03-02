@@ -20,7 +20,7 @@ def test_setup_cli(client, jobs):
         assert 'Registration successful' in error[1]
 
 # Vacany posting tests (R8, R14)
-"""
+
 @pytest.mark.parametrize(('data', 'message'), (
     ({
         'job_title': '',
@@ -29,7 +29,7 @@ def test_setup_cli(client, jobs):
         'country': 'Germany',
         'job_desc': 'test',
         'numVacancies': 1,
-        'Stage_Description': [1, 2, 3],
+        'Stage_Description': ["000000000000000000000000"],
         'skill': ['Python', 'C'],
         'skillVal': [7, 6]
     }, 'Empty job title'),
@@ -40,7 +40,7 @@ def test_setup_cli(client, jobs):
         'country': 'Germany',
         'job_desc': '',
         'numVacancies': 1,
-        'Stage_Description': [1, 2, 3],
+        'Stage_Description': ["000000000000000000000000"],
         'skill': ['Python', 'C'],
         'skillVal': [7, 6]
     }, 'No Job description'),
@@ -51,7 +51,7 @@ def test_setup_cli(client, jobs):
         'country': 'Germany',
         'job_desc': 'test',
         'numVacancies': -1,
-        'Stage_Description': [1, 2, 3],
+        'Stage_Description': ["000000000000000000000000"],
         'skill': ['Python', 'C'],
         'skillVal': [7, 6]
     }, 'Number of vacancies must be positive'),
@@ -62,7 +62,7 @@ def test_setup_cli(client, jobs):
         'country': 'Germany',
         'job_desc': 'test',
         'numVacancies': 1,
-        'Stage_Description': [1, 2, 3],
+        'Stage_Description': ["000000000000000000000000"],
         'skill': ['Python', 'C'],
         'skillVal': [1]
     }, "Skills and scores don't match"),
@@ -73,7 +73,7 @@ def test_setup_cli(client, jobs):
         'country': 'Germany',
         'job_desc': 'test',
         'numVacancies': 1,
-        'Stage_Description': [1, 2, 3],
+        'Stage_Description': ["000000000000000000000000"],
         'skill': ['Python'],
         'skillVal': [7, 6]
     }, "Skills and scores don't match"),
@@ -84,7 +84,7 @@ def test_setup_cli(client, jobs):
         'country': 'Germany',
         'job_desc': 'test',
         'numVacancies': 1,
-        'Stage_Description': [1, 2, 3],
+        'Stage_Description': ["000000000000000000000000"],
         'skill': ['Python', 'C'],
         'skillVal': [77, 6]
     }, 'Score out of range'),
@@ -95,7 +95,7 @@ def test_setup_cli(client, jobs):
         'country': 'Germany',
         'job_desc': 'test',
         'numVacancies': 1,
-        'Stage_Description': [1, 2, 3],
+        'Stage_Description': ["000000000000000000000000"],
         'skill': ['Python', 'C'],
         'skillVal': ['77', '6']
     }, 'Score is not a number'),
@@ -106,7 +106,7 @@ def test_setup_cli(client, jobs):
         'country': 'Germany',
         'job_desc': 'test',
         'numVacancies': 1,
-        'Stage_Description': [-999],
+        'Stage_Description': ["000000000000000000000000"],
         'skill': ['Python', 'C'],
         'skillVal': [7, 6]
     }, 'Wrong stage'),
@@ -117,7 +117,7 @@ def test_setup_cli(client, jobs):
         'country': 'Germany',
         'job_desc': 'test',
         'numVacancies': 1,
-        'Stage_Description': [1, 2, 3],
+        'Stage_Description': ["000000000000000000000000"],
         'skill': ['Python', 'C'],
         'skillVal': [7, 6]
     }, 'Vacancy data accepted'),
@@ -132,7 +132,7 @@ def test_post_vacancy(client, jobs, data, message):
         except KeyError:
             raise AssertionError('nothing flashed')
         assert message in error[1]
-    """
+
 # Vacancy retrieval tests (R15)
 
 def test_get_vacancies(client, jobs):
@@ -157,7 +157,7 @@ json['other'] = None
 ))
 def test_post_application(client, jobs, data, message):
     token = csrf.generate_csrf_token_with_session(jobs._client)
-    jobs._client.post('/apl/auth/login', data={'username': '1@1', 'password': '1', '_csrf_token': token})
+    jobs._client.post('/apl/auth/login', data={'username': 'test', 'password': 'test', '_csrf_token': token})
     response = jobs.apply_to_vacancy(data)
     with jobs._client.session_transaction() as session:
         try:
