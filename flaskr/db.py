@@ -202,13 +202,13 @@ class Mongo:
 
     #Return list of applications older than 6 months, delete the applications and relevent info
     def gdprCompliance(self):
-        oldApplications = []
-        query = self.db.applications.find({"date inputted": {"$lt": datetime.today() - relativedelta(months=6)}}, {"applicant id": 1, "vacancy id": 1})
+        compliant = True
+        query = self.db.application.find({"date inputted": {"$lt": datetime.today() - relativedelta(months=6)}}, {"applicant id": 1, "vacancy id": 1})
         for doc in query:
-            oldApplications.append(doc)
+            compliant = False
             self.db.applicantInfo.delete_one({"applicant id": doc['applicant id']})
         self.db.application.delete_many({"date inputted": {"$lt": datetime.today() - relativedelta(months=6)}})
-        return oldApplications
+        return compliant
 
 
     def deleteJobByID(self, jobID):
