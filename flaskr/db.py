@@ -56,7 +56,8 @@ class Mongo:
     def insertClientUser(self, username, passHash, salt):
         clientData = {"username": username,
                       "password_hash": passHash,
-                      "salt": salt}
+                      "salt": salt,
+                      "vacancies": []}
         clientID = self.db.client.insert_one(clientData).inserted_id
         return clientID
 
@@ -167,7 +168,8 @@ class Mongo:
         stageDic = {}
         query = self.db.stage.find({}, {"title": 1})
         for doc in query:
-            stageDic[str(doc['_id'])] = doc['title']
+            if str(doc['_id']) != '000000000000000000000000':
+                stageDic[str(doc['_id'])] = doc['title']
         return stageDic
 
 
@@ -209,7 +211,7 @@ class Mongo:
 
         if location != "":
             queryMaker['location'] = location
-            
+
         availableJobs = list(self.db.vacancy.find(queryMaker))
         return math.ceil(len(availableJobs)/20)
 
@@ -232,8 +234,8 @@ class Mongo:
         self.db.application.delete_many({"vacancy id": jobID})
         self.db.vacancies.delete_one({"_id": ObjectId(jobID)})
         return True
-    
-    
+
+
     #Returns the weights stored
     def getWeights(self):
         weights = []
@@ -241,12 +243,12 @@ class Mongo:
         for doc in query:
             weights.append(doc)
         return weights
-    
-    
+
+
     def updateWeights(self, json):
         self.db.feedbackWeights.update_one({"$set": json})
         return True
-    
+
     #Retuns the applicants who have been accepted for the first stage or had a specialized score higher than 0.8
     def getFeedbackApplicants(self):
         feedbackApplicants = []
@@ -254,20 +256,30 @@ class Mongo:
         for doc in query:
             feedbackApplicants.append(doc)
         return feedbackApplicants
-    
+
     #Returns the percentage of applicants that were accepted for the first stage
     def getAcceptedRate(self):
         return float(self.db.application.find({"current step": {"$gt": 1}}).size())/float(self.db.application.find({}).size())
-     
+
     # Return true if a userID exists for either client or applicants
     def userExists(self, user_id):
         if self.db.applicant.find({"_id": ObjectId(user_id)}) != None:
             return True
         else:
-            if self.db.client.find({"_id": ObjectId(user_id)} != None:
+            if self.db.client.find({"_id": ObjectId(user_id)}) != None:
                 return True
         return False
-    
+
+    def clientExists(self, user_id):
+        if self.db.client.find({"_id": ObjectId(user_id)}) != None:
+            return True
+        return False
+
+    def applicantExists(self, user_id):
+        if self.db.applicant.find({"_id": ObjectId(user_id)}) != None:
+            return True
+        return False
+
     # Return a list of all divisions
     def getDivisions(self):
         divisions = []
@@ -297,7 +309,7 @@ class Mongo:
     def newRole(self, role):
         self.db.metaData.update_one({}, {"$addToSet": {"roles": role}})
         return True
-    
+
     def newLocation(self, location):
         self.db.metaData.update_one({}, {"$addToSet": {"locations": location}})
         return True
@@ -307,7 +319,7 @@ class Mongo:
         interviewStages = []
         query = self.db.stage.find({"type": "Interview"}, {"_id": 1})
         for doc in query:
-            interviewStages.append(doc)
+            interviewStages.append(str(doc["_id"]))
         return interviewStages
 
     def insertStageAvailability(self):
@@ -315,7 +327,10 @@ class Mongo:
 
     #Given an id will return the title of the stage
     def getStageTitle(self, id):
-        return self.db.stage.find_one({"_id": ObjectId(id)}, {"title": 1, "_id": 0})['title']
+        query = self.db.stage.find_one({"_id": ObjectId(id)}, {"title": 1, "_id": 0})
+        if query is not None:
+            return query['title']
+        return ""
 
     def deleteApplicantAccount(self, username):
         self.db.accountInfo.delete_many({"username": username})
