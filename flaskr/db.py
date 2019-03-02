@@ -209,7 +209,7 @@ class Mongo:
 
         if location != "":
             queryMaker['location'] = location
-            
+
         availableJobs = list(self.db.vacancy.find(queryMaker))
         return math.ceil(len(availableJobs)/20)
 
@@ -232,8 +232,8 @@ class Mongo:
         self.db.application.delete_many({"vacancy id": jobID})
         self.db.vacancies.delete_one({"_id": ObjectId(jobID)})
         return True
-    
-    
+
+
     #Returns the weights stored
     def getWeights(self):
         weights = []
@@ -241,12 +241,12 @@ class Mongo:
         for doc in query:
             weights.append(doc)
         return weights
-    
-    
+
+
     def updateWeights(self, json):
         self.db.feedbackWeights.update_one({"$set": json})
         return True
-    
+
     #Retuns the applicants who have been accepted for the first stage or had a specialized score higher than 0.8
     def getFeedbackApplicants(self):
         feedbackApplicants = []
@@ -254,20 +254,20 @@ class Mongo:
         for doc in query:
             feedbackApplicants.append(doc)
         return feedbackApplicants
-    
+
     #Returns the percentage of applicants that were accepted for the first stage
     def getAcceptedRate(self):
         return float(self.db.application.find({"current step": {"$gt": 1}}).size())/float(self.db.application.find({}).size())
-     
+
     # Return true if a userID exists for either client or applicants
     def userExists(self, user_id):
         if self.db.applicant.find({"_id": ObjectId(user_id)}) != None:
             return True
         else:
-            if self.db.client.find({"_id": ObjectId(user_id)} != None:
+            if self.db.client.find({"_id": ObjectId(user_id)}) != None:
                 return True
         return False
-    
+
     # Return a list of all divisions
     def getDivisions(self):
         divisions = []
@@ -297,7 +297,7 @@ class Mongo:
     def newRole(self, role):
         self.db.metaData.update_one({}, {"$addToSet": {"roles": role}})
         return True
-    
+
     def newLocation(self, location):
         self.db.metaData.update_one({}, {"$addToSet": {"locations": location}})
         return True
