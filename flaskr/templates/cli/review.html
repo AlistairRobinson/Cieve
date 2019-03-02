@@ -106,7 +106,7 @@
             <div class="column ">
 			<h1 class='title is-1'>Review your answers</h1>
       <form id="revform">
-      {% if answers %}
+      {% if json %}
         {% for answer in answers%}
         <h3 class="title is-5">Division</h3>
         <p>{{answer.Division}}</p><br>
@@ -118,9 +118,9 @@
         <p>{{answer.numberofvacancies}}</p><br>
         <h3 class="title is-5">Stages</h3>
         <ul type="1">
-        {%for stage in answer.Stages%}
+        {%for stage in json["stagesDetail"]%}
 
-          <li>{{stage.StageDesc}}</li>
+          <li>{{stage}}</li>
         {%endfor%}
         </ul><br>
         <h3 class="title is-5">Skills<h3>

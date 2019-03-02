@@ -83,7 +83,6 @@ def newJob():
                 error = "Wrong stage"
         
         if error is not None:
-            print(error)
             flash(error)
         else:
             flash("Vacancy data accepted")
@@ -108,11 +107,12 @@ def newJob():
             interviews = {}
             for stage in json['stages']:
                 i = 1
-                title = db.getStageTitle(stage)
-                json['stagesDetail'].append(title)
-                if stage in db.getInterviewStages():
-                    interviews[i] = [title, str(stage)]
-                    i += 1
+                if stage != '000000000000000000000000':
+                    title = db.getStageTitle(stage)
+                    json['stagesDetail'].append(title)
+                    if stage in db.getInterviewStages():
+                        interviews[i] = [title, str(stage)]
+                i += 1
 
 
             return render_template('/cli/review.html', json = json, interviews = interviews)
