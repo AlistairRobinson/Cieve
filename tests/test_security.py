@@ -78,8 +78,11 @@ def test_apl_login_get(client, auth):
     assert client.get('/apl/auth/login').status_code == 200
 
 @pytest.mark.parametrize(('username', 'password', 'message'), (
+    ('', '', 'Incorrect username or password'),
+    ('', '', 'Incorrect username or password'),
     ('a', 'test', 'Incorrect username or password'),
     ('test', 'a', 'Incorrect username or password'),
+    ('test', 'test', 'Login successful'),
 ))
 def test_apl_login(auth, username, password, message):
     response = auth.login_apl(username, password)

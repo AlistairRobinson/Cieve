@@ -110,6 +110,7 @@ def applicantLogin():
         if error is None:
             session.clear()
             session['user_id'] = "A" + str(user['applicant_id'])
+            flash('Login successful')
             return redirect(url_for('applicant.dashboard'))
 
         flash(error)
