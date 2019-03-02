@@ -46,9 +46,10 @@ db.db.vacancy.insert_one({"vacancy title": 0,
                           "stages" : 0,
                           "skills": 0})
 
-db.db.stage.insert_one({"type": 0,
-                        "title": 0,
-                        "description": 0})
+db.db.stage.insert_one({"_id": 0,
+                        "type": "Onboarding",
+                        "title": "Onboarding",
+                        "description": "Initial onboarding stage"})
 
 db.db.questionStage.insert_one({"stage id": 0,
                                 "questions": 0})
