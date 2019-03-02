@@ -106,7 +106,7 @@ def test_setup_cli(client, jobs):
         'country': 'Germany',
         'job_desc': 'test',
         'numVacancies': 1,
-        'Stage_Description': ["000000000000000000000000"],
+        'Stage_Description': ["987654321987654321987654"],
         'skill': ['Python', 'C'],
         'skillVal': [7, 6]
     }, 'Wrong stage'),
