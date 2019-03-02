@@ -45,18 +45,18 @@ def newJob():
         stage_list.insert(0,"0") #Onboarding Stage
 
         error = None
-        """
+        
         if jobTitle == "":
             error = "Empty Job Title"
 
         if division not in db.getDivisions():
-            db.addDivision(division)
+            db.newDivision(division)
 
         if role not in db.getRoles():
-            db.addRole(role)
+            db.newRole(role)
 
         if country not in db.getLocations():
-            db.addLocation(country)
+            db.newLocation(country)
 
         if jobDescription == "":
             error = "No Job description"
@@ -80,11 +80,12 @@ def newJob():
         for stage in stages:
             if stage not in get_db().getStages():
                 error = "Wrong stage"
-        """
+        
         if error is not None:
-            print
+            print(error)
             flash(error)
         else:
+            flash("Vacancy data accepted")
             db = get_db()
             json = {'vacancy title':jobTitle,
                     'division':division,
