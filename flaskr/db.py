@@ -131,14 +131,15 @@ class Mongo:
     # Wiil accept a json parameter which will be defined by the input, adds the new job to the DB
     def addNewJob(self, json, clientID):
         jobID = self.db.vacancy.insert_one(json).inserted_id
-        self.db.client.update_one({"_id": clientID}, {"$push": {"vacancies": jobID}})
+        self.db.client.update_one({"_id": ObjectId(clientID)}, {"$push": {"vacancies": jobID}})
+        return jobID
 
     # Given an ID return all vacancies an applicant has applied too (including non-preferenced ones)
     def getApplications(self, applicantID):
         applications = []
         idQuery = self.db.application.find({"applicant id": ObjectId(applicantID)}, {"vacancy id": 1, "_id": 0})
         for id in idQuery:
-            titleQuery = self.db.vacancy.find({"_id": id}, {"vacancy title": 1, "_id": 0})
+            titleQuery = self.db.vacancy.find({"_id": ObjectID(id)}, {"vacancy title": 1, "_id": 0})
             for title in titleQuery:
                 applications.append(title)
         return applications
@@ -171,10 +172,10 @@ class Mongo:
     # Return the details for all jobs the client is linked too
     def getClientJobs(self, clientID):
         jobDetails = []
-        clientQuery = self.db.client.find({"_id": clientID}, {"vacancies": 1, "_id": 0})
+        clientQuery = self.db.client.find({"_id": ObjectId(clientID)}, {"vacancies": 1, "_id": 0})
         for doc in clientQuery:
             for id in doc['vacancies']:
-                jobQuery = self.db.vacancy.find({"_id": id})
+                jobQuery = self.db.vacancy.find({"_id": ObjectId(id)})
                 for job in jobQuery:
                     jobDetails.append(job)
         return jobDetails
@@ -192,7 +193,7 @@ class Mongo:
 
     #Move applicants to the next stage in the steps for the jobs and update completed flag
     def moveToNextStage(self, applicationID, jobID):
-        self.db.application.update_one({"_id": applicationID}, {"$inc": {"current step": 1}}, {"$set": {"completed": False}})
+        self.db.application.update_one({"_id": ObjectId(applicationID)}, {"$inc": {"current step": 1}}, {"$set": {"completed": False}})
 
 
     # Return the total number of pages for a specific job sort
@@ -216,7 +217,7 @@ class Mongo:
         for doc in query:
             self.db.applicantInfo.delete_one({"applicant id": doc['applicant id']})
         self.db.application.delete_many({"vacancy id": jobID})
-        self.db.vacancies.delete_one({"_id": jobID})
+        self.db.vacancies.delete_one({"_id": ObjectId(jobID)})
         return True
     
     
@@ -247,10 +248,10 @@ class Mongo:
     
     # Return true if a userID exists for either client or applicants
     def userExists(self, user_id):
-        if self.db.applicant.find({"_id": user_id}) != None:
+        if self.db.applicant.find({"_id": ObjectId(user_id)}) != None:
             return True
         else:
-            if self.db.client.find({"_id": user_id}) != None:
+            if self.db.client.find({"_id": ObjectId(user_id)} != None:
                 return True
         return False
 
