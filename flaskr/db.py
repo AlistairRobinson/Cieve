@@ -304,8 +304,7 @@ class Mongo:
         return self.db.stage.find_one({"_id": id}, {"title": 1, "_id": 0})['title']
 
     def deleteApplicantAccount(self, username):
-        self.db.applicantInfo.delete_many({"username": username})
-        self.db.application.delete_many({"username": username})
+        self.db.accountInfo.delete_many({"username": username})
         return True
 
     def deleteClientAccount(self, username):
