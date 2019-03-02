@@ -28,4 +28,4 @@ def test_malcompliance_insertion(client):
 def test_malcompliance_access(client):
     db = get_db()
     query = db.db.application.find({"date inputted": {"$lt": datetime.today() - relativedelta(months=6)}})
-    assert query.count() == 0
+    assert list(query) == []
