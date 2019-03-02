@@ -154,22 +154,11 @@ def newJobSummary():
 
 
 
-
-            #jsonData = json.loads(jsonData)
-            #print jsonData
-            """
-            json = data['json']
-            del data[json]
-
-            db = get_db()
-            for stage in data:
-                db.insertStageAvailability(stageID, jobID, stage) #Stage = {of ["dd/mm/yy", start time, end time, number of slots]}
-
-           
             flash("Vacancy post successful")
+            
+            
             return redirect(url_for('client.jobs'))
-            """
-            return None
+        
     render_template(url_for('client.dashboard'))
 
 #Definition for the application
