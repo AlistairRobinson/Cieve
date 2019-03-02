@@ -110,10 +110,11 @@ def newJob():
                 title = db.getStageTitle(stage)
                 json['stagesDetail'].append(title)
                 if stage in db.getInterviewStages():
-                    interviews["Stage " + str(i)] = [title, str(stage)]
+                    interviews[i] = [title, str(stage)]
                     i += 1
 
-            return render_template('/cli/createjobsummary.html', json = json, interviews = interviews)
+
+            return render_template('/cli/review.html', json = json, interviews = interviews)
     # Generate post data and pass to front end
     return render_template('/cli/createJob.html', stages=stages,divisons = db.getDivisions(), roles = db.getRoles(), locations = db.getLocations())
 
@@ -128,7 +129,7 @@ def newJobSummary():
 
             db = get_db()
             for stage in data:
-                db.insertStageAvailability(stage) #Stage = [of ["dd/mm/yy", start time, end time, number of slots]]
+                db.insertStageAvailability(stage) #Stage = {of ["dd/mm/yy", start time, end time, number of slots]}
 
             db.addNewJob(json, session.get('user_id')[1:])
             flash("Vacancy post successful")
