@@ -319,7 +319,7 @@ class Mongo:
         interviewStages = []
         query = self.db.stage.find({"type": "Interview"}, {"_id": 1})
         for doc in query:
-            interviewStages.append(doc)
+            interviewStages.append(str(doc["_id"]))
         return interviewStages
 
     def insertStageAvailability(self):

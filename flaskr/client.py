@@ -4,6 +4,7 @@ from flask import (
 from werkzeug.exceptions import abort
 from werkzeug.datastructures import ImmutableMultiDict
 from bson.objectid import ObjectId
+import json
 
 from flaskr.auth import login_required_C
 from flaskr.db import get_db
@@ -105,16 +106,16 @@ def newJob():
             json['skills'] = skillDic
             json['stagesDetail'] = []
             interviews = {}
+            i = 1
             for stage in json['stages']:
-                i = 1
+                
+                title = db.getStageTitle(stage)
+                json['stagesDetail'].append(title)
+                
                 if stage != '000000000000000000000000':
-                    title = db.getStageTitle(stage)
-                    json['stagesDetail'].append(title)
                     if stage in db.getInterviewStages():
-                        interviews[i] = [title, str(stage)]
+                        interviews[str(i)] = [title, str(stage)]
                 i += 1
-
-
             return render_template('cli/review.html', json = json, interviews = interviews)
     # Generate post data and pass to front end
     return render_template('cli/createjob.html', stages=stages,divisons = db.getDivisions(), roles = db.getRoles(), locations = db.getLocations())
@@ -123,18 +124,52 @@ def newJob():
 @login_required_C
 def newJobSummary():
     if request.method == "POST":
-            data = request.form.to_dict(flat=False)
+            db = get_db()
 
+            data = request.form.to_dict(flat=False)
+            
+            jsonData = data["json"][0].replace("'",'"')
+            jsonData = jsonData.replace('u"','"')
+            jsonData = json.loads(jsonData)
+            del jsonData['stagesDetail']
+
+            userID = session.get('user_id')[1:]
+            #jobID =  db.addNewJob(jsonData, userID)
+
+            interviewsData = json.loads(data["interviews"][0].replace("'",'"').replace('u"','"'))
+
+            for stepID, interviews in interviewsData.items():
+                stageID = interviews[1]
+                dates = data["Date[]" + stepID]
+                startTimes = data["startTimes[]" + stepID]
+                endTimes = data["endTimes[]" + stepID]
+                vacancies = data["vacancies[]" + stepID]
+                stagesData = []
+                for i in len(dates):
+                    stagesData.append(dates[i], startTimes[i], endTimes[i], vacancies[i])
+                
+                for stageData in stagesData:
+                    db.insertStageAvailability(stageID, jobID, stageData)
+
+
+
+
+
+            #jsonData = json.loads(jsonData)
+            #print jsonData
+            """
             json = data['json']
             del data[json]
 
             db = get_db()
             for stage in data:
-                db.insertStageAvailability(stage) #Stage = {of ["dd/mm/yy", start time, end time, number of slots]}
+                db.insertStageAvailability(stageID, jobID, stage) #Stage = {of ["dd/mm/yy", start time, end time, number of slots]}
 
-            db.addNewJob(json, session.get('user_id')[1:])
+           
             flash("Vacancy post successful")
             return redirect(url_for('client.jobs'))
+            """
+            return None
     render_template(url_for('client.dashboard'))
 
 #Definition for the application
@@ -152,7 +187,6 @@ def jobBreakdown():
     jobData = db.getClientJobs(session.get('user_id')[1:])
     applicants = {}
     if request.method == "POST":
-        jobID = request.form["jobID"]
         stageNumber = request.form["stageID"]
         error = None
 
