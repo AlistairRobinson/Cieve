@@ -3,6 +3,7 @@ from bson.objectid import ObjectId
 from flask import jsonify
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+import math
 
 
 def get_db():
@@ -118,6 +119,7 @@ class Mongo:
 
         if location != "":
             queryMaker['location'] = location
+
         query = self.db.vacancy.find(queryMaker, {"positions available": 0, "skills": 0})
         for doc in query:
             Jobs.append(doc)
@@ -139,7 +141,7 @@ class Mongo:
         applications = []
         idQuery = self.db.application.find({"applicant id": ObjectId(applicantID)}, {"vacancy id": 1, "_id": 0})
         for id in idQuery:
-            titleQuery = self.db.vacancy.find({"_id": ObjectID(id)}, {"vacancy title": 1, "_id": 0})
+            titleQuery = self.db.vacancy.find({"_id": ObjectId(id)}, {"vacancy title": 1, "_id": 0})
             for title in titleQuery:
                 applications.append(title)
         return applications
@@ -199,7 +201,18 @@ class Mongo:
 
     # Return the total number of pages for a specific job sort
     def getPageTotal(self, division, role, location):
-        return 0
+        queryMaker = {"positions available": {"$gt": "0"}}
+        if division != "":
+            queryMaker['division'] = division
+
+        if role != "":
+            queryMaker['role type'] = role
+
+        if location != "":
+            queryMaker['location'] = location
+
+        availableJobs = list(self.db.vacancy.find(queryMaker))
+        return math.ceil(len(availableJobs)/20)
 
 
     #Return list of applications older than 6 months, delete the applications and relevent info
@@ -220,8 +233,8 @@ class Mongo:
         self.db.application.delete_many({"vacancy id": jobID})
         self.db.vacancies.delete_one({"_id": ObjectId(jobID)})
         return True
-    
-    
+
+
     #Returns the weights stored
     def getWeights(self):
         weights = []
@@ -229,12 +242,12 @@ class Mongo:
         for doc in query:
             weights.append(doc)
         return weights
-    
-    
+
+
     def updateWeights(self, json):
         self.db.feedbackWeights.update_one({"$set": json})
         return True
-    
+
     #Retuns the applicants who have been accepted for the first stage or had a specialized score higher than 0.8
     def getFeedbackApplicants(self):
         feedbackApplicants = []
@@ -242,11 +255,11 @@ class Mongo:
         for doc in query:
             feedbackApplicants.append(doc)
         return feedbackApplicants
-    
+
     #Returns the percentage of applicants that were accepted for the first stage
     def getAcceptedRate(self):
         return float(self.db.application.find({"current step": {"$gt": 1}}).size())/float(self.db.application.find({}).size())
-    
+
     # Return true if a userID exists for either client or applicants
     def userExists(self, user_id):
         if self.db.applicant.find({"_id": ObjectId(user_id)}) != None:
@@ -295,7 +308,7 @@ class Mongo:
     def newRole(self, role):
         self.db.metaData.update_one({}, {"$addToSet": {"roles": role}})
         return True
-    
+
     def newLocation(self, location):
         self.db.metaData.update_one({}, {"$addToSet": {"locations": location}})
         return True
@@ -318,7 +331,7 @@ class Mongo:
     def deleteApplicantAccount(self, username):
         self.db.accountInfo.delete_many({"username": username})
         return True
-        
+
     def deleteClientAccount(self, username):
         self.db.client.delete_one({"username": username})
         return True

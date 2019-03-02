@@ -123,7 +123,11 @@
             <div class="column">
             <h3 class="title is-3">Create Your Application</h3>
 
-            <div class="steps" id="stepsDemo">
+            <div id="processing" style='display:none;'>
+            Your application has been submitted!
+            </div>
+
+            <div class="steps" id="ApplicationSteps">
               <div class="step-item is-active is-success">
                 <div class="step-marker">1</div>
                 <div class="step-details">
@@ -160,6 +164,7 @@
                   <p class="step-title">Finish</p>
                 </div>
               </div>
+
               <div class="steps-content">
 
                 <form id="create-application" action="/apl/newapplication" method = "POST">
@@ -517,7 +522,7 @@
                               languages.push([value, languageProficiency[index]]);
                             });
 
-                            applicationData["languages"] = languages;
+                            applicationData["Languages"] = languages;
 
 
                             var skillName = new Array();
@@ -535,12 +540,74 @@
                               skills.push([value, skillProficiency[index]]);
                             });
 
-                            applicationData["skills"] = skills;
+                            if ($('#checkOtherRoles').is(":checked")) {
+                              applicationData["Consider_for_other_roles"]=1;
+                            } else{
+                              applicationData["Consider_for_other_roles"]=0;
+                            }
+
+                            applicationData["Skills"] = skills;
+
+                            var selectedJobs = new Array();
+                            var unselectedJobs = new Array();
+                            // $('input[name=checkIfJobSelected]:checked').each(function(index) {
+                            //   selectedJobs.push($(this).attr("id"));
+                            // });
+                            // applicationData["Selected_Jobs"] = selectedJobs;
 
 
-                            console.log(a_levels_array);
+
+                            // $('input[name=checkIfJobSelected]:unchecked').each(function(index) {
+                            //   unselectedJobs.push($(this).attr("id"));
+                            // });
+                            // applicationData["Unselected_Jobs"] = unselectedJobs;
+
+
+
+
+
+                            // var list = $("input[name='applicantJobSelect']:checked").map(function () {
+                            //     return this.value;
+                            // }).get();
+                            // alert(list);
+
+
+                            $("#jobsTable input").each(function(){
+                              if($(this).is(":checked")){
+                                   selectedJobs.push($(this).attr("id"));
+                               }else{
+                                   unselectedJobs.push($(this).attr("id"));
+                               }
+                            });
+
+                            applicationData["Selected_Jobs"] = selectedJobs;
+                            applicationData["Unselected_Jobs"] = unselectedJobs;
+
+                            var x = 1;
+                            var previous_jobs = new Array();
+                            var job = new Array();
+                            $("#dynamic_field_employment input").each(function(){
+                               if (x%4 == 0) {
+                                 job.push($(this).val());
+                                 previous_jobs.push(job);
+                                 job = [];
+                                 x = 1;
+                               } else {
+                                 job.push($(this).val());
+                                 x++;
+                               }
+                            });
+
+                            applicationData["Employment_History"] = previous_jobs;
+
+                            applicationData["Cover_Letter"] = $('#coverLetter').val();
+                            applicationData["Interesting_Facts"] = $('#interestingFacts').val();
 
                             console.log(applicationData);
+
+                            $( "#ApplicationSteps" ).fadeOut( "slow", function() {
+                              $( "#processing" ).show();
+                            });
                         });
 
 
@@ -745,7 +812,7 @@
                   </div>
 
                   <br>
-                  <input name=_csrf_token id="_csrf_token" type=hidden value="b&#39;$2b$20$uVrPFwHssRhA7LNCO5n01u&#39;">
+                  <input name=_csrf_token id="_csrf_token" type=hidden value="{{ csrf_token() }}">
                   <script>
                       $(document).ready(function() {
 
@@ -791,7 +858,7 @@
                                       var jobCounter = 1;
                                       $.each(jQuery.parseJSON(JSON.stringify(response)), function(index, element) {
                                           if (jobCounter!=numJobs) {
-                                            $('#jobsTable').append('<tr><td>'+element["vacancy title"]+'</td><td>'+element["location"]+'</td><td><input type="checkbox" '+element["_id"]+'></td></tr>');
+                                            $('#jobsTable').append('<tr><td>'+element["vacancy title"]+'</td><td>'+element["location"]+'</td><td><input type="checkbox" name="checkIfJobSelected" id='+element["_id"]+'></td></tr>');
                                           }
                                           jobCounter++;
                                       });
@@ -839,7 +906,7 @@
 
                   <label class="label">Want to be considered for other roles?</label>
                   <label class="checkbox" id="considerForOtherRoles">
-                    <input type="checkbox">
+                    <input type="checkbox" id="checkOtherRoles">
                     Would you like us to considered you for roles that you may be better suited for, within your matching criteria of division, role and location.
                   </label>
                 </div>
@@ -859,7 +926,7 @@
                      <div class="field-body">
                        <div class="field">
                          <div class="control has-icon has-icon-right">
-                           <textarea class="textarea" placeholder="Cover Letter"></textarea>
+                           <textarea class="textarea" placeholder="Cover Letter" id="coverLetter"></textarea>
                          </div>
                        </div>
                      </div>
@@ -871,7 +938,7 @@
                      <div class="field-body">
                        <div class="field">
                          <div class="control has-icon has-icon-right">
-                           <textarea class="textarea" placeholder="Interesting Facts"></textarea>
+                           <textarea class="textarea" placeholder="Interesting Facts" id="interestingFacts"></textarea>
                          </div>
                        </div>
                      </div>
