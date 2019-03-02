@@ -371,3 +371,38 @@ class Mongo:
     def deleteJob(self, title):
         self.db.vacancy.delete_one({"vacancy title": title})
         return True
+    
+    def addUserEducation(self, userID, alevels, degreeQualification, degreeLevel, universityAttended):
+        self.db.applicantInfo.update_one({"applicant_id": ObjectId(userID)}, 
+                                         {"$set": {"a-level qualifications": alevels, "degree qualification": degreeQualification, "degree level": degreeLevel, "attended university": universityAttended}})
+        return True
+
+    def addUserSkills(self, userID, skills):
+        self.db.applicantInfo.update_one({"applicant_id": ObjectId(userID)},
+                                         {"$set": {"skills": skills}})
+        return True
+
+    def addUserLanguages(self, userID, languages):
+        self.db.applicantInfo.update_one({"applicant_id": ObjectId(userID)},
+                                         {"$set": {"languages": languages}})
+        return True
+
+    def addUserEmployment(self, userID, employmentHistory):
+        self.db.applicantInfo.update_one({"applicant_id": ObjectId(userID)},
+                                         {"$set": {"previous employment": employmentHistory}})
+        return True
+
+    def addUserContacts(self, userID, phoneNumber, address):
+        self.db.applicantInfo.update_one({"applicant_id": ObjectId(userID)},
+                                         {"$set": {"phone number": phoneNumber, "address": address}})
+        return True
+
+    def addUserMetaData(self, userID, coverLetter, interestingFacts):
+        self.db.applicantInfo.update_one({"applicant_id": ObjectId(userID)},
+                                         {"$set": {"cover letter": coverLetter, "interesting facts": interestingFacts}})
+        return True
+
+    def addUserScore(self, userID, userScore):
+        self.db.applicantInfo.update_one({"applicant_id": ObjectId(userID)},
+                                         {"$set": {"basic score": userScore}})
+        return True
