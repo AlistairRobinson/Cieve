@@ -200,22 +200,60 @@
                                 </p>
                             </div>
                     </div>
-                    <div class="field" id="row">
+                    <div class="field" id="langrow">
+                            <div class="columns">
+                                <div class="column">
+                                    <label class="label">Languages</label>
+                                    <div class="control">
+                                        <div class="select is-fullwidth">
+                                            <select name="lang">
+                                                <option>Python</option>
+                                                <option>Java</option>
+                                                <option>Haskell</option>
+                                                <option>C</option>
+                                                <option>HTML</option>
+                                                <option>CSS</option>
+                                                <option>javascript</option>
+                                                <option>PHP</option>
+                                                <option>C++</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="column">
+                                    <label class="label">Proficiency</label>
+                                    <div class="control">
+                                      <input name="langVal" id="sliderWithValue" class="slider has-output is-fullwidth is-circle" min="1" max="10" value="1" step="1" type="range">
+                                      <output for="sliderWithValue">1</output>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field is-grouped ">
+                            <p class="control">
+                                <a class="button is-primary" id="add-language">
+                                        Add Language
+                                    </a>
+                            </p>
+                            <p class="control">
+                                <a class="button is-light" id="delete-language">
+                                        Delete Language
+                                    </a>
+                            </p>
+                        </div>
+                    
+                    <div class="field" id="skillrow">
                         <div class="columns">
                             <div class="column">
                                 <label class="label">Skill</label>
                                 <div class="control">
                                     <div class="select is-fullwidth">
                                         <select name="skill">
-                                            <option>Python</option>
-                                            <option>Java</option>
-                                            <option>Haskell</option>
-                                            <option>C</option>
-                                            <option>HTML</option>
-                                            <option>CSS</option>
-                                            <option>javascript</option>
-                                            <option>PHP</option>
-                                            <option>C++</option>
+                                                <option>Powerpoint</option>
+                                                <option>Git</option>
+                                                <option>Presentation</option>
+                                                <option>Team Work</option>
+                                                <option>Project Management</option>
                                         </select>
                                     </div>
                                 </div>
@@ -223,21 +261,6 @@
                             <div class="column">
                                 <label class="label">Proficiency</label>
                                 <div class="control">
-                                  <!-- <div class="select is-fullwidth">
-                                      <select name="prof[]">
-                                          <option>0</option>
-                                          <option>1</option>
-                                          <option>2</option>
-                                          <option>3</option>
-                                          <option>4</option>
-                                          <option>5</option>
-                                          <option>6</option>
-                                          <option>7</option>
-                                          <option>8</option>
-                                          <option>9</option>
-                                          <option>10</option>
-                                      </select>
-                                  </div> -->
                                   <input name="skillVal" id="sliderWithValue" class="slider has-output is-fullwidth is-circle" min="1" max="10" value="1" step="1" type="range">
                                   <output for="sliderWithValue">1</output>
                                 </div>
@@ -283,6 +306,7 @@
 $(document).ready(function() {
     var stage_counter = 1;
     var counter2 = 1;
+    var counter3 = 1;
     $('#add-stage').click(function(e) {
         $('#stages-fb').append(`<div class="field" id="st` + stage_counter + `">
           <div class="control">
@@ -308,12 +332,51 @@ $(document).ready(function() {
 
 
     $('body').on('click', '#add-skill', function(e) {
-        $('#row').append(`		<div class="columns" id="col` + counter2 + `">
+        $('#skillrow').append(`		<div class="columns" id="scol` + counter2 + `">
       <div class="column">
-      <label class="label">Skill</label>
         <div class="control">
           <div class="select is-fullwidth">
             <select name="skill">
+              <option>Powerpoint</option>
+              <option>Git</option>
+              <option>Presentation</option>
+              <option>Team Work</option>
+              <option>Project Management</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="column">
+        <div class="control">
+                          <input name="skillVal" class="slider has-output is-fullwidth is-circle" min="1" max="10" value="1" step="1" type="range">
+                        <output for="sliderWithValue">1</output>
+        </div>
+      </div>
+  </div>
+    `);
+        counter2++;
+
+    });
+
+    $('body').on('click', '#delete-skill', function(e) {
+        e.preventDefault();
+        $('#scol' + (counter2 - 1)).remove();
+        counter2--;
+
+    });
+
+
+      $(document).on('change', 'input.slider',function () {
+          $(this).next().html($(this).val());
+      });
+
+
+      $('body').on('click', '#add-language', function(e) {
+        $('#langrow').append(`		<div class="columns" id="lcol` + counter3 + `">
+      <div class="column">
+        <div class="control">
+          <div class="select is-fullwidth">
+            <select name="lang">
               <option>Python</option>
               <option>Java</option>
               <option>Haskell</option>
@@ -328,30 +391,23 @@ $(document).ready(function() {
         </div>
       </div>
       <div class="column">
-      <label class="label">Proficiency</label>
         <div class="control">
-                          <input name="skillVal" class="slider has-output is-fullwidth is-circle" min="1" max="10" value="1" step="1" type="range">
+                          <input name="langVal" class="slider has-output is-fullwidth is-circle" min="1" max="10" value="1" step="1" type="range">
                         <output for="sliderWithValue">1</output>
         </div>
       </div>
   </div>
     `);
-        counter2++;
+        counter3++;
 
     });
 
-    $('body').on('click', '#delete-skill', function(e) {
+    $('body').on('click', '#delete-language', function(e) {
         e.preventDefault();
-        $('#col' + (counter2 - 1)).remove();
-        counter2--;
+        $('#lcol' + (counter3 - 1)).remove();
+        counter3--;
 
     });
-
-
-      $(document).on('change', 'input.slider',function () {
-          $(this).next().html($(this).val());
-      });
-
 
 });
 
@@ -365,67 +421,6 @@ $(document).ready(function() {
         }
     }
 
-    function getSliderOutputPosition(slider) {
-        // Update output position
-        var newPlace,
-            minValue;
-
-        var style = window.getComputedStyle(slider, null);
-        // Measure width of range input
-        sliderWidth = parseInt(style.getPropertyValue('width'), 10);
-
-        // Figure out placement percentage between left and right of input
-        if (!slider.getAttribute('min')) {
-            minValue = 0;
-        } else {
-            minValue = slider.getAttribute('min');
-        }
-        var newPoint = (slider.value - minValue) / (slider.getAttribute('max') - minValue);
-
-        // Prevent bubble from going beyond left or right (unsupported browsers)
-        if (newPoint < 0) {
-            newPlace = 0;
-        } else if (newPoint > 1) {
-            newPlace = sliderWidth;
-        } else {
-            newPlace = sliderWidth * newPoint;
-        }
-
-        return {
-            'position': newPlace + 'px'
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        // Get all document sliders
-        var sliders = document.querySelectorAll('input[type="range"].slider');
-        [].forEach.call(sliders, function(slider) {
-            var output = findOutputForSlider(slider);
-            if (output) {
-                if (slider.classList.contains('has-output-tooltip')) {
-                    // Get new output position
-                    var newPosition = getSliderOutputPosition(slider);
-
-                    // Set output position
-                    output.style['left'] = newPosition.position;
-                }
-
-                // Add event listener to update output when slider value change
-                slider.addEventListener('input', function(event) {
-                    if (event.target.classList.contains('has-output-tooltip')) {
-                        // Get new output position
-                        var newPosition = getSliderOutputPosition(event.target);
-
-                        // Set output position
-                        output.style['left'] = newPosition.position;
-                    }
-
-                    // Update output with slider value
-                    output.value = event.target.value;
-                });
-            }
-        });
-    });
     });
 
 </script>
