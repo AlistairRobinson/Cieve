@@ -43,6 +43,8 @@ def newJob():
             stage_list = []
         skills = data['skill']
         skillVal = data['skillVal']
+        langVal = data['langVal']
+        languages = data['lang']
 
         stage_list.insert(0,'000000000000000000000000') #Onboarding Stage
 
@@ -72,7 +74,17 @@ def newJob():
         if len(skills) != len(skillVal):
             error = "Skills and scores don't match"
 
+        if len(languages) != len(langVal):
+            error = "Languages and scores don't match"
+
         for val in skillVal:
+            if str.isdigit(str(val)):
+                if int(val) <= 0 or int(val) > 10:
+                    error = "Score out of range"
+            else:
+                error = "Score is not a number"
+
+        for val in langVal:
             if str.isdigit(str(val)):
                 if int(val) <= 0 or int(val) > 10:
                     error = "Score out of range"
@@ -96,7 +108,9 @@ def newJob():
                     'positions available':noVacancies,
                     'stages':stage_list,
                     'skills':skills,
-                    'skillVal':skillVal}
+                    'skillVal':skillVal,
+                    'languages':languages,
+                    'langVal': langVal}
 
             skillDic = {}
             skillVal = json.pop('skillVal', None)
@@ -104,7 +118,16 @@ def newJob():
             for i in range(len(skills)):
                 skillDic[skills[i]] = skillVal[i]
             json['skills'] = skillDic
+
+            langDic = {}
+            langVal = json.pop('langVal', None)
+            langs = json.pop('languages', None)
+            for i in range(len(langs)):
+                langDic[langs[i]] = langVal[i]
+            json['languages'] = langDic
+            
             json['stagesDetail'] = []
+
             interviews = {}
             i = 1
             for stage in json['stages']:
@@ -134,19 +157,19 @@ def newJobSummary():
             del jsonData['stagesDetail']
 
             userID = session.get('user_id')[1:]
-            #jobID =  db.addNewJob(jsonData, userID)
+            jobID =  db.addNewJob(jsonData, userID)
 
             interviewsData = json.loads(data["interviews"][0].replace("'",'"').replace('u"','"'))
 
             for stepID, interviews in interviewsData.items():
                 stageID = interviews[1]
                 dates = data["Date[]" + stepID]
-                startTimes = data["startTimes[]" + stepID]
-                endTimes = data["endTimes[]" + stepID]
+                startTimes = data["startTime[]" + stepID]
+                endTimes = data["endTime[]" + stepID]
                 vacancies = data["vacancies[]" + stepID]
                 stagesData = []
-                for i in len(dates):
-                    stagesData.append(dates[i], startTimes[i], endTimes[i], vacancies[i])
+                for i in range(len(dates)):
+                    stagesData.append([dates[i], startTimes[i], endTimes[i], vacancies[i]])
                 
                 for stageData in stagesData:
                     db.insertStageAvailability(stageID, jobID, stageData)
@@ -154,22 +177,11 @@ def newJobSummary():
 
 
 
-
-            #jsonData = json.loads(jsonData)
-            #print jsonData
-            """
-            json = data['json']
-            del data[json]
-
-            db = get_db()
-            for stage in data:
-                db.insertStageAvailability(stageID, jobID, stage) #Stage = {of ["dd/mm/yy", start time, end time, number of slots]}
-
-           
             flash("Vacancy post successful")
+            
+            
             return redirect(url_for('client.jobs'))
-            """
-            return None
+        
     render_template(url_for('client.dashboard'))
 
 #Definition for the application

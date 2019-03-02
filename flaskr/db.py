@@ -162,8 +162,8 @@ class Mongo:
 
 
     def applyJob(self, userID, jobID, preferred, score):
-        self.db.application.insert_one({"applicant id": userID,
-                                        "vacancy id": jobID,
+        self.db.application.insert_one({"applicant id": ObjectId(userID),
+                                        "vacancy id": ObjectId(jobID),
                                         "current step": 0,
                                         "preferred": preferred,
                                         "specialized score": score,
@@ -327,6 +327,14 @@ class Mongo:
         self.db.metaData.update_one({}, {"$addToSet": {"locations": location}})
         return True
 
+    def getQuestions(self, stageID):
+        query = self.db.questionStage.find_one({"stage id": stageID})
+        return query['questions']
+
+    def insertQuestions(self, stageID, questions):
+        self.db.questionStage.insert_one({"stage id": stageID, "questions": questions})
+        return True
+
     # Return the id's of the stages of type "Interview"
     def getInterviewStages(self):
         interviewStages = []
@@ -335,8 +343,11 @@ class Mongo:
             interviewStages.append(str(doc["_id"]))
         return interviewStages
 
-    def insertStageAvailability(self):
-        return
+    def insertStageAvailability(self, stageID, jobID, stageData):
+        self.db.interviewStage.insert_one({"stage id": stageID,
+                                            "job id": jobID,
+                                            "slots": stageData})
+        return True
 
     #Given an id will return the title of the stage
     def getStageTitle(self, id):
