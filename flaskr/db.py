@@ -39,12 +39,15 @@ class Mongo:
         applicantData = {"setup": True}
         applicantID = self.db.applicant.insert_one(applicantData).inserted_id
 
-        applicantInfoData = {"applicant_id": applicantID,
-                             "name": name,
-                             "username": username,
-                             "password_hash": passHash,
-                             "salt": salt}
+        applicantInfoData = {"applicant_id": applicantID}
+
+        accountInfoData = {"name": name,
+                           "username": username,
+                           "password_hash": passHash,
+                           "salt": salt}
+
         self.db.applicantInfo.insert_one(applicantInfoData)
+        self.db.accountInfo.insert_one(accountInfoData)
         return applicantID
 
 
@@ -58,6 +61,7 @@ class Mongo:
 
 
     # Create an application, return the applicationID if completed (None if not)
+    '''
     def createApplication(self, applicantID, jobID, stage, score):
         query = self.db.applicant.find_one({"preferred vacancies": jobID})
         if query != None:
@@ -72,8 +76,10 @@ class Mongo:
                            "preferred": preferred,
                            "completed": False,
                            "date inputted": datetime.today()}
+        print(datetime.today())
         applicationID = self.db.application.insert_one(applicationData).inserted_id
         return applicationID
+    '''
 
 
 
@@ -138,10 +144,10 @@ class Mongo:
         return applications
 
 
-    def applyJob(self, userID, username, jobID, preferred, score):
+    def applyJob(self, userID, jobID, preferred, score):
         self.db.application.insert_one({"applicant id": userID,
-                                        "username": username,
                                         "vacancy id": jobID,
+                                        "current step": 0,
                                         "preferred": preferred,
                                         "specialized score": score,
                                         "completed": True})
@@ -230,7 +236,7 @@ class Mongo:
     #Retuns the applicants who have been accepted for the first stage or had a specialized score higher than 0.8
     def getFeedbackApplicants(self):
         feedbackApplicants = []
-        query = self.db.application.find({"current step": {"$gt": 1}, "$or": [{"current step": 1, "completed": True, "specialized score": {"$gt": 0.8}}]}, {"applicant id": 1, "_id": 0})
+        query = self.db.application.find({"current step": {"$gt": 0}, "$or": [{"current step": 0, "completed": True, "specialized score": {"$gt": 0.8}}]}, {"applicant id": 1, "_id": 0})
         for doc in query:
             feedbackApplicants.append(doc)
         return feedbackApplicants
@@ -271,7 +277,7 @@ class Mongo:
         return locations
 
     def newDivision(self, division):
-        self.db.metaData.update_one({"$addToSet": {"documents": documents}})
+        self.db.metaData.update_one({"$addToSet": {"divisions": division}})
         return True
 
     def newRole(self, role):
@@ -283,10 +289,14 @@ class Mongo:
         return True
 
     # Return the id's of the stages of type "Interview"
-    def getInterviewStages():
-        return
+    def getInterviewStages(self):
+        interviewStages = []
+        query = self.db.stage.find({"type": "Interview"}, {"_id": 1})
+        for doc in query:
+            interviewStages.append(doc)
+        return interviewStages
 
-    def insertStageAvailability():
+    def insertStageAvailability(self):
         return
 
     def deleteApplicantAccount(self, username):
@@ -305,7 +315,4 @@ class Mongo:
     def deleteJob(self, title):
         self.db.vacancy.delete_one({"vacancy title": title})
         return True
-    
-print(get_db().getWeights())
-print(get_db().gdprCompliance())
 
