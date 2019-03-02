@@ -72,6 +72,18 @@ def test_cli_login(auth, username, password, message):
             raise AssertionError('nothing flashed')
         assert message in error[1]
 
+# Client logout tests (R1)
+
+def test_cli_logout(client, auth):
+    token = csrf.generate_csrf_token_with_session(auth._client)
+    response = auth._client.post('/logout', data={'_csrf_token': token})
+    with auth._client.session_transaction() as session:
+        try:
+            user_id = session['user_id']
+        except KeyError:
+            return True
+        return False
+
 # Applicant login tests (R1)
 
 def test_apl_login_get(client, auth):
