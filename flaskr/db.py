@@ -124,12 +124,6 @@ class Mongo:
 
     # Wiil accept a json parameter which will be defined by the input, adds the new job to the DB
     def addNewJob(self, json, clientID):
-        skillDic = {}
-        skillVal = json.pop('skillVal', None)
-        skills = json.pop('skills', None)
-        for i in range(len(skills)):
-            skillDic[skills[i]] = skillVal[i]
-        json['skills'] = skillDic
         jobID = self.db.vacancy.insert_one(json).inserted_id
         self.db.client.update_one({"_id": clientID}, {"$push": {"vacancies": jobID}})
 
@@ -188,13 +182,13 @@ class Mongo:
         for doc in applicationQuery:
             applicantList.append(doc)
         return applicantList
-    
-    
+
+
     #Move applicants to the next stage in the steps for the jobs and update completed flag
     def moveToNextStage(self, applicationID, jobID):
         self.db.application.update_one({"_id": applicationID}, {"$inc": {"current step": 1}}, {"$set": {"completed": False}})
-        
-        
+
+
     # Return the total number of pages for a specific job sort
     def getPageTotal(self, division, role, location):
         return 0
@@ -209,8 +203,8 @@ class Mongo:
             self.db.applicantInfo.delete_one({"applicant id": doc['applicant id']})
         self.db.application.delete_many({"date inputted": {"$lt": datetime.today() - relativedelta(months=6)}})
         return oldApplications
-    
-    
+
+
     def deleteJobByID(self, jobID):
         query = self.db.application.find_one({"vacancy id": jobID}, {"applicant id": 1, "_id": 0})
         for doc in query:
@@ -287,7 +281,14 @@ class Mongo:
     def newLocation(self, location):
         self.db.metaData.update_one({"$addToSet": {"locations": location}})
         return True
-    
+
+    # Return the id's of the stages of type "Interview"
+    def getInterviewStages():
+        return
+
+    def insertStageAvailability():
+        return
+
     def deleteApplicantAccount(self, username):
         self.db.applicantInfo.delete_one({"username": username})
         self.db.application.delete_one({"username": username})

@@ -43,6 +43,7 @@ def aplRegister():
             applicantID = db.insertApplicantUser(name, username, passHash, salt)
             session.clear()
             session['user_id'] = "A" + str(applicantID)
+            flash('Registration successful')
             return redirect(url_for('applicant.dashboard'))
 
         flash(error)
@@ -76,6 +77,7 @@ def cliRegister():
             clientID = db.insertClientUser(username, passHash, salt)
             session.clear()
             session['user_id'] = "C" + str(clientID)
+            flash('Registration successful')
             return redirect(url_for('client.dashboard'))
 
         flash(error)
@@ -100,7 +102,7 @@ def applicantLogin():
         db = get_db()
         error = None
         user = db.getApplicantAccount(username)
-        if user is None:
+        if user is None or username == "" or password == "":
             error = 'Incorrect username or password.'
         elif not check_password_hash(user['password_hash'], password + user['salt']):
             error = 'Incorrect username or password.'
@@ -108,6 +110,7 @@ def applicantLogin():
         if error is None:
             session.clear()
             session['user_id'] = "A" + str(user['applicant_id'])
+            flash('Login successful')
             return redirect(url_for('applicant.dashboard'))
 
         flash(error)
@@ -137,6 +140,7 @@ def clientLogin():
         if error is None:
             session.clear()
             session['user_id'] = "C" + str(user['_id'])
+            flash('Login successful')
             return redirect(url_for('client.dashboard'))
 
         flash(error)
