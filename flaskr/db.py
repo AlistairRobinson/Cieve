@@ -3,6 +3,7 @@ from bson.objectid import ObjectId
 from flask import jsonify
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+import math
 
 
 def get_db():
@@ -118,6 +119,7 @@ class Mongo:
 
         if location != "":
             queryMaker['location'] = location
+
         query = self.db.vacancy.find(queryMaker, {"positions available": 0, "skills": 0})
         for doc in query:
             Jobs.append(doc)
@@ -139,7 +141,7 @@ class Mongo:
         applications = []
         idQuery = self.db.application.find({"applicant id": ObjectId(applicantID)}, {"vacancy id": 1, "_id": 0})
         for id in idQuery:
-            titleQuery = self.db.vacancy.find({"_id": ObjectID(id)}, {"vacancy title": 1, "_id": 0})
+            titleQuery = self.db.vacancy.find({"_id": ObjectId(id)}, {"vacancy title": 1, "_id": 0})
             for title in titleQuery:
                 applications.append(title)
         return applications
@@ -198,7 +200,18 @@ class Mongo:
 
     # Return the total number of pages for a specific job sort
     def getPageTotal(self, division, role, location):
-        return 0
+        queryMaker = {"positions available": {"$gt": "0"}}
+        if division != "":
+            queryMaker['division'] = division
+
+        if role != "":
+            queryMaker['role type'] = role
+
+        if location != "":
+            queryMaker['location'] = location
+            
+        availableJobs = list(self.db.vacancy.find(queryMaker))
+        return math.ceil(len(availableJobs)/20)
 
 
     #Return list of applications older than 6 months, delete the applications and relevent info
@@ -245,26 +258,16 @@ class Mongo:
     #Returns the percentage of applicants that were accepted for the first stage
     def getAcceptedRate(self):
         return float(self.db.application.find({"current step": {"$gt": 1}}).size())/float(self.db.application.find({}).size())
-    
+     
     # Return true if a userID exists for either client or applicants
     def userExists(self, user_id):
         if self.db.applicant.find({"_id": ObjectId(user_id)}) != None:
             return True
         else:
-            if self.db.client.find({"_id": ObjectId(user_id)}) != None:
+            if self.db.client.find({"_id": ObjectId(user_id)} != None:
                 return True
         return False
-
-    def clientExists(self, user_id):
-        if self.db.client.find({"_id": ObjectId(user_id)}) != None:
-            return True
-        return False
-
-    def applicantExists(self, user_id):
-        if self.db.applicant.find({"_id": ObjectId(user_id)}) != None:
-            return True
-        return False
-
+    
     # Return a list of all divisions
     def getDivisions(self):
         divisions = []
@@ -317,7 +320,7 @@ class Mongo:
     def deleteApplicantAccount(self, username):
         self.db.accountInfo.delete_many({"username": username})
         return True
-        
+
     def deleteClientAccount(self, username):
         self.db.client.delete_one({"username": username})
         return True
