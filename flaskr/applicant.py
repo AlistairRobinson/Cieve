@@ -126,43 +126,6 @@ def newApplication():
         db.addUserMetaData(userID, coverLetter, interestingFacts)
 
         db.addUserScore(userID, 0)  # USER GENERAL SCORE
-        """
-        skills = request.form['skills']
-        jobs = request.form['jobs']
-        other = request.form['other']
-        error = None
-
-        if other not in ["T", "F"]:
-            error = 'Error! Other is not T or F'
-
-        if skills == None:
-            error = "No skills"
-
-        if jobs == None:
-            error = "No jobs selected"
-
-        # STANDARD SCORE + DB UPDATE
-
-        if error is not None:
-            flash(error)
-        else:
-            if other == "F":
-
-                for job, prefered in jobs.items():
-                    if prefered == 0:
-                        del jobs[job]
-
-            for jobID, prefered in jobs.items():
-                userID = session.get('user_id')[1:]
-                score = 0 #CALCLUATE JOB SPECIFIC SCORE
-
-                db.applyJob(userID, jobID, score, prefered)
-
-            # APPLY SKILS SCORE ....
-
-            # APPLICANT SCORING FUNCTION HERE
-            return render_template(url_for('apl.applications'))
-        """
 
     return render_template('/apl/applicationCreation.html', divisons = db.getDivisions(), roles = db.getRoles(), locations = db.getLocations())
 
