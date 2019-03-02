@@ -3,6 +3,7 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 from werkzeug.datastructures import ImmutableMultiDict
+from bson.objectid import ObjectId
 
 from flaskr.auth import login_required_C
 from flaskr.db import get_db
@@ -42,21 +43,21 @@ def newJob():
         skills = data['skill']
         skillVal = data['skillVal']
 
-        stage_list.insert(0,"0") #Onboarding Stage
+        stage_list.insert(0,'000000000000000000000000') #Onboarding Stage
 
         error = None
-        """
+        
         if jobTitle == "":
             error = "Empty Job Title"
 
         if division not in db.getDivisions():
-            db.addDivision(division)
+            db.newDivision(division)
 
         if role not in db.getRoles():
-            db.addRole(role)
+            db.newRole(role)
 
         if country not in db.getLocations():
-            db.addLocation(country)
+            db.newLocation(country)
 
         if jobDescription == "":
             error = "No Job description"
@@ -80,11 +81,12 @@ def newJob():
         for stage in stages:
             if stage not in get_db().getStages():
                 error = "Wrong stage"
-        """
+        
         if error is not None:
-            print
+            print(error)
             flash(error)
         else:
+            flash("Vacancy data accepted")
             db = get_db()
             json = {'vacancy title':jobTitle,
                     'division':division,
@@ -109,10 +111,11 @@ def newJob():
                 title = db.getStageTitle(stage)
                 json['stagesDetail'].append(title)
                 if stage in db.getInterviewStages():
-                    interviews["Stage " + str(i)] = [title, str(stage)]
+                    interviews[i] = [title, str(stage)]
                     i += 1
 
-            return render_template('/cli/createjobsummary.html', json = json, interviews = interviews)
+
+            return render_template('/cli/review.html', json = json, interviews = interviews)
     # Generate post data and pass to front end
     return render_template('/cli/createJob.html', stages=stages,divisons = db.getDivisions(), roles = db.getRoles(), locations = db.getLocations())
 
@@ -127,7 +130,7 @@ def newJobSummary():
 
             db = get_db()
             for stage in data:
-                db.insertStageAvailability(stage) #Stage = [of ["dd/mm/yy", start time, end time, number of slots]]
+                db.insertStageAvailability(stage) #Stage = {of ["dd/mm/yy", start time, end time, number of slots]}
 
             db.addNewJob(json, session.get('user_id')[1:])
             flash("Vacancy post successful")

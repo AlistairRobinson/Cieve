@@ -6,16 +6,55 @@ from flaskr.db import get_db
 
 # Client login tests (to ensure security)
 
-def test_cli_login(client, jobs):
-    token = csrf.generate_csrf_token_with_session(jobs._client)
-    response = jobs._client.post('/cli/auth/login', data={'username': '1@1', 'password': '1', '_csrf_token': token})
-    with jobs._client:
-        client.get('/')
-        assert 'C' in session['user_id']
+def test_setup_cli(client, jobs):
+    token = csrf.generate_csrf_token_with_session(client)
+    jobs._client.post(
+        '/cli/auth/register',
+        data={'username': 'test', 'password': 'test', 'name': 'test', '_csrf_token': token}
+    )
+    with client.session_transaction() as session:
+        try:
+            error = session['_flashes'][0]
+        except KeyError:
+            raise AssertionError('nothing flashed')
+        assert 'Registration successful' in error[1]
 
 # Vacany posting tests (R8, R14)
 
 @pytest.mark.parametrize(('data', 'message'), (
+    ({
+        'job_title': '',
+        'division': 'HR',
+        'roles': 'Graduate',
+        'country': 'Germany',
+        'job_desc': 'test',
+        'numVacancies': 1,
+        'Stage_Description': ["000000000000000000000000"],
+        'skill': ['Python', 'C'],
+        'skillVal': [7, 6]
+    }, 'Empty job title'),
+    ({
+        'job_title': 'test',
+        'division': 'HR',
+        'roles': 'Graduate',
+        'country': 'Germany',
+        'job_desc': '',
+        'numVacancies': 1,
+        'Stage_Description': ["000000000000000000000000"],
+        'skill': ['Python', 'C'],
+        'skillVal': [7, 6]
+    }, 'No Job description'),
+    ({
+        'job_title': 'test',
+        'division': 'HR',
+        'roles': 'Graduate',
+        'country': 'Germany',
+        'job_desc': 'test',
+        'numVacancies': -1,
+        'Stage_Description': ["000000000000000000000000"],
+        'skill': ['Python', 'C'],
+        'skillVal': [7, 6]
+    }, 'Number of vacancies must be positive'),
     ({
         'job_title': 'test',
         'division': 'HR',
@@ -23,22 +62,77 @@ def test_cli_login(client, jobs):
         'country': 'Germany',
         'job_desc': 'test',
         'numVacancies': 1,
-        'Stage_Description': [1, 2, 3],
+        'Stage_Description': ["000000000000000000000000"],
+        'skill': ['Python', 'C'],
+        'skillVal': [1]
+    }, "Skills and scores don't match"),
+    ({
+        'job_title': 'test',
+        'division': 'HR',
+        'roles': 'Graduate',
+        'country': 'Germany',
+        'job_desc': 'test',
+        'numVacancies': 1,
+        'Stage_Description': ["000000000000000000000000"],
+        'skill': ['Python'],
+        'skillVal': [7, 6]
+    }, "Skills and scores don't match"),
+    ({
+        'job_title': 'test',
+        'division': 'HR',
+        'roles': 'Graduate',
+        'country': 'Germany',
+        'job_desc': 'test',
+        'numVacancies': 1,
+        'Stage_Description': ["000000000000000000000000"],
+        'skill': ['Python', 'C'],
+        'skillVal': [77, 6]
+    }, 'Score out of range'),
+    ({
+        'job_title': 'test',
+        'division': 'HR',
+        'roles': 'Graduate',
+        'country': 'Germany',
+        'job_desc': 'test',
+        'numVacancies': 1,
+        'Stage_Description': ["000000000000000000000000"],
+        'skill': ['Python', 'C'],
+        'skillVal': ['77', '6']
+    }, 'Score is not a number'),
+    ({
+        'job_title': 'test',
+        'division': 'HR',
+        'roles': 'Graduate',
+        'country': 'Germany',
+        'job_desc': 'test',
+        'numVacancies': 1,
+        'Stage_Description': ["000000000000000000000000"],
         'skill': ['Python', 'C'],
         'skillVal': [7, 6]
-    }, 'Vacancy post successful'),
+    }, 'Wrong stage'),
+    ({
+        'job_title': 'test',
+        'division': 'HR',
+        'roles': 'Graduate',
+        'country': 'Germany',
+        'job_desc': 'test',
+        'numVacancies': 1,
+        'Stage_Description': ["000000000000000000000000"],
+        'skill': ['Python', 'C'],
+        'skillVal': [7, 6]
+    }, 'Vacancy data accepted'),
 ))
 def test_post_vacancy(client, jobs, data, message):
     token = csrf.generate_csrf_token_with_session(jobs._client)
-    jobs._client.post('/cli/auth/login', data={'username': '1@1', 'password': '1', '_csrf_token': token})
+    jobs._client.post('/cli/auth/login', data={'username': 'test', 'password': 'test', '_csrf_token': token})
     response = jobs.post_vacancy(data)
     with jobs._client.session_transaction() as session:
         try:
-            error = session['_flashes'][0]
+            error = session['_flashes'][1]
         except KeyError:
             raise AssertionError('nothing flashed')
         assert message in error[1]
-    
+
 # Vacancy retrieval tests (R15)
 
 def test_get_vacancies(client, jobs):
@@ -63,7 +157,7 @@ json['other'] = None
 ))
 def test_post_application(client, jobs, data, message):
     token = csrf.generate_csrf_token_with_session(jobs._client)
-    jobs._client.post('/apl/auth/login', data={'username': '1@1', 'password': '1', '_csrf_token': token})
+    jobs._client.post('/apl/auth/login', data={'username': 'test', 'password': 'test', '_csrf_token': token})
     response = jobs.apply_to_vacancy(data)
     with jobs._client.session_transaction() as session:
         try:
@@ -72,6 +166,14 @@ def test_post_application(client, jobs, data, message):
             raise AssertionError('nothing flashed')
         assert message in error[1]
 
-def test_cleanup():
+def test_cleanup_job():
     db = get_db()
-    assert db.deleteJob("test") & db.deleteApplication("test")
+    assert db.deleteJob("test") 
+    
+def test_cleanup_appl():
+    db = get_db()
+    assert db.deleteApplication("test") 
+    
+def test_cleanup_cli():
+    db = get_db()
+    assert db.deleteClientAccount("test")

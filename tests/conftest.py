@@ -121,3 +121,14 @@ class JobActions(object):
 @pytest.fixture
 def jobs(client):
     return JobActions(client)
+
+class PageActions:
+
+     # Set up a virtual client to store session variables
+    def __init__(self, client):
+        self._client = client
+
+# Returns a page test object
+@pytest.fixture
+def page(client):
+    return AuthActions(client)

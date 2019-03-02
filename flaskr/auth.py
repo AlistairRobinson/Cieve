@@ -43,6 +43,7 @@ def aplRegister():
             applicantID = db.insertApplicantUser(name, username, passHash, salt)
             session.clear()
             session['user_id'] = "A" + str(applicantID)
+            flash('Registration successful')
             return redirect(url_for('applicant.dashboard'))
 
         flash(error)
@@ -76,6 +77,7 @@ def cliRegister():
             clientID = db.insertClientUser(username, passHash, salt)
             session.clear()
             session['user_id'] = "C" + str(clientID)
+            flash('Registration successful')
             return redirect(url_for('client.dashboard'))
 
         flash(error)
@@ -100,14 +102,15 @@ def applicantLogin():
         db = get_db()
         error = None
         user = db.getApplicantAccount(username)
-        if user is None:
+        if user is None or username == "" or password == "":
             error = 'Incorrect username or password.'
         elif not check_password_hash(user['password_hash'], password + user['salt']):
             error = 'Incorrect username or password.'
 
         if error is None:
             session.clear()
-            session['user_id'] = "A" + str(user['applicant_id'])
+            session['user_id'] = "A" + str(user['_id'])
+            flash('Login successful')
             return redirect(url_for('applicant.dashboard'))
 
         flash(error)
@@ -137,6 +140,7 @@ def clientLogin():
         if error is None:
             session.clear()
             session['user_id'] = "C" + str(user['_id'])
+            flash('Login successful')
             return redirect(url_for('client.dashboard'))
 
         flash(error)
@@ -147,16 +151,15 @@ def clientLogin():
 def load_logged_in_user():
     user_id = session.get('user_id')
     
-    if get_db().userExists(user_id):
-        if user_id is None:
-            g.user = None
-        elif user_id[0] == "A":
-            g.user = user_id[1:]
-        elif user_id[0] == "C":
-            g.user = user_id[1:]
-        else:
-            g.user = None
-            session['user_id'] = None
+    if user_id is None:
+        g.user = None
+    elif user_id[0] == "A" and get_db().applicantExists(user_id[1:]):
+        g.user = user_id[1:]
+    elif user_id[0] == "C" and get_db().clientExists(user_id[1:]):
+        g.user = user_id[1:]
+    else:
+        g.user = None
+        session['user_id'] = None
 
 @bp.route('/logout')
 def logout():
