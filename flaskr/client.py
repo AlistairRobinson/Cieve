@@ -33,7 +33,13 @@ def newJob():
         country = request.form['country']
         jobDescription = request.form['job_desc']
         noVacancies = request.form['numVacancies']
+        print request.form
+        startDate = request.form['start_date']
+        if request.form['asap'] == 'on':
+            startDate = "ASAP"
 
+        minDegreeLevel = request.form['min_deg_level']
+        preferedDegrees = request.form['prefered_degrees']
 
 
         data = request.form.to_dict(flat=False)
@@ -106,6 +112,9 @@ def newJob():
                     'location':country,
                     'vacancy description':jobDescription,
                     'positions available':noVacancies,
+                    'start date':startDate,
+                    'min degree level':minDegreeLevel,
+                    'prefered degrees':preferedDegrees,
                     'stages':stage_list,
                     'skills':skills,
                     'skillVal':skillVal,
