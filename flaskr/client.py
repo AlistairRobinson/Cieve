@@ -33,7 +33,6 @@ def newJob():
         country = request.form['country']
         jobDescription = request.form['job_desc']
         noVacancies = request.form['numVacancies']
-        print request.form
         startDate = request.form['start_date']
         if request.form['asap'] == 'on':
             startDate = "ASAP"
