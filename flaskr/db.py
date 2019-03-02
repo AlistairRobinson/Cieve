@@ -36,13 +36,13 @@ class Mongo:
 
     def getApplicantPhish(self, id):
         query = self.db.accountInfo.find_one({"_id": ObjectId(id[1:])})
-        if query is not None and query['phish'][0] is not None:
+        if query is not None and 'phish' in query:
             return query['phish'][0]
         return ""
 
     def getClientPhish(self, id):
         query = self.db.client.find_one({"_id": ObjectId(id[1:])}, {'phish': 1})
-        if query is not None and query['phish'][0] is not None:
+        if query is not None and 'phish' in query:
             return query['phish'][0]
         return ""
 
