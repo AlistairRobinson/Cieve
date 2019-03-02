@@ -134,19 +134,19 @@ def newJobSummary():
             del jsonData['stagesDetail']
 
             userID = session.get('user_id')[1:]
-            #jobID =  db.addNewJob(jsonData, userID)
+            jobID =  db.addNewJob(jsonData, userID)
 
             interviewsData = json.loads(data["interviews"][0].replace("'",'"').replace('u"','"'))
 
             for stepID, interviews in interviewsData.items():
                 stageID = interviews[1]
                 dates = data["Date[]" + stepID]
-                startTimes = data["startTimes[]" + stepID]
-                endTimes = data["endTimes[]" + stepID]
+                startTimes = data["startTime[]" + stepID]
+                endTimes = data["endTime[]" + stepID]
                 vacancies = data["vacancies[]" + stepID]
                 stagesData = []
-                for i in len(dates):
-                    stagesData.append(dates[i], startTimes[i], endTimes[i], vacancies[i])
+                for i in range(len(dates)):
+                    stagesData.append([dates[i], startTimes[i], endTimes[i], vacancies[i]])
                 
                 for stageData in stagesData:
                     db.insertStageAvailability(stageID, jobID, stageData)
