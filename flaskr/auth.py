@@ -102,7 +102,7 @@ def applicantLogin():
         db = get_db()
         error = None
         user = db.getApplicantAccount(username)
-        if user is None:
+        if user is None or username == "" or password == "":
             error = 'Incorrect username or password.'
         elif not check_password_hash(user['password_hash'], password + user['salt']):
             error = 'Incorrect username or password.'
