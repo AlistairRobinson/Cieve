@@ -121,6 +121,18 @@ def test_cli_nosql_injection(client, auth, username, password, message):
             raise AssertionError('nothing flashed')
         assert message in error[1]
 
+# Applicant logout tests (R1)
+
+def test_apl_logout(client, auth):
+    token = csrf.generate_csrf_token_with_session(auth._client)
+    response = auth._client.post('/logout', data={'_csrf_token': token})
+    with auth._client.session_transaction() as session:
+        try:
+            user_id = session['user_id']
+        except KeyError:
+            return True
+        return False
+
 def test_cleanup(client, auth):
     db = get_db()
     assert db.deleteApplicantAccount("test")
