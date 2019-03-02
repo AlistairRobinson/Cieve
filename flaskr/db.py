@@ -307,7 +307,7 @@ class Mongo:
     def deleteApplicantAccount(self, username):
         self.db.accountInfo.delete_many({"username": username})
         return True
-
+        
     def deleteClientAccount(self, username):
         self.db.client.delete_one({"username": username})
         return True

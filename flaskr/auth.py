@@ -151,7 +151,7 @@ def clientLogin():
 def load_logged_in_user():
     user_id = session.get('user_id')
     
-    if get_db().userExists(user_id):
+    if get_db().userExists(user_id[1:]):
         if user_id is None:
             g.user = None
         elif user_id[0] == "A":
