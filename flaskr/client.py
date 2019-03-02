@@ -130,7 +130,7 @@ def newJobSummary():
 
             db = get_db()
             for stage in data:
-                db.insertStageAvailability(stage) #Stage = {of ["dd/mm/yy", start time, end time, number of slots]}
+                db.insertStageAvailability(stageID, jobID, stage) #Stage = {of ["dd/mm/yy", start time, end time, number of slots]}
 
             db.addNewJob(json, session.get('user_id')[1:])
             flash("Vacancy post successful")
