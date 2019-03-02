@@ -10,7 +10,7 @@ db.db.applicant.insert_one({"preferred vacancies": 0,
                             "basic score": 0,
                             "main skills": 0})
 
-db.db.clients.insert_one({"username": 0,
+db.db.client.insert_one({"username": 0,
                           "passHash": 0,
                           "salt": 0,
                           "email": 0,

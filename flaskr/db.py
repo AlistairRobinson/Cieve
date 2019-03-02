@@ -35,7 +35,7 @@ class Mongo:
             return None
 
     def getApplicantPhish(self, id):
-        query = self.db.accountInfo.find_one({"_id": ObjectId(id[1:])}, {'phish': 1})
+        query = self.db.accountInfo.find_one({"applicant id": ObjectId(id[1:])}, {'phish': 1})
         if query is not None:
             return query.get('phish', [""])[0]
         return ""
@@ -51,9 +51,10 @@ class Mongo:
         applicantData = {"setup": True}
         applicantID = self.db.applicant.insert_one(applicantData).inserted_id
 
-        applicantInfoData = {"applicant_id": applicantID}
+        applicantInfoData = {"applicant id": applicantID}
 
-        accountInfoData = {"name": name,
+        accountInfoData = {"applicant id": applicantID,
+                           "name": name,
                            "username": username,
                            "password_hash": passHash,
                            "salt": salt,
@@ -101,10 +102,9 @@ class Mongo:
     def updateApplication(self, applicantID, stage, completed):
         self.db.application.update_one({"applicant id": applicantID}, {"$set": {"stage": stage, "completed": completed}})
 
-
     # Return JSON of applicant info populated based on id
     def getApplicantUserID(self, id):
-        query = self.db.applicantInfo.find_one({"applicant_id": ObjectId(id)})
+        query = self.db.applicantInfo.find_one({"applicant id": ObjectId(id)})
         if query != None:
             return query
         else:
@@ -210,7 +210,7 @@ class Mongo:
 
     #Move applicants to the next stage in the steps for the jobs and update completed flag
     def moveToNextStage(self, applicationID, jobID):
-        self.db.application.update_one({"_id": ObjectId(applicationID)}, {"$inc": {"current step": 1}}, {"$set": {"completed": False}})
+        self.db.application.update_one({"applicant id": ObjectId(applicationID)}, {"$inc": {"current step": 1}}, {"$set": {"completed": False}})
 
 
     # Return the total number of pages for a specific job sort
@@ -373,36 +373,36 @@ class Mongo:
         return True
     
     def addUserEducation(self, userID, alevels, degreeQualification, degreeLevel, universityAttended):
-        self.db.applicantInfo.update_one({"applicant_id": ObjectId(userID)}, 
+        self.db.applicantInfo.update_one({"applicant id": ObjectId(userID)}, 
                                          {"$set": {"a-level qualifications": alevels, "degree qualification": degreeQualification, "degree level": degreeLevel, "attended university": universityAttended}})
         return True
 
     def addUserSkills(self, userID, skills):
-        self.db.applicantInfo.update_one({"applicant_id": ObjectId(userID)},
+        self.db.applicantInfo.update_one({"applicant id": ObjectId(userID)},
                                          {"$set": {"skills": skills}})
         return True
 
     def addUserLanguages(self, userID, languages):
-        self.db.applicantInfo.update_one({"applicant_id": ObjectId(userID)},
+        self.db.applicantInfo.update_one({"applicant id": ObjectId(userID)},
                                          {"$set": {"languages": languages}})
         return True
 
     def addUserEmployment(self, userID, employmentHistory):
-        self.db.applicantInfo.update_one({"applicant_id": ObjectId(userID)},
+        self.db.applicantInfo.update_one({"applicant id": ObjectId(userID)},
                                          {"$set": {"previous employment": employmentHistory}})
         return True
 
     def addUserContacts(self, userID, phoneNumber, address):
-        self.db.applicantInfo.update_one({"applicant_id": ObjectId(userID)},
+        self.db.applicantInfo.update_one({"applicant id": ObjectId(userID)},
                                          {"$set": {"phone number": phoneNumber, "address": address}})
         return True
 
     def addUserMetaData(self, userID, coverLetter, interestingFacts):
-        self.db.applicantInfo.update_one({"applicant_id": ObjectId(userID)},
+        self.db.applicantInfo.update_one({"applicant id": ObjectId(userID)},
                                          {"$set": {"cover letter": coverLetter, "interesting facts": interestingFacts}})
         return True
 
     def addUserScore(self, userID, userScore):
-        self.db.applicantInfo.update_one({"applicant_id": ObjectId(userID)},
+        self.db.applicantInfo.update_one({"applicant id": ObjectId(userID)},
                                          {"$set": {"basic score": userScore}})
         return True

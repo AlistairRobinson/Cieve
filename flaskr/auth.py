@@ -113,7 +113,7 @@ def applicantLogin():
 
         if error is None:
             session.clear()
-            session['user_id'] = "A" + str(user['_id'])
+            session['user_id'] = "A" + str(user['applicant id'])
             flash('Login successful')
             return redirect(url_for('applicant.dashboard'))
 
@@ -143,7 +143,7 @@ def clientLogin():
 
         if error is None:
             session.clear()
-            session['user_id'] = "C" + str(user['_id'])
+            session['user_id'] = "C" + str(user['applicant id'])
             flash('Login successful')
             return redirect(url_for('client.dashboard'))
 
