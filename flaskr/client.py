@@ -45,7 +45,7 @@ def newJob():
         stage_list.insert(0,"0") #Onboarding Stage
 
         error = None
-        
+
         if jobTitle == "":
             error = "Empty Job Title"
 
@@ -80,7 +80,7 @@ def newJob():
         for stage in stages:
             if stage not in get_db().getStages():
                 error = "Wrong stage"
-        
+
         if error is not None:
             print(error)
             flash(error)
@@ -114,9 +114,9 @@ def newJob():
                     i += 1
 
 
-            return render_template('/cli/review.html', json = json, interviews = interviews)
+            return render_template('cli/review.html', json = json, interviews = interviews)
     # Generate post data and pass to front end
-    return render_template('/cli/createJob.html', stages=stages,divisons = db.getDivisions(), roles = db.getRoles(), locations = db.getLocations())
+    return render_template('cli/createjob.html', stages=stages,divisons = db.getDivisions(), roles = db.getRoles(), locations = db.getLocations())
 
 @bp.route('/newJobSummary' , methods=('GET', 'POST'))
 @login_required_C
