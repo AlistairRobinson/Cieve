@@ -34,9 +34,20 @@ class Mongo:
         else:
             return None
 
+    def getApplicantPhish(self, id):
+        query = self.db.accountInfo.find_one({"_id": ObjectId(id[1:])})
+        if query is not None and query['phish'][0] is not None:
+            return query['phish'][0]
+        return ""
+
+    def getClientPhish(self, id):
+        query = self.db.client.find_one({"_id": ObjectId(id[1:])}, {'phish': 1})
+        if query is not None and query['phish'][0] is not None:
+            return query['phish'][0]
+        return ""
 
     # Insert to user account, return userID if completed (None if not)
-    def insertApplicantUser(self, name, username, passHash, salt):
+    def insertApplicantUser(self, name, username, passHash, salt, phish):
         applicantData = {"setup": True}
         applicantID = self.db.applicant.insert_one(applicantData).inserted_id
 
@@ -45,7 +56,8 @@ class Mongo:
         accountInfoData = {"name": name,
                            "username": username,
                            "password_hash": passHash,
-                           "salt": salt}
+                           "salt": salt,
+                           "phish": phish}
 
         self.db.applicantInfo.insert_one(applicantInfoData)
         self.db.accountInfo.insert_one(accountInfoData)
@@ -53,10 +65,11 @@ class Mongo:
 
 
     # Insert to client account, return userID if completed (None if not)
-    def insertClientUser(self, username, passHash, salt):
+    def insertClientUser(self, username, passHash, salt, phish):
         clientData = {"username": username,
                       "password_hash": passHash,
                       "salt": salt,
+                      "phish": phish,
                       "vacancies": []}
         clientID = self.db.client.insert_one(clientData).inserted_id
         return clientID
