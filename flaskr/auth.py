@@ -77,6 +77,7 @@ def cliRegister():
             clientID = db.insertClientUser(username, passHash, salt)
             session.clear()
             session['user_id'] = "C" + str(clientID)
+            flash('Registration successful')
             return redirect(url_for('client.dashboard'))
 
         flash(error)

@@ -27,6 +27,30 @@ def test_apl_registration(client, auth, username, password, name, message):
             raise AssertionError('nothing flashed')
         assert message in error[1]
 
+# Client registration tests (R1)
+
+def test_cli_registration_get(client, app):
+    assert client.get('/cli/auth/register').status_code == 200
+
+@pytest.mark.parametrize(('username', 'password', 'name', 'message'), (
+    ('test', 'test', 'test', 'Registration successful'),
+    ('', '', '', 'Username is required'),
+    ('test', '', '', 'Password is required'),
+    ('test', 'test', 'test', 'Username test is already taken'),
+))
+def test_cli_registration(client, auth, username, password, name, message):
+    token = csrf.generate_csrf_token_with_session(auth._client)
+    response = auth._client.post(
+        '/cli/auth/register',
+        data={'username': username, 'password': password, 'name': name, '_csrf_token': token}
+    )
+    with auth._client.session_transaction() as session:
+        try:
+            error = session['_flashes'][0]
+        except KeyError:
+            raise AssertionError('nothing flashed')
+        assert message in error[1]
+
 # Client login tests (R1)
 
 def test_cli_login_get(client, auth):
@@ -82,3 +106,4 @@ def test_cli_nosql_injection(client, auth, username, password, message):
 def test_cleanup(client, auth):
     db = get_db()
     assert db.deleteApplicantAccount("test")
+    assert db.deleteClientAccount("test")
