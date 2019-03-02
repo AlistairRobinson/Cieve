@@ -37,6 +37,94 @@ def newApplication():
     others = ""
     db = get_db()
     if request.method == 'POST':
+        error = None
+        phoneNumber = request.form['Phone_Number']
+        address = request.form["Address"]
+
+        degreeQualification = request.form["Degree_Qualification"]
+        degreeLevel = request.form["Degree_Level"]
+        universtiyAttended = request.form['University_Attended']
+
+        alevels = []
+        try:
+            i = 0
+            while 1==1: 
+                alevels.append(request.form.to_dict(flat=False)["a_levels["+str(i)+"][]"])
+                i += 1
+        except:
+            pass
+
+
+        employmentHistory = []
+        try:
+            i = 0
+            while 1==1: 
+                employmentHistory.append(request.form.to_dict(flat=False)["Employment_History["+str(i)+"][]"])
+                i += 1
+        except:
+            pass
+
+
+        languages = []
+        try:
+            i = 0
+            while 1==1: 
+                languages.append(request.form.to_dict(flat=False)["Languages["+str(i)+"][]"])
+                i += 1
+        except:
+            pass
+
+        
+        skills = []
+        try:
+            i = 0
+            while 1==1: 
+                skills.append(request.form.to_dict(flat=False)["Skills["+str(i)+"][]"])
+                i += 1
+        except:
+            pass
+
+
+        selectedJobs = []
+        try:
+            selectedJobs = request.form.to_dict(flat=False)["Selected_Jobs[]"]
+        except:
+            pass
+
+
+        unselectedJobs = []
+        if request.form['Consider_for_other_roles'] == "1":
+            try:
+                unselected_Jobs = request.form.to_dict(flat=False)["Unselected_Jobs[]"]
+            except:
+                pass
+
+        coverLetter = request.form['Cover_Letter']
+        interestingFacts = request.form['Interesting_Facts']
+
+        userID = session.get('user_id')[1:]
+
+        db = get_db()
+        for job in selectedJobs:
+            jobScore = 0 #INSERT APPLICANT PROCESSING HERE
+            db.applyJob(userID, job, 1, jobScore)
+
+        for job in unselectedJobs:
+            jobScore = 0 #INSERT APPLICANT PROCESSING HERE
+            db.applyJob(userID, job, 0, jobScore)
+        
+        db.addUserEducation(userID, alevels, degreeQualification, degreeLevel, universtiyAttended)
+
+        db.addUserSkills(userID, skills)
+
+        db.addUserLanguages(userID, languages)
+
+        db.addUserEmployment(userID, employmentHistory)
+
+        db.addUserContacts(userID, phoneNumber, address)
+
+        db.addUserMetaData(userID, coverLetter, interestingFacts)
+        """
         skills = request.form['skills']
         jobs = request.form['jobs']
         other = request.form['other']
@@ -72,6 +160,7 @@ def newApplication():
 
             # APPLICANT SCORING FUNCTION HERE
             return render_template(url_for('apl.applications'))
+        """
 
     return render_template('/apl/applicationCreation.html', divisons = db.getDivisions(), roles = db.getRoles(), locations = db.getLocations())
 

@@ -149,8 +149,8 @@ class Mongo:
 
 
     def applyJob(self, userID, jobID, preferred, score):
-        self.db.application.insert_one({"applicant id": userID,
-                                        "vacancy id": jobID,
+        self.db.application.insert_one({"applicant id": ObjectId(userID),
+                                        "vacancy id": ObjectId(jobID),
                                         "current step": 0,
                                         "preferred": preferred,
                                         "specialized score": score,
