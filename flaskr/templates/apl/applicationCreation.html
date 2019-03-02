@@ -167,8 +167,6 @@
 
               <div class="steps-content">
 
-                <form id="create-application" action="/apl/newapplication" method = "POST">
-
                 <div class="step-content has-text-centered is-active">
                   <div class="field is-horizontal">
                     <div class="field-label is-normal">
@@ -550,27 +548,6 @@
 
                             var selectedJobs = new Array();
                             var unselectedJobs = new Array();
-                            // $('input[name=checkIfJobSelected]:checked').each(function(index) {
-                            //   selectedJobs.push($(this).attr("id"));
-                            // });
-                            // applicationData["Selected_Jobs"] = selectedJobs;
-
-
-
-                            // $('input[name=checkIfJobSelected]:unchecked').each(function(index) {
-                            //   unselectedJobs.push($(this).attr("id"));
-                            // });
-                            // applicationData["Unselected_Jobs"] = unselectedJobs;
-
-
-
-
-
-                            // var list = $("input[name='applicantJobSelect']:checked").map(function () {
-                            //     return this.value;
-                            // }).get();
-                            // alert(list);
-
 
                             $("#jobsTable input").each(function(){
                               if($(this).is(":checked")){
@@ -604,6 +581,16 @@
                             applicationData["Interesting_Facts"] = $('#interestingFacts').val();
 
                             console.log(applicationData);
+                            var token = document.getElementById('_csrf_token').value;
+                            $.ajax({
+                                url: '/apl/newApplication',
+                                type: 'POST',
+                                data: applicationData,
+                                _csrf_token: token,
+                                success: function(response){
+                                    alert("data posted");
+                                }
+                            })
 
                             $( "#ApplicationSteps" ).fadeOut( "slow", function() {
                               $( "#processing" ).show();
