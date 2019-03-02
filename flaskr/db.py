@@ -322,8 +322,11 @@ class Mongo:
             interviewStages.append(str(doc["_id"]))
         return interviewStages
 
-    def insertStageAvailability(self):
-        return
+    def insertStageAvailability(self, stageID, jobID, stageData):
+        self.db.interviewStage.insert_one({"stage id": stageID,
+                                            "job id": jobID,
+                                            "slots": stageData})
+        return True
 
     #Given an id will return the title of the stage
     def getStageTitle(self, id):
