@@ -43,7 +43,7 @@ def newApplication():
 
         degreeQualification = request.form["Degree_Qualification"]
         degreeLevel = request.form["Degree_Level"]
-        universtiyAttended = request.form['University_Attended']
+        universityAttended = request.form['University_Attended']
 
         alevels = []
         try:
@@ -113,7 +113,7 @@ def newApplication():
             jobScore = 0 #INSERT APPLICANT PROCESSING HERE
             db.applyJob(userID, job, 0, jobScore)
         
-        db.addUserEducation(userID, alevels, degreeQualification, degreeLevel, universtiyAttended)
+        db.addUserEducation(userID, alevels, degreeQualification, degreeLevel, universityAttended)
 
         db.addUserSkills(userID, skills)
 
