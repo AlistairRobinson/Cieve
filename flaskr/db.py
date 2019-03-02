@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from flask import jsonify
-from datetime import date
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 
@@ -71,7 +71,7 @@ class Mongo:
                            "specialized score": score,
                            "preferred": preferred,
                            "completed": False,
-                           "dateInputted": date.today()}
+                           "date inputted": datetime.today()}
         applicationID = self.db.application.insert_one(applicationData).inserted_id
         return applicationID
 
@@ -197,11 +197,11 @@ class Mongo:
     #Return list of applications older than 6 months, delete the applications and relevent info
     def gdprCompliance(self):
         oldApplications = []
-        query = self.db.applications.find({"dateInputted": {"$lt": (date.today() - relativedelta(months=6))}}, {"applicant id": 1, "vacancy id": 1})
+        query = self.db.applications.find({"date inputted": {"$lt": datetime.today() - relativedelta(months=6)}}, {"applicant id": 1, "vacancy id": 1})
         for doc in query:
             oldApplications.append(doc)
             self.db.applicantInfo.delete_one({"applicant id": doc['applicant id']})
-        self.db.application.delete_many({"dateInputted": {"$lt": (date.today() - relativedelta(months=6))}})
+        self.db.application.delete_many({"date inputted": {"$lt": datetime.today() - relativedelta(months=6)}})
         return oldApplications
 
 
@@ -211,47 +211,76 @@ class Mongo:
             self.db.applicantInfo.delete_one({"applicant id": doc['applicant id']})
         self.db.application.delete_many({"vacancy id": jobID})
         self.db.vacancies.delete_one({"_id": jobID})
-
-
+        return True
+    
+    
     #Returns the weights stored
     def getWeights(self):
-        return self.db.feedbackWeights.find({}, {"_id": 0})
-
-
+        weights = []
+        query = self.db.feedbackWeights.find({}, {"_id": 0})
+        for doc in query:
+            weights.append(doc)
+        return weights
+    
+    
     def updateWeights(self, json):
         self.db.feedbackWeights.update_one({"$set": json})
-
+        return True
+    
     #Retuns the applicants who have been accepted for the first stage or had a specialized score higher than 0.8
     def getFeedbackApplicants(self):
-        return self.db.application.find({"current step": 1, "$or": [{"completed": True, "specialized score": {"$gt": 0.8}}]}, {"applicant id": 1, "_id": 0})
-
+        feedbackApplicants = []
+        query = self.db.application.find({"current step": {"$gt": 1}, "$or": [{"current step": 1, "completed": True, "specialized score": {"$gt": 0.8}}]}, {"applicant id": 1, "_id": 0})
+        for doc in query:
+            feedbackApplicants.append(doc)
+        return feedbackApplicants
+    
     #Returns the percentage of applicants that were accepted for the first stage
     def getAcceptedRate(self):
-        return float(self.db.application.find({"current step": 1, "completed": True}).size())/float(self.db.application.find({"current step": 1}.size()))
-#retreive all applications older than 6 months
-
+        return float(self.db.application.find({"current step": {"$gt": 1}}).size())/float(self.db.application.find({}).size())
+    
     # Return true if a userID exists for either client or applicants
     def userExists(self, user_id):
-        return ""
+        if self.db.applicant.find({"_id": user_id}) != None:
+            return True
+        else:
+            if self.db.client.find({"_id": user_id}) != None:
+                return True
+        return False
 
     # Return a list of all divisions
     def getDivisions(self):
-        return
+        divisions = []
+        query = self.db.metaData.find({"divisions": 1, "_id": 0})
+        for doc in query:
+            divisions.append(doc)
+        return divisions
 
     def getRoles(self):
-        return
+        roles = []
+        query = self.db.metaData.find({"roles": 1, "_id": 0})
+        for doc in query:
+            roles.append(doc)
+        return roles
 
     def getLocations(self):
-        return
+        locations = []
+        query = self.db.metaData.find({"locations": 1, "_id": 0})
+        for doc in query:
+            locations.append(doc)
+        return locations
 
     def newDivision(self, division):
-        return
+        self.db.metaData.update_one({"$addToSet": {"documents": documents}})
+        return True
 
     def newRole(self, role):
-        return
-
+        self.db.metaData.update_one({"$addToSet": {"roles": role}})
+        return True
+    
     def newLocation(self, location):
-        return
+        self.db.metaData.update_one({"$addToSet": {"locations": location}})
+        return True
 
     # Return the id's of the stages of type "Interview"
     def getInterviewStages(self):
@@ -265,18 +294,22 @@ class Mongo:
         return
 
     def deleteApplicantAccount(self, username):
-        query = self.db.applicantInfo.delete_many({"username": username})
-        query = self.db.application.delete_many({"username": username})
+        self.db.applicantInfo.delete_one({"username": username})
+        self.db.application.delete_one({"username": username})
         return True
 
     def deleteClientAccount(self, username):
-        query = self.db.client.delete_many({"username": username})
+        self.db.client.delete_one({"username": username})
         return True
 
     def deleteApplication(self, username):
-        query = self.db.application.delete_many({"username": username})
+        self.db.application.delete_one({"username": username})
         return True
 
     def deleteJob(self, title):
-        query = self.db.vacancy.delete_many({"vacancy title": title})
+        self.db.vacancy.delete_one({"vacancy title": title})
         return True
+    
+print(get_db().getWeights())
+print(get_db().gdprCompliance())
+

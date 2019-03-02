@@ -138,4 +138,4 @@ db.db.feedbackWeights.insert_one({
        "Weight": 0.3
      }
    ]
- }
+ })
