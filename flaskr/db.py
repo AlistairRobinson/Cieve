@@ -314,6 +314,14 @@ class Mongo:
         self.db.metaData.update_one({}, {"$addToSet": {"locations": location}})
         return True
 
+    def getQuestions(self, stageID):
+        query = self.db.questionStage.find_one({"stage id": stageID})
+        return query['questions']
+
+    def insertQuestions(self, stageID, questions):
+        self.db.questionStage.insert_one({"stage id": stageID, "questions": questions})
+        return True
+
     # Return the id's of the stages of type "Interview"
     def getInterviewStages(self):
         interviewStages = []
