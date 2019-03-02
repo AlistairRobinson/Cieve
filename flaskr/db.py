@@ -35,15 +35,15 @@ class Mongo:
             return None
 
     def getApplicantPhish(self, id):
-        query = self.db.accountInfo.find_one({"_id": ObjectId(id[1:])})
-        if query is not None and 'phish' in query:
-            return query['phish'][0]
+        query = self.db.accountInfo.find_one({"_id": ObjectId(id[1:])}, {'phish': 1})
+        if query is not None:
+            return query.get('phish', [""])[0]
         return ""
 
     def getClientPhish(self, id):
         query = self.db.client.find_one({"_id": ObjectId(id[1:])}, {'phish': 1})
-        if query is not None and 'phish' in query:
-            return query['phish'][0]
+        if query is not None:
+            return query.get('phish', [""])[0]
         return ""
 
     # Insert to user account, return userID if completed (None if not)
