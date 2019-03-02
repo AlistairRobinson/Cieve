@@ -109,7 +109,7 @@ def newJob():
                 title = db.getStageTitle(stage)
                 json['stagesDetail'].append(title)
                 if stage in db.getInterviewStages():
-                    interviews["Stage " + str(i)] = [title, str(stage)]
+                    interviews[i] = [title, str(stage)]
                     i += 1
 
 
