@@ -254,10 +254,14 @@ class Mongo:
         return
 
     # Return the id's of the stages of type "Interview"
-    def getInterviewStages():
+    def getInterviewStages(self):
         return
 
-    def insertStageAvailability():
+    def insertStageAvailability(self):
+        return
+
+    #Given an id will return the title of the stage
+    def getStageTitle(self, id):
         return
 
     def deleteApplicantAccount(self, username):
