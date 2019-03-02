@@ -251,7 +251,7 @@ class Mongo:
         if self.db.applicant.find({"_id": ObjectId(user_id)}) != None:
             return True
         else:
-            if self.db.client.find({"_id": ObjectId(user_id)} != None:
+            if self.db.client.find({"_id": ObjectId(user_id)}) != None:
                 return True
         return False
 
