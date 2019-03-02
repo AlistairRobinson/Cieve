@@ -49,7 +49,7 @@ def newJob():
         error = None
 
         if jobTitle == "":
-            error = "Empty Job Title"
+            error = "Empty job title"
 
         if division not in db.getDivisions():
             db.newDivision(division)
@@ -61,7 +61,7 @@ def newJob():
             db.newLocation(country)
 
         if jobDescription == "":
-            error = "No Job description"
+            error = "No job description"
 
         if str.isdigit(str(noVacancies)):
             if int(noVacancies) <= 0:
