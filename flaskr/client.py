@@ -79,7 +79,7 @@ def newJob():
                 error = "Score is not a number"
 
         for stage in stages:
-            if stage not in get_db().getStages():
+            if stage not in get_db().getStages() or get_db().getStageTitle(stage) == "":
                 error = "Wrong stage"
 
         if error is not None:
