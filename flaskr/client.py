@@ -127,8 +127,7 @@ def newJobSummary():
             db = get_db()
 
             data = request.form.to_dict(flat=False)
-            print data
-
+            
             jsonData = data["json"][0].replace("'",'"')
             jsonData = jsonData.replace('u"','"')
             jsonData = json.loads(jsonData)
@@ -140,7 +139,7 @@ def newJobSummary():
             interviewsData = json.loads(data["interviews"][0].replace("'",'"').replace('u"','"'))
 
             for stepID, interviews in interviewsData.items():
-                stageID = jsonData['stages'][int(stepID)-1]
+                stageID = interviews[1]
                 dates = data["Date[]" + stepID]
                 startTimes = data["startTimes[]" + stepID]
                 endTimes = data["endTimes[]" + stepID]
