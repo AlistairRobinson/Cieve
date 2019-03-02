@@ -18,7 +18,7 @@ class Mongo:
 
     # Return an account class
     def getApplicantAccount(self, username):
-        query = self.db.applicantInfo.find_one({"username": username})
+        query = self.db.accountInfo.find_one({"username": username})
         if query != None:
             return query
         else:
@@ -301,7 +301,7 @@ class Mongo:
 
     #Given an id will return the title of the stage
     def getStageTitle(self, id):
-        return
+        return self.db.stage.find_one({"_id": id}, {"title": 1, "_id": 0})['title'])
 
     def deleteApplicantAccount(self, username):
         self.db.applicantInfo.delete_one({"username": username})
@@ -319,4 +319,3 @@ class Mongo:
     def deleteJob(self, title):
         self.db.vacancy.delete_one({"vacancy title": title})
         return True
-
