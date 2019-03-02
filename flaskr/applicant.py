@@ -124,6 +124,8 @@ def newApplication():
         db.addUserContacts(userID, phoneNumber, address)
 
         db.addUserMetaData(userID, coverLetter, interestingFacts)
+
+        db.addUserScore(userID, 0)  # USER GENERAL SCORE
         """
         skills = request.form['skills']
         jobs = request.form['jobs']
