@@ -3,6 +3,7 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 from werkzeug.datastructures import ImmutableMultiDict
+from bson.objectid import ObjectId
 
 from flaskr.auth import login_required_C
 from flaskr.db import get_db
@@ -42,7 +43,7 @@ def newJob():
         skills = data['skill']
         skillVal = data['skillVal']
 
-        stage_list.insert(0,"0") #Onboarding Stage
+        stage_list.insert(0,'000000000000000000000000') #Onboarding Stage
 
         error = None
         

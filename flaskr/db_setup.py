@@ -1,5 +1,6 @@
 #Code for intialisation of DB
 from pymongo import MongoClient
+from bson.objectid import ObjectId
 
 client = MongoClient("mongodb+srv://cieve:N3gNW20iJNqwL0fC@cievedatabase-gzmjp.mongodb.net/test?retryWrites=true")
 db = client.cieve_database
@@ -46,7 +47,7 @@ db.db.vacancy.insert_one({"vacancy title": 0,
                           "stages" : 0,
                           "skills": 0})
 
-db.db.stage.insert_one({"_id": 0,
+db.db.stage.insert_one({"_id": ObjectId('000000000000000000000000'),
                         "type": "Onboarding",
                         "title": "Onboarding",
                         "description": "Initial onboarding stage"})
