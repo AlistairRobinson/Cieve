@@ -135,5 +135,4 @@ def test_apl_logout(client, auth):
 
 def test_cleanup(client, auth):
     db = get_db()
-    assert db.deleteApplicantAccount("test")
-    assert db.deleteClientAccount("test")
+    assert db.deleteApplicantAccount("test") & db.deleteClientAccount("test")
