@@ -277,15 +277,15 @@ class Mongo:
         return locations
 
     def newDivision(self, division):
-        self.db.metaData.update_one({"$addToSet": {"divisions": division}})
+        self.db.metaData.update_one({}, {"$addToSet": {"divisions": division}})
         return True
 
     def newRole(self, role):
-        self.db.metaData.update_one({"$addToSet": {"roles": role}})
+        self.db.metaData.update_one({}, {"$addToSet": {"roles": role}})
         return True
     
     def newLocation(self, location):
-        self.db.metaData.update_one({"$addToSet": {"locations": location}})
+        self.db.metaData.update_one({}, {"$addToSet": {"locations": location}})
         return True
 
     # Return the id's of the stages of type "Interview"
