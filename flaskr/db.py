@@ -301,7 +301,7 @@ class Mongo:
 
     #Given an id will return the title of the stage
     def getStageTitle(self, id):
-        return self.db.stage.find_one({"_id": id}, {"title": 1, "_id": 0})['title']
+        return self.db.stage.find_one({"_id": ObjectId(id)}, {"title": 1, "_id": 0})['title']
 
     def deleteApplicantAccount(self, username):
         self.db.accountInfo.delete_many({"username": username})
