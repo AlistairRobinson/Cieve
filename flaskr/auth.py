@@ -43,6 +43,7 @@ def aplRegister():
             applicantID = db.insertApplicantUser(name, username, passHash, salt)
             session.clear()
             session['user_id'] = "A" + str(applicantID)
+            flash('Registration successful')
             return redirect(url_for('applicant.dashboard'))
 
         flash(error)
