@@ -43,7 +43,7 @@ def test_setup_cli(client, jobs):
         'Stage_Description': ["000000000000000000000000"],
         'skill': ['Python', 'C'],
         'skillVal': [7, 6]
-    }, 'No Job description'),
+    }, 'No job description'),
     ({
         'job_title': 'test',
         'division': 'HR',
@@ -54,7 +54,7 @@ def test_setup_cli(client, jobs):
         'Stage_Description': ["000000000000000000000000"],
         'skill': ['Python', 'C'],
         'skillVal': [7, 6]
-    }, 'Number of vacancies must be positive'),
+    }, 'Non-integer value for number of vacancies'),
     ({
         'job_title': 'test',
         'division': 'HR',
@@ -98,7 +98,7 @@ def test_setup_cli(client, jobs):
         'Stage_Description': ["000000000000000000000000"],
         'skill': ['Python', 'C'],
         'skillVal': ['77', '6']
-    }, 'Score is not a number'),
+    }, 'Score out of range'),
     ({
         'job_title': 'test',
         'division': 'HR',
