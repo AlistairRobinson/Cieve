@@ -56,7 +56,8 @@ class Mongo:
     def insertClientUser(self, username, passHash, salt):
         clientData = {"username": username,
                       "password_hash": passHash,
-                      "salt": salt}
+                      "salt": salt,
+                      "vacancies": []}
         clientID = self.db.client.insert_one(clientData).inserted_id
         return clientID
 
@@ -326,7 +327,10 @@ class Mongo:
 
     #Given an id will return the title of the stage
     def getStageTitle(self, id):
-        return self.db.stage.find_one({"_id": ObjectId(id)}, {"title": 1, "_id": 0})['title']
+        query = self.db.stage.find_one({"_id": ObjectId(id)}, {"title": 1, "_id": 0})
+        if query is not None:
+            return query['title']
+        return ""
 
     def deleteApplicantAccount(self, username):
         self.db.accountInfo.delete_many({"username": username})

@@ -46,7 +46,7 @@ def newJob():
         stage_list.insert(0,'000000000000000000000000') #Onboarding Stage
 
         error = None
-        
+
         if jobTitle == "":
             error = "Empty Job Title"
 
@@ -79,9 +79,9 @@ def newJob():
                 error = "Score is not a number"
 
         for stage in stages:
-            if stage not in get_db().getStages():
+            if stage not in get_db().getStages() or get_db().getStageTitle(stage) == "":
                 error = "Wrong stage"
-        
+
         if error is not None:
             flash(error)
         else:
@@ -115,9 +115,9 @@ def newJob():
                 i += 1
 
 
-            return render_template('/cli/review.html', json = json, interviews = interviews)
+            return render_template('cli/review.html', json = json, interviews = interviews)
     # Generate post data and pass to front end
-    return render_template('/cli/createJob.html', stages=stages,divisons = db.getDivisions(), roles = db.getRoles(), locations = db.getLocations())
+    return render_template('cli/createjob.html', stages=stages,divisons = db.getDivisions(), roles = db.getRoles(), locations = db.getLocations())
 
 @bp.route('/newJobSummary' , methods=('GET', 'POST'))
 @login_required_C

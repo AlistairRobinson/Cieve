@@ -10,6 +10,7 @@
     <script src="../../static/js/jquery-3.3.1.min.js"></script>
 	</head>
 	<body>
+	{{print(json)}}{{print(interviews)}}
     <nav class="navbar has-shadow">
       <div class="container">
         <div class="navbar-brand">
@@ -148,19 +149,23 @@
 
       {% if interview == True%}
     <center>  <h3 class="title is-5">Interview Availability<h3></center>
-          <table class="table is-fullwidth" id="dynamic_field_interview">
+			{% for key,stage in interviews.items() %}
+			<h3 class="title is-6">{{key}}</h3>
+          <table class="table is-fullwidth" id="dynamic_field_interview{{stage}}">
             <thead>
               <tr>
-                <th>Interview Date</th>
-                <th>Interview Start Time</th>
-                <th>Interview End Time</th>
+                <th>Date</th>
+                <th>Start Time</th>
+                <th>End Time</th>
                 <th>Number of Slots</th>
                 <th>---</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>  <input class="input" type="date" name="Date[]" placeholder="Enter the Interview date"> </td>
+
+                <td class="stageid"> <input class="input"  type="hidden" name="stageid[]" value="{{key}}" readonly=True> <input class="input" type="date" name="Date[]" placeholder="Enter the Interview date"> </td>
+
                 <td>  <input class="input" type="time" name="startTime[]" placeholder="Enter your start time"></td>
                 <td>  <input class="input" type="time" name="endTime[]" placeholder="Enter your end time"></td>
                 <td>  <input class="input" type="number" name="vacancies[]" placeholder="#"></td>
@@ -170,7 +175,7 @@
               </tr>
             </tbody>
           </table>
-
+				{%endfor%}
       {% endif %}
       <div class="field">
                       <div class="control">
@@ -192,9 +197,10 @@
       var stage_counter = 1;
       $('body').on('click', '#add-interview', function(e) {
         e.preventDefault();
-          $('table#dynamic_field_interview tbody').append(`
+				var key = $(this).parent().siblings('.stageid').children().attr('value');
+          $(this).parent().parent().parent().append(`
           <tr>
-            <td>  <input class="input" type="date" name="Date[]" placeholder="Enter the Interview date"> </td>
+            <td> <input class="input" type="hidden" name="stageid[]" value="`+key+`" readonly=True> <input class="input" type="date" name="Date[]" placeholder="Enter the Interview date"> </td>
             <td>  <input class="input" type="time" name="startTime[]" placeholder="Enter your start time"></td>
             <td>  <input class="input" type="time" name="endTime[]" placeholder="Enter your end time"></td>
             <td>  <input class="input" type="number" name="vacancies[]" placeholder="#"></td>
