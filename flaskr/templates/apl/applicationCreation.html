@@ -579,14 +579,13 @@
 
                             applicationData["Cover_Letter"] = $('#coverLetter').val();
                             applicationData["Interesting_Facts"] = $('#interestingFacts').val();
+                            applicationData["_csrf_token"] = document.getElementById('_csrf_token').value;
 
                             console.log(applicationData);
-                            var token = document.getElementById('_csrf_token').value;
                             $.ajax({
                                 url: '/apl/newApplication',
                                 type: 'POST',
                                 data: applicationData,
-                                _csrf_token: token,
                                 success: function(response){
                                     alert("data posted");
                                 }
@@ -747,7 +746,7 @@
                         });
                     });
                 </script>
-
+                <input name="_csrf_token" id="_csrf_token" type=hidden value="{{ csrf_token() }}">
                 <div class="step-content">
                   <div class="field">
                       <div class="columns" id="filterSection">
