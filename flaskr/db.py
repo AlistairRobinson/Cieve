@@ -255,6 +255,16 @@ class Mongo:
                 return True
         return False
 
+    def clientExists(self, user_id):
+        if self.db.client.find({"_id": ObjectId(user_id)}) != None:
+            return True
+        return False
+
+    def applicantExists(self, user_id):
+        if self.db.applicant.find({"_id": ObjectId(user_id)}) != None:
+            return True
+        return False
+
     # Return a list of all divisions
     def getDivisions(self):
         divisions = []
