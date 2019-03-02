@@ -277,15 +277,15 @@ class Mongo:
         return locations
 
     def newDivision(self, division):
-        self.db.metaData.update_one({"$addToSet": {"divisions": division}})
+        self.db.metaData.update_one({}, {"$addToSet": {"divisions": division}})
         return True
 
     def newRole(self, role):
-        self.db.metaData.update_one({"$addToSet": {"roles": role}})
+        self.db.metaData.update_one({}, {"$addToSet": {"roles": role}})
         return True
     
     def newLocation(self, location):
-        self.db.metaData.update_one({"$addToSet": {"locations": location}})
+        self.db.metaData.update_one({}, {"$addToSet": {"locations": location}})
         return True
 
     # Return the id's of the stages of type "Interview"
@@ -304,19 +304,19 @@ class Mongo:
         return
 
     def deleteApplicantAccount(self, username):
-        self.db.applicantInfo.delete_one({"username": username})
-        self.db.application.delete_one({"username": username})
+        self.db.applicantInfo.delete_many({"username": username})
+        self.db.application.delete_many({"username": username})
         return True
 
     def deleteClientAccount(self, username):
-        self.db.client.delete_one({"username": username})
+        self.db.client.delete_many({"username": username})
         return True
 
     def deleteApplication(self, username):
-        self.db.application.delete_one({"username": username})
+        self.db.application.delete_many({"username": username})
         return True
 
     def deleteJob(self, title):
-        self.db.vacancy.delete_one({"vacancy title": title})
+        self.db.vacancy.delete_many({"vacancy title": title})
         return True
 
