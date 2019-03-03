@@ -1,1 +1,7 @@
-{{jobData}}
+{%for job in jobData%}
+    <form action="/cli/jobBreakdown" method="POST">
+        <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+        <input name="jobID" value="{{job["_id"]}}"" type="hidden">
+        <button>{{job}}</button>
+    </form>
+{%endfor%}

@@ -34,8 +34,12 @@ def newJob():
         jobDescription = request.form['job_desc']
         noVacancies = request.form['numVacancies']
         startDate = request.form['start_date']
-        if request.form['asap'] == 'on':
+
+        try:
+            request.form['asap']
             startDate = "ASAP"
+        except:
+            pass
 
         minDegreeLevel = request.form['min_degree_level']
         preferedDegrees = request.form['preferred_degrees']
@@ -147,7 +151,6 @@ def newJob():
                     if stage in db.getInterviewStages():
                         interviews[str(i)] = [title, str(stage)]
                 i += 1
-            print(json)
             return render_template('cli/review.html', json = json, interviews = interviews)
     # Generate post data and pass to front end
     return render_template('cli/createjob.html', stages=stages,divisons = db.getDivisions(), roles = db.getRoles(), locations = db.getLocations())
@@ -211,14 +214,24 @@ def jobs():
 @bp.route('/jobBreakdown', methods=('GET', 'POST'))
 @login_required_C
 def jobBreakdown():
-    db = get_db()
-    jobData = db.getClientJobs(session.get('user_id')[1:])
-    applicants = {}
     if request.method == "POST":
-        stageNumber = request.form["stageID"]
+        db = get_db()
+        jobID = request.form['jobID']
+        #jobData = db.getJob(jobID)
+        jobData = ""
+        applicants = {}
+
+        stepNumber = 0
+        try:
+            stepNumber = request.form["stageID"]
+        except:
+            pass
+        
         error = None
+        
+        if error is None:
+            applicants = db.getApplicantsJob(jobID, stepNumber)
+        
+        return render_template('/cli/jobBreakdown.html', jobData = jobData, applicants = {})
 
-        if error is not None:
-            applicants = db.getApplicantsJob(jobID, stageNumber)
-
-    return render_template('/cli/jobBreakdown.html', jobData = jobData, applicants = {})
+    return redirect(url_for('client.jobs'))
