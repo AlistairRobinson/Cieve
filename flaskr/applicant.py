@@ -2,10 +2,11 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for, session
 )
 from werkzeug.exceptions import abort
+from datetime import datetime
 
+from flaskr.Evaluator import Evaluator
 from flaskr.auth import login_required_A
 from flaskr.db import get_db
-
 bp = Blueprint('applicant', __name__, url_prefix='/apl')
 
 #Definition for the applicant dashboard
@@ -44,6 +45,12 @@ def newApplication():
         degreeQualification = request.form["Degree_Qualification"]
         degreeLevel = request.form["Degree_Level"]
         universityAttended = request.form['University_Attended']
+
+        gradutationDate = ""
+        try:
+            gradutationDate = request.form['yearGraduation']
+        except:
+            pass
 
         alevels = []
         try:
@@ -110,23 +117,70 @@ def newApplication():
         appData["Degree Qualification"] = degreeQualification
         appData["Degree Level"] = degreeLevel
         appData["University Attended"] = universityAttended
-        appData["A-Level Qualifications"] = alevels
+        appData["Graduation Date"] = gradutationDate
+        appData["A-Level Qualifications"] = []
+        for alevel in alevels:
+            appData["A-Level Qualifications"].append({"Subject" : alevel[0], "Grade" : alevel[1]})
+        appData["Languages Known"] = []
+        for language in languages:
+            appData["Languages Known"].append({"Language" : language[0], "Expertise" : language[1]})
+        appData["Previous Employment"] = []
+        for employ in employmentHistory:
+            appData["Previous Employment"].append({"Company" : employ[0], "Position" : employ[1], "Length of Employment" : (datetime.strptime(employ[3],"%Y-%m-%d")-datetime.strptime(employ[2],"%Y-%m-%d")).days})
+        appData["Skills"] = []
+        for skill in skills:
+            appData["Skills"].append({"Skill" : skill[0], "Expertise" : skill[1]})
+        
+        
+        
+
+        db.addUserScore(userID, Evaluator().basicEvaluate(appData))  # USER GENERAL SCORE
 
 
-        db.addUserScore(userID, appData)  # USER GENERAL SCORE
 
 
 
-
-
-
-        db = get_db()
         for job in selectedJobs:
-            jobScore = 0 #INSERT APPLICANT PROCESSING HERE
+            data = db.getJob(job)
+            jobData = {}
+            jobData["Degree Qualification"] = [] #CHANGE
+            jobData["Minimum Degree Level"] = data["min degree level"]
+            jobData["Type"] = data["role type"]
+            try:
+                jobData["Start Date"] = datetime.strptime(data["start date"], "%d/%m/%Y").year
+            except:
+                jobData["Start Date"] = datetime.today().year
+            jobData["Languages Known"] = []
+            for language, expertise in data["languages"].items():
+                jobData["Languages Known"].append({"Language" : language, "Expertise" : expertise})
+            jobData["Skills"] = []
+            for skill, expertise in data["skills"].items():
+                jobData["Skills"].append({"Skill" : skill, "Expertise" : expertise})
+            
+
+            jobScore = Evaluator().jobEvaluate(jobData, appData)
+        
             db.applyJob(userID, job, 1, jobScore)
 
         for job in unselectedJobs:
-            jobScore = 0 #INSERT APPLICANT PROCESSING HERE
+            data = db.getJob(job)
+            jobData = {}
+            jobData["Degree Qualification"] = [] #CHANGE
+            jobData["Minimum Degree Level"] = data["min degree level"]
+            jobData["Type"] = data["role type"]
+            try:
+                jobData["Start Date"] = datetime.strptime(data["start date"], "%d/%m/%Y").year
+            except:
+                jobData["Start Date"] = datetime.today().year
+            jobData["Languages Known"] = []
+            for language, expertise in data["languages"].items():
+                jobData["Languages Known"].append({"Language" : language, "Expertise" : expertise})
+            jobData["Skills"] = []
+            for skill, expertise in data["skills"].items():
+                jobData["Skills"].append({"Skill" : skill, "Expertise" : expertise})
+            
+            jobScore = Evaluator().jobEvaluate(jobData, appData)
+        
             db.applyJob(userID, job, 0, jobScore)
         
         db.addUserEducation(userID, alevels, degreeQualification, degreeLevel, universityAttended)
