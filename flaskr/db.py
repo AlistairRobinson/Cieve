@@ -143,6 +143,9 @@ class Mongo:
         else:
             return Jobs[(number-1)*20:((number-1)*20)+20]
 
+    #Return the data of a job given the jobID
+    def getJob(self, jobID):
+        return list(self.db.vacancy.find({"_id": ObjectId(jobID)}))[0]
 
     # Wiil accept a json parameter which will be defined by the input, adds the new job to the DB
     def addNewJob(self, json, clientID):
@@ -158,7 +161,6 @@ class Mongo:
             vacancy = list(self.db.vacancy.find({"_id": ObjectId(vacancyID)}, {"positions available": 0, "skills": 0, "_id": 0}))[0]
             for key, item in vacancy.items():
                 application[key] = item
-        print(applicationQuery)
         return applicationQuery
 
 
@@ -195,6 +197,7 @@ class Mongo:
             for id in doc['vacancies']:
                 jobQuery = self.db.vacancy.find({"_id": ObjectId(id)})
                 for job in jobQuery:
+                    job["_id"] = str(job["_id"])
                     jobDetails.append(job)
         return jobDetails
 
@@ -203,7 +206,7 @@ class Mongo:
     # In order of job related score
     def getApplicantsJob(self, jobID, stepOrder):
         applicantList = []
-        applicationQuery = self.db.application.find({"vacancy id": jobID, "current step": stepOrder}).sort({"specialized score": -1})
+        applicationQuery = self.db.application.find({"vacancy id": ObjectId(jobID), "current step" : int(stepOrder)})#.sort({"specialized score": -1})
         for doc in applicationQuery:
             applicantList.append(doc)
         return applicantList
@@ -372,9 +375,9 @@ class Mongo:
     def deleteJob(self, title):
         self.db.vacancy.delete_one({"vacancy title": title})
         return True
-    
+
     def addUserEducation(self, userID, alevels, degreeQualification, degreeLevel, universityAttended):
-        self.db.applicantInfo.update_one({"applicant id": ObjectId(userID)}, 
+        self.db.applicantInfo.update_one({"applicant id": ObjectId(userID)},
                                          {"$set": {"a-level qualifications": alevels, "degree qualification": degreeQualification, "degree level": degreeLevel, "attended university": universityAttended}})
         return True
 
@@ -407,4 +410,3 @@ class Mongo:
         self.db.applicantInfo.update_one({"applicant id": ObjectId(userID)},
                                          {"$set": {"basic score": userScore}})
         return True
-get_db().getApplications("5c7afead8c5b5b278068d293")

@@ -72,6 +72,20 @@ def test_cli_login(auth, username, password, message):
             raise AssertionError('nothing flashed')
         assert message in error[1]
 
+# Phish code tests
+
+def test_cli_phish(client, auth):
+    auth.login_cli('test', 'test')
+    with auth._client.session_transaction() as session:
+        assert get_db().getClientPhish(session['user_id']) != ""
+
+# Phish error check
+
+def test_cli_phish_error(client, auth):
+    auth.login_cli('test', 'test')
+    with auth._client.session_transaction() as session:
+        assert get_db().getApplicantPhish(session['user_id']) == ""
+
 # Client logout tests (R1)
 
 def test_cli_logout(client, auth):
@@ -104,6 +118,20 @@ def test_apl_login(auth, username, password, message):
         except KeyError:
             raise AssertionError('nothing flashed')
         assert message in error[1]
+
+# Phish code tests
+
+def test_apl_phish(client, auth):
+    auth.login_apl('test', 'test')
+    with auth._client.session_transaction() as session:
+        assert get_db().getApplicantPhish(session['user_id']) != ""
+
+# Phish error check
+
+def test_apl_phish_error(client, auth):
+    auth.login_apl('test', 'test')
+    with auth._client.session_transaction() as session:
+        assert get_db().getClientPhish(session['user_id']) == ""
 
 # NoSQL injection tests (R16)
 

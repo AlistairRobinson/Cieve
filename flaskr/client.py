@@ -34,8 +34,12 @@ def newJob():
         jobDescription = request.form['job_desc']
         noVacancies = request.form['numVacancies']
         startDate = request.form['start_date']
-        if request.form['asap'] == 'on':
+
+        try:
+            request.form['asap']
             startDate = "ASAP"
+        except:
+            pass
 
         minDegreeLevel = request.form['min_degree_level']
         preferedDegrees = request.form['preferred_degrees']
@@ -133,71 +137,70 @@ def newJob():
             for i in range(len(langs)):
                 langDic[langs[i]] = langVal[i]
             json['languages'] = langDic
-            
+
             json['stagesDetail'] = []
 
             interviews = {}
             i = 1
             for stage in json['stages']:
-                
+
                 title = db.getStageTitle(stage)
                 json['stagesDetail'].append(title)
-                
+
                 if stage != '000000000000000000000000':
                     if stage in db.getInterviewStages():
                         interviews[str(i)] = [title, str(stage)]
                 i += 1
-            print(json)
             return render_template('cli/review.html', json = json, interviews = interviews)
     # Generate post data and pass to front end
-    return render_template('cli/createjob.html', stages=stages,divisons = db.getDivisions(), roles = db.getRoles(), locations = db.getLocations())
+    return render_template('cli/createjob.html', stages=stages, divisons = db.getDivisions(), roles = db.getRoles(), locations = db.getLocations())
 
 @bp.route('/newJobSummary' , methods=('GET', 'POST'))
 @login_required_C
 def newJobSummary():
     if request.method == "POST":
-            db = get_db()
+        db = get_db()
 
-            data = request.form.to_dict(flat=False)
-            
-            jsonData = data["json"][0].replace("'",'"')
-            jsonData = jsonData.replace('u"','"')
-            jsonData = json.loads(jsonData)
+        data = request.form.to_dict(flat=False)
+
+        jsonData = data["json"][0].replace("'",'"')
+        jsonData = jsonData.replace('u"','"')
+        jsonData = json.loads(jsonData)
+        if 'stagesDetail' in jsonData:
             del jsonData['stagesDetail']
 
-            userID = session.get('user_id')[1:]
-            jobID =  db.addNewJob(jsonData, userID)
+        userID = session.get('user_id')[1:]
+        jobID =  db.addNewJob(jsonData, userID)
+        interviewsData = json.loads(data["interviews"][0].replace("'",'"').replace('u"','"'))
+        for stepID, interviews in interviewsData.items():
+            stageID = interviews[1]
+            dates = data.get("Date[]" + stepID, [])
+            startTimes = data.get("startTime[]" + stepID, [])
+            endTimes = data.get("endTime[]" + stepID, [])
+            vacancies = data.get("vacancies[]" + stepID, [])
 
-            interviewsData = json.loads(data["interviews"][0].replace("'",'"').replace('u"','"'))
+            if len(startTimes) != len(endTimes) or len(dates) != len(startTimes):
+                flash("An unexpected error occured")
+                continue
 
-            for stepID, interviews in interviewsData.items():
-                stageID = interviews[1]
-                dates = data["Date[]" + stepID]
-                startTimes = data["startTime[]" + stepID]
-                endTimes = data["endTime[]" + stepID]
-                vacancies = data["vacancies[]" + stepID]
-                """
-                if vacancies <= 0:
-                    flash("Number of vacancies must be positive")
-                    interviews = {}
-                    i = 1
-                    for stage in jsonData['stages']:
-                        if stage != '000000000000000000000000':
-                            if stage in db.getInterviewStages():
-                                interviews[str(i)] = [title, str(stage)]
-                        i += 1
-                    return render_template('cli/review.html', json = json, interviews = interviews)
-                """
-                stagesData = []
-                for i in range(len(dates)):
-                    stagesData.append([dates[i], startTimes[i], endTimes[i], vacancies[i]])
-                
-                for stageData in stagesData:
-                    db.insertStageAvailability(stageID, jobID, stageData)
+            if len(vacancies) == 0:
+                flash("An unexpected error occured")
+                continue
 
-            flash("Vacancy post successful")
-            return redirect(url_for('client.jobs'))
-        
+            if any(int(v) <= 0 for v in vacancies):
+                flash("An unexpected error occured")
+                continue
+
+            stagesData = []
+            for i in range(len(dates)):
+                stagesData.append([dates[i], startTimes[i], endTimes[i], vacancies[i]])
+
+            for stageData in stagesData:
+                db.insertStageAvailability(stageID, jobID, stageData)
+
+        flash("Vacancy post successful")
+        return redirect(url_for('client.jobs'))
+
     render_template(url_for('client.dashboard'))
 
 #Definition for the application
@@ -211,14 +214,46 @@ def jobs():
 @bp.route('/jobBreakdown', methods=('GET', 'POST'))
 @login_required_C
 def jobBreakdown():
-    db = get_db()
-    jobData = db.getClientJobs(session.get('user_id')[1:])
-    applicants = {}
     if request.method == "POST":
-        stageNumber = request.form["stageID"]
+        db = get_db()
+        jobID = request.form['jobID']
+        jobData = db.getJob(jobID)
+       
+        jobData["stagesDetail"] = []
+        for stage in jobData["stages"]:
+            title = db.getStageTitle(stage)
+            jobData['stagesDetail'].append(title)
+
+        applicants = {}
+        print(request.form)
+
+        stepNumber = 0
+        try:
+            stepNumber = request.form["stageID"]
+        except:
+            pass
+
         error = None
 
-        if error is not None:
-            applicants = db.getApplicantsJob(jobID, stageNumber)
+        if error is None:
+            applicants = db.getApplicantsJob(jobID, stepNumber)
 
-    return render_template('/cli/jobBreakdown.html', jobData = jobData, applicants = {})
+        return render_template('/cli/jobBreakdown.html', jobData = jobData, applicants = applicants)
+
+    return redirect(url_for('client.jobs'))
+
+
+@bp.route('/stageDetail', methods=('GET', 'POST'))
+@login_required_C
+def stageDetail():
+    if request.method == "POST":
+        db = get_db()
+        jobID = request.form['jobID']
+        stepNo = request.form['stepNo']
+        error = None
+        
+        if error is None:
+            applicants = db.getApplicantsJob(jobID, stepNo)
+        return applicants
+
+    return None

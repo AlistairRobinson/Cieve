@@ -102,9 +102,19 @@ class JobActions(object):
         return self._client.post(
             '/apl/newapplication',
             data={
-                'skills': application['skills'],
-                'jobs': application['jobs'],
-                'other': application['other'],
+                'Phone_Number': application['Phone_Number'],
+                'Address': application['Address'],
+                'Degree_Qualification': application['Degree_Qualification'],
+                'Degree_Level': application['Degree_Level'],
+                'University_Attended': application['University_Attended'],
+                'a_levels[0][]': application['a_levels[0][]'],
+                'Employment_History[0][]': application['Employment_History[0][]'],
+                'Languages[0][]': application['Languages[0][]'],
+                'Skills[0][]': application['Skills[0][]'],
+                'Selected_Jobs[]': application['Selected_Jobs[]'],
+                'Consider_for_other_roles': application['Consider_for_other_roles'],
+                'Cover_Letter': application['Cover_Letter'],
+                'Interesting_Facts': application['Interesting_Facts'],
                 '_csrf_token': token
             }
         )

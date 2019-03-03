@@ -7,10 +7,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <link rel="stylesheet" href="../../static/main.css" />
-    <link rel="stylesheet" href="enlarge.css" />
     <script src="../../static/js/jquery-3.3.1.min.js"></script>
 
-    <script>
+    <!-- <script>
         $(document).ready(function() {
 
                   var token = document.getElementById('_csrf_token').value;
@@ -43,21 +42,8 @@
                       //     }
                       // })
                   });
-
-                  // $.ajax({
-                  //     url: '/cli/jobBreakdown',
-                  //     data: {
-                  //       jobID: status,
-                  //       _csrf_token: token
-                  //     },
-                  //     type: 'POST',
-                  //     success: function(response) {
-                  //     },
-                  //     error: function(error) {
-                  //     }
-                  // });
         });
-    </script>
+    </script> -->
 
   </head>
   <body>
@@ -160,24 +146,29 @@
 
             </div>
             <div class="column">
-            <h3 class="title is-3">Your Jobs</h3>
-            <input name=_csrf_token type=hidden id="_csrf_token" value="{{ csrf_token() }}">
+            <h3 class="title is-3">{{jobData["vacancy title"]}}</h3>
+
+            {% for i in range (jobData["stages"]|length) %}
+             {{ i }}
+            {% endfor %}
+
+
+            <!-- {{applicants}} -->
+
+            <!-- <input name=_csrf_token type=hidden id="_csrf_token" value="{{ csrf_token() }}">
             {%for job in jobData%}
-                <div class="box" id="{{job["_id"]}}" style='cursor: pointer;'>
+                <div class="box" id="{{job["_id"]}}">
                   <div><h5 class="title is-5">{{job["vacancy title"]}}</h5>
                 </div> <span class="tag is-light"><b> Division </b> &nbsp {{job["division"]}}</span> <span class="tag is-light"><b> Role Type </b> &nbsp {{job["role type"]}}</span> <span class="tag is-light"><b> <i class="fas fa-map-marker-alt"> </i> </b> &nbsp {{job["location"]}}</span></div>
 
-                <!-- <form action="/cli/jobBreakdown" method="POST">
-                    <div class="box"> <div><h5 class="title is-5"></h5></div>
-                    <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
-                    <input name="jobID" value="{{job["_id"]}}"" type="hidden">
-                    <div class="box"><button>{{job}}</button></div>
-                </form> -->
             {%endfor%}
-            </div>
+            </div> -->
 
-
-
+            {{jobData}}
+            <!-- <br>
+            <br>
+            HELLO FRIEND -->
+            {{applicants}}
 
       </section>
     </div>
