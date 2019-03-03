@@ -30,8 +30,14 @@ def test_setup_cli(client, jobs):
         'job_desc': 'test',
         'numVacancies': 1,
         'Stage_Description': ["000000000000000000000000"],
-        'skill': ['Python', 'C'],
-        'skillVal': [7, 6]
+        'skill': ['Git', 'Presentation'],
+        'skillVal': [7, 6],
+        'lang': ['Python', 'C'],
+        'langVal': [7, 6],
+        'start_date': '03/03/2019',
+        'asap': 'off',
+        'min_degree_level': '1:1',
+        'preferred_degrees': 'University of Warwick'
     }, 'Empty job title'),
     ({
         'job_title': 'test',
@@ -41,8 +47,14 @@ def test_setup_cli(client, jobs):
         'job_desc': '',
         'numVacancies': 1,
         'Stage_Description': ["000000000000000000000000"],
-        'skill': ['Python', 'C'],
-        'skillVal': [7, 6]
+        'skill': ['Git', 'Presentation'],
+        'skillVal': [7, 6],
+        'lang': ['Python', 'C'],
+        'langVal': [7, 6],
+        'start_date': '03/03/2019',
+        'asap': 'off',
+        'min_degree_level': '1:1',
+        'preferred_degrees': 'University of Warwick'
     }, 'No job description'),
     ({
         'job_title': 'test',
@@ -52,8 +64,14 @@ def test_setup_cli(client, jobs):
         'job_desc': 'test',
         'numVacancies': 'abc',
         'Stage_Description': ["000000000000000000000000"],
-        'skill': ['Python', 'C'],
-        'skillVal': [7, 6]
+        'skill': ['Git', 'Presentation'],
+        'skillVal': [7, 6],
+        'lang': ['Python', 'C'],
+        'langVal': [7, 6],
+        'start_date': '03/03/2019',
+        'asap': 'off',
+        'min_degree_level': '1:1',
+        'preferred_degrees': 'University of Warwick'
     }, 'Non-integer value for number of vacancies'),
     ({
         'job_title': 'test',
@@ -63,8 +81,14 @@ def test_setup_cli(client, jobs):
         'job_desc': 'test',
         'numVacancies': 1,
         'Stage_Description': ["000000000000000000000000"],
-        'skill': ['Python', 'C'],
-        'skillVal': [1]
+        'skill': ['Presentation'],
+        'skillVal': [7, 6],
+        'lang': ['Python', 'C'],
+        'langVal': [7, 6],
+        'start_date': '03/03/2019',
+        'asap': 'off',
+        'min_degree_level': '1:1',
+        'preferred_degrees': 'University of Warwick'
     }, "Skills and scores don't match"),
     ({
         'job_title': 'test',
@@ -74,9 +98,15 @@ def test_setup_cli(client, jobs):
         'job_desc': 'test',
         'numVacancies': 1,
         'Stage_Description': ["000000000000000000000000"],
-        'skill': ['Python'],
-        'skillVal': [7, 6]
-    }, "Skills and scores don't match"),
+        'skill': ['Git', 'Presentation'],
+        'skillVal': [7, 6],
+        'lang': ['Python', 'C'],
+        'langVal': [7, 6, 8],
+        'start_date': '03/03/2019',
+        'asap': 'off',
+        'min_degree_level': '1:1',
+        'preferred_degrees': 'University of Warwick'
+    }, "Languages and scores don't match"),
     ({
         'job_title': 'test',
         'division': 'HR',
@@ -85,8 +115,14 @@ def test_setup_cli(client, jobs):
         'job_desc': 'test',
         'numVacancies': 1,
         'Stage_Description': ["000000000000000000000000"],
-        'skill': ['Python', 'C'],
-        'skillVal': [77, 6]
+        'skill': ['Git', 'Presentation'],
+        'skillVal': [17, 6],
+        'lang': ['Python', 'C'],
+        'langVal': [7, 6],
+        'start_date': '03/03/2019',
+        'asap': 'off',
+        'min_degree_level': '1:1',
+        'preferred_degrees': 'University of Warwick'
     }, 'Score out of range'),
     ({
         'job_title': 'test',
@@ -96,8 +132,14 @@ def test_setup_cli(client, jobs):
         'job_desc': 'test',
         'numVacancies': 1,
         'Stage_Description': ["000000000000000000000000"],
-        'skill': ['Python', 'C'],
-        'skillVal': ['77', '6']
+        'skill': ['Git', 'Presentation'],
+        'skillVal': [7, 6],
+        'lang': ['Python', 'C'],
+        'langVal': [17, 6],
+        'start_date': '03/03/2019',
+        'asap': 'off',
+        'min_degree_level': '1:1',
+        'preferred_degrees': 'University of Warwick'
     }, 'Score out of range'),
     ({
         'job_title': 'test',
@@ -107,16 +149,24 @@ def test_setup_cli(client, jobs):
         'job_desc': 'test',
         'numVacancies': 1,
         'Stage_Description': ["000000000000000000000000"],
-        'skill': ['Python', 'C'],
-        'skillVal': [7, 6]
+        'skill': ['Git', 'Presentation'],
+        'skillVal': [7, 6],
+        'lang': ['Python', 'C'],
+        'langVal': [7, 6],
+        'start_date': '03/03/2019',
+        'asap': 'off',
+        'min_degree_level': '1:1',
+        'preferred_degrees': 'University of Warwick'
     }, 'Vacancy data accepted'),
 ))
 def test_post_vacancy(client, jobs, data, message):
     token = csrf.generate_csrf_token_with_session(jobs._client)
     jobs._client.post('/cli/auth/login', data={'username': 'test', 'password': 'test', '_csrf_token': token})
     response = jobs.post_vacancy(data)
+    print(response)
     with jobs._client.session_transaction() as session:
         try:
+            print(session['_flashes'])
             error = session['_flashes'][1]
         except KeyError:
             raise AssertionError('nothing flashed')
