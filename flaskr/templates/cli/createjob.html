@@ -128,8 +128,9 @@
                                 <div class="control">
                                     <div class="select is-fullwidth">
                                         <select name="division">
-                                            <option>Tech</option>
-                                            <option>Hr</option>
+                                            {%for division in divisions%}
+                                                <option>{{ division }}</option>
+                                            {%endfor%}
                                         </select>
                                     </div>
                                 </div>
@@ -139,22 +140,22 @@
                                 <div class="control">
                                     <div class="select is-fullwidth">
                                         <select name="roles">
-                                            <option>Full-Time</option>
-                                            <option>Grad.</option>
-                                            <option>Intern</option>
+                                            {%for role in roles%}
+                                                <option>{{ role }}</option>
+                                            {%endfor%}
                                         </select>
                                     </div>
                                 </div>
                             </div>
                             <div class="column">
                             <div class="field">
-                              <label class="label">Country</label>
+                              <label class="label">Location</label>
                                 <div class="control has-icons-left">
                                   <span class="select is-fullwidth">
                                     <select class="select is-fullwidth" name="country">
-                                      <option>United Kingdom</option>
-                                      <option>United States</option>
-                                      <option>Germany</option>
+                                        {%for location in locations%}
+                                            <option>{{ location }}</option>
+                                        {%endfor%}
                                     </select>
                                   </span>
                                   <span class="icon is-small is-left">

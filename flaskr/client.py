@@ -148,7 +148,6 @@ def newJob():
 
                 title = db.getStageTitle(stage)
                 json['stagesDetail'].append(title)
-                print stage
                 if stage != '000000000000000000000000':
                     if stage != '111111111111111111111111':
                         if stage in db.getInterviewStages():
@@ -156,7 +155,7 @@ def newJob():
                 i += 1
             return render_template('cli/review.html', json = json, interviews = interviews)
     # Generate post data and pass to front end
-    return render_template('cli/createjob.html', stages=stages, divisons = db.getDivisions(), roles = db.getRoles(), locations = db.getLocations())
+    return render_template('cli/createjob.html', stages=stages, divisions = db.getDivisions(), roles = db.getRoles(), locations = db.getLocations())
 
 @bp.route('/newJobSummary' , methods=('GET', 'POST'))
 @login_required_C
@@ -168,7 +167,6 @@ def newJobSummary():
 
         jsonData = data["json"][0].replace("'",'"')
         jsonData = jsonData.replace('u"','"')
-        print jsonData
         jsonData = json.loads(jsonData)
         if 'stagesDetail' in jsonData:
             del jsonData['stagesDetail']
