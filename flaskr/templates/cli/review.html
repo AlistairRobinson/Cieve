@@ -105,24 +105,46 @@
             </div>
             <div class="column ">
 			<h1 class='title is-1'>Review your answers</h1>
-      <form id="revform">
-      {% if json %}
-        {% for answer in answers%}
+      <form id="revform" action="/cli/newJobSummary" method="POST">
+        <input name="_csrf_token" id="_csrf_token" type=hidden value="{{ csrf_token() }}">
+        <input name="json" value="{{json}}" type="hidden">
+        <input name="interviews" value="{{interviews}}" type = "hidden">
+              
+        <h1 class="title is-5">Title</h1>
+        <p>{{json['vacancy title']}}</p><br>
         <h3 class="title is-5">Division</h3>
-        <p>{{answer.Division}}</p><br>
+        <p>{{json['division']}}</p><br>
         <h3 class="title is-5">Role</h3>
-        <p>{{answer.Role}}</p><br>
+        <p>{{json['role type']}}</p><br>
         <h3 class="title is-5">Country<h3>
-        <p>{{answer.Country}}</p><br>
+        <p>{{json['location']}}</p><br>
         <h3 class="title is-5">Number of Vacancies</h3>
-        <p>{{answer.numberofvacancies}}</p><br>
-        <h3 class="title is-5">Stages</h3>
-        <ul type="1">
-        {%for stage in json["stagesDetail"]%}
-
-          <li>{{stage}}</li>
-        {%endfor%}
-        </ul><br>
+        <p>{{json['positions available']}}</p><br>
+        <h3 class="title is-5">Start Date</h3>
+        <p>{{json['start date']}}</p><br>
+        <h3 class="title is-5">Minimum Required Degree</h3>
+        <p>{{json['min degree level']}}</p><br>
+        <h3 class="title is-5">Perfered Degrees</h3>
+        <p>{{json['prefered degrees']}}</p><br>
+        <h3 class="title is-5">Languages<h3>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Language</th>
+                  <th>Proficiency</th>
+                </tr>
+              </thead>
+              <tbody>
+    
+                {% for lang, val in json['languages'].items() %}
+                <tr>
+                  <td>{{lang}}</td>
+                  <td>{{val}}</td>
+                </tr>
+    
+                {%endfor%}
+              </tbody>
+            </table><br>
         <h3 class="title is-5">Skills<h3>
         <table class="table">
           <thead>
@@ -133,24 +155,25 @@
           </thead>
           <tbody>
 
-            {% for skill in answer.Skills %}
+            {% for skill, val in json['skills'].items() %}
             <tr>
-              <td>{{skill.Skill}}</td>
-              <td>{{skill.Proficiency}}</td>
+              <td>{{skill}}</td>
+              <td>{{val}}</td>
             </tr>
 
             {%endfor%}
           </tbody>
         </table><br>
-        {%endfor%}
 
-      {%endif%}
-
-      {% if interview == True%}
-    <center>  <h3 class="title is-5">Interview Availability<h3></center>
-			{% for key,stage in interviews.items() %}
-			<h3 class="title is-6">{{key}}</h3>
-          <table class="table is-fullwidth" id="dynamic_field_interview{{stage}}">
+      {% for i in range(json["stagesDetail"]|length) %}
+        {% if i == 0 %}
+          <h3 style="color:green;" class="title is-5">Stage 1 (Onboarding Stage)</h3>
+          <h2>&#9; &#8226; Initial Onbaording Stage (All Applicants Start Here)</h2><br>
+        {% elif ((i+1)|string) in interviews.keys() %}
+          {% set key = (i+1) %}
+          {% set stage = interviews[(i+1)|string] %}
+          <h3 style="color:red;" class="title is-5">Stage {{key}} ({{stage[0]}}) </h3>
+          <table class="table is-fullwidth" id="dynamic_field_interview">
             <thead>
               <tr>
                 <th>Date</th>
@@ -162,20 +185,26 @@
             </thead>
             <tbody>
               <tr>
-
-                <td class="stageid"> <input class="input"  type="hidden" name="stageid[]" value="{{key}}" readonly=True> <input class="input" type="date" name="Date[]" placeholder="Enter the Interview date"> </td>
-
-                <td>  <input class="input" type="time" name="startTime[]" placeholder="Enter your start time"></td>
-                <td>  <input class="input" type="time" name="endTime[]" placeholder="Enter your end time"></td>
-                <td>  <input class="input" type="number" name="vacancies[]" placeholder="#"></td>
+                <td class="stageid">  <input class="input" type="date" name="Date[]{{i+1}}" placeholder="Enter the Interview date"> </td>
+                <td>  <input class="input" type="time" name="startTime[]{{i+1}}" placeholder="Enter your start time"></td>
+                <td>  <input class="input" type="time" name="endTime[]{{i+1}}" placeholder="Enter your end time"></td>
+                <td>  <input class="input" type="number" name="vacancies[]{{i+1}}" placeholder="#"></td>
                 <td><a class="button is-primary" id="add-interview">
-            Add Interview Date
+            New Date
           </a></td>
               </tr>
             </tbody>
           </table>
-				{%endfor%}
-      {% endif %}
+
+        
+        {% else %}
+          <h3 style="color:green;" class="title is-5">Stage {{i+1}} ({{json["stagesDetail"][i]}})</h3>
+          <h2>&#9; &#8226; Description of Stage</h2><br>
+        {% endif %}
+      {% endfor %}
+			
+			
+			
       <div class="field">
                       <div class="control">
                           <div class="box has-text-centered is-shadowless">
@@ -183,6 +212,17 @@
                               <button class="button is-link is-medium">
                                   Submit
                               </button>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="field">
+                      <div class="control">
+                          <div class="box has-text-centered is-shadowless">
+                              <a href="/cli">
+                              <button class="button is-medium">
+                                  Cancel
+                              </button>
+                            </a>
                           </div>
                       </div>
                   </div>
@@ -199,12 +239,12 @@
 				var key = $(this).parent().siblings('.stageid').children().attr('value');
           $(this).parent().parent().parent().append(`
           <tr>
-            <td> <input class="input" type="hidden" name="stageid[]" value="`+key+`" readonly=True> <input class="input" type="date" name="Date[]" placeholder="Enter the Interview date"> </td>
-            <td>  <input class="input" type="time" name="startTime[]" placeholder="Enter your start time"></td>
-            <td>  <input class="input" type="time" name="endTime[]" placeholder="Enter your end time"></td>
-            <td>  <input class="input" type="number" name="vacancies[]" placeholder="#"></td>
+            <td> <input class="input" type="date" name="Date[]`+(stage_counter+1)+`" placeholder="Enter the Interview date"> </td>
+            <td>  <input class="input" type="time" name="startTime[]`+(stage_counter+1)+`" placeholder="Enter your start time"></td>
+            <td>  <input class="input" type="time" name="endTime[]`+(stage_counter+1)+`" placeholder="Enter your end time"></td>
+            <td>  <input class="input" type="number" name="vacancies[]`+(stage_counter+1)+`" placeholder="#"></td>
             <td><a class="button is-secondary" id="delete-interview">
-        Delete Interview Date
+         Remove
       </a></td>
           </tr>
           `)

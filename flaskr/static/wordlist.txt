@@ -1,0 +1,156 @@
+Abu Dhabi
+Abuja
+Accra
+Addis Ababa
+Ahmedabad
+Ahvaz
+Alexandria
+Astana
+Auckland
+Baghdad
+Baku
+Bangalore
+Bangkok	
+Barcelona	
+Beijing
+Belgrade
+Berlin
+Birmingham
+Bogotá	
+Brisbane
+Bucharest
+Budapest
+Buenos Aires
+Busan
+Cairo
+Calgary
+Cape Town	
+Caracas
+Casablanca
+Chicago	
+Chongqing
+Cologne
+Dallas
+Delhi
+Dhaka
+Dubai
+Durban	
+Fez
+Giza
+Guangzhou	
+Hamburg
+Hanoi
+Havana	
+Ho Chi Minh
+Hong Kong
+Houston	
+Ibadan
+Incheon
+Istanbul
+Jaipur
+Jakarta
+Jeddah
+Johannesburg
+Kabul
+Kampala
+Kaohsiung
+Kathmandu
+Kiev
+Kobe
+Kuala Lumpur
+Kyoto	
+Lagos
+Lima
+London
+Los Angeles
+Lusaka
+Madrid
+Manchester
+Mandalay
+Manila
+Maputo
+Maracaibo
+Mashhad
+Medan
+Medellin
+Melbourne
+Mexico City
+Milan	
+Minsk
+Montreal
+Moscow
+Mumbai
+Munich
+Nagoya
+Nagpur
+Nairobi	
+Nanjing
+New Delhi
+New Taipei City
+New York City
+Ningbo
+Nizhny
+Novosibirsk
+Omsk
+Oran
+Osaka
+Ouagadougou
+Palembang
+Paris
+Patna
+Philadelphia
+Phnom Penh
+Phoenix
+Porto Alegre
+Prague
+Pune	
+Qingdao
+Qom
+Quito
+Rawalpindi
+Recife
+Rio de Janeiro
+Riyadh
+Rome
+Rosario
+Saint Petersburg
+Saitama
+Salvador	
+San Antonio	
+San Diego
+Santiago
+Sapporo	
+Semarang
+Seoul
+Shanghai
+Shenzhen
+Shiraz	
+Singapore		
+Sofia
+Surabaya
+Surat
+Suwon
+Sydney
+São Paulo	
+Taichung
+Tainan
+Taipei
+Tangshan
+Tashkent	
+Tehran
+Tianjin
+Tijuana
+Tokyo
+Toronto
+Tripoli
+Tunis
+Ulsan	
+Vienna
+Warsaw
+Wenzhou
+Wuhan	
+Xian
+Xiamen
+Yangon	
+Yerevan
+Yokohama

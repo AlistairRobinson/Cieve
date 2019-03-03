@@ -1,14 +1,14 @@
 import functools
-
-
+import random
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
 from werkzeug.security import check_password_hash, generate_password_hash
-
 from flaskr.db import get_db
-
 from bcrypt import gensalt
+
+with open('flaskr/static/wordlist.txt') as f:
+    words = [l.rstrip('\n').rstrip() for l in f]
 
 bp = Blueprint('auth', __name__)
 
@@ -30,6 +30,8 @@ def aplRegister():
         db = get_db()
         error = None
 
+        phish = random.sample(words, 1)
+
         if not username:
             error = 'Username is required.'
         elif not password:
@@ -40,7 +42,7 @@ def aplRegister():
         if error is None:
             salt = str(gensalt(12))
             passHash = generate_password_hash(password + salt)
-            applicantID = db.insertApplicantUser(name, username, passHash, salt)
+            applicantID = db.insertApplicantUser(name, username, passHash, salt, phish)
             session.clear()
             session['user_id'] = "A" + str(applicantID)
             flash('Registration successful')
@@ -71,11 +73,13 @@ def cliRegister():
         elif db.getClientAccount(username) is not None:
             error = 'Username {} is already taken.'.format(username)
 
+        phish = random.sample(words, 1)
+
         if error is None:
             salt = str(gensalt(12))
             passHash = generate_password_hash(password + salt)
-            clientID = db.insertClientUser(username, passHash, salt)
-            session.clear()
+            clientID = db.insertClientUser(username, passHash, salt, phish)
+            session.clear() 
             session['user_id'] = "C" + str(clientID)
             flash('Registration successful')
             return redirect(url_for('client.dashboard'))
@@ -109,7 +113,7 @@ def applicantLogin():
 
         if error is None:
             session.clear()
-            session['user_id'] = "A" + str(user['_id'])
+            session['user_id'] = "A" + str(user['applicant id'])
             flash('Login successful')
             return redirect(url_for('applicant.dashboard'))
 
