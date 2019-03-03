@@ -4,12 +4,27 @@ from flask import g, session, jsonify
 from flaskr import csrf
 from flaskr.db import get_db
 
-# Client login tests (to ensure security)
+# Client registration tests (to ensure security)
 
 def test_setup_cli(client, jobs):
     token = csrf.generate_csrf_token_with_session(client)
     jobs._client.post(
         '/cli/auth/register',
+        data={'username': 'test', 'password': 'test', 'name': 'test', '_csrf_token': token}
+    )
+    with client.session_transaction() as session:
+        try:
+            error = session['_flashes'][0]
+        except KeyError:
+            raise AssertionError('nothing flashed')
+        assert 'Registration successful' in error[1]
+
+# Applicant login tests (to ensure security)
+
+def test_setup_apl(client, jobs):
+    token = csrf.generate_csrf_token_with_session(client)
+    jobs._client.post(
+        '/apl/auth/register',
         data={'username': 'test', 'password': 'test', 'name': 'test', '_csrf_token': token}
     )
     with client.session_transaction() as session:
@@ -243,21 +258,30 @@ def test_get_vacancies(client, jobs):
 
 # Application posting tests (R15)
 
-json = {} # TODO
-json['skills'] = None
-json['jobs'] = None
-json['other'] = None
-
-@pytest.mark.parametrize(('data', 'message'), (
-    (json, 'Application post successful'),
+@pytest.mark.parametrize(('data_input', 'message'), (
+({
+    'Phone_Number': '987654321',
+    'Address': '123 Test Road',
+    'Degree_Qualification': 'Computer Science',
+    'Degree_Level': '1:1',
+    'University_Attended': 'University of Warwick',
+    'a_levels[0][]': 'General Studies',
+    'Employment_History[0][]': 'KPMG',
+    'Languages[0][]': 'Python',
+    'Skills[0][]': 'Powerpoint',
+    'Selected_Jobs[]': [],
+    'Consider_for_other_roles': '0',
+    'Cover_Letter': 'This is a cover letter',
+    'Interesting_Facts': "I don't actually exist"
+}, 'Application successful'),
 ))
-def test_post_application(client, jobs, data, message):
+def test_post_application(client, jobs, data_input, message):
     token = csrf.generate_csrf_token_with_session(jobs._client)
     jobs._client.post('/apl/auth/login', data={'username': 'test', 'password': 'test', '_csrf_token': token})
-    response = jobs.apply_to_vacancy(data)
+    response = jobs.apply_to_vacancy(data_input)
     with jobs._client.session_transaction() as session:
         try:
-            error = session['_flashes'][0]
+            error = session['_flashes'][1]
         except KeyError:
             raise AssertionError('nothing flashed')
         assert message in error[1]
@@ -265,10 +289,15 @@ def test_post_application(client, jobs, data, message):
 def test_cleanup_job():
     db = get_db()
     assert db.deleteJob("test") 
+
 def test_cleanup_appl():
     db = get_db()
     assert db.deleteApplication("test") 
+
+def test_apl_cleanup(client, auth):
+    db = get_db()
+    assert db.deleteApplicantAccount("test")
     
-def test_cleanup_cli():
+def test_cli_cleanup():
     db = get_db()
     assert db.deleteClientAccount("test")

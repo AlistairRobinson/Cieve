@@ -127,6 +127,8 @@ def newApplication():
 
         db.addUserScore(userID, 0)  # USER GENERAL SCORE
 
+        flash("Application successful")
+
     return render_template('/apl/applicationCreation.html', divisons = db.getDivisions(), roles = db.getRoles(), locations = db.getLocations())
 
 #Definition for the application
