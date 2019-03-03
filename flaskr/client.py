@@ -217,13 +217,7 @@ def jobBreakdown():
     if request.method == "POST":
         db = get_db()
         jobID = request.form['jobID']
-<<<<<<< HEAD
         jobData = db.getJob(jobID)
-=======
-        #jobData = db.getJob(jobID)
-
-        jobData = ""
->>>>>>> e5a3f8ebdf156990420e91f728e904f65827a048
         applicants = {}
         print(request.form)
 
