@@ -106,6 +106,20 @@ def newApplication():
 
         userID = session.get('user_id')[1:]
 
+        appData = {}
+        appData["Degree Qualification"] = degreeQualification
+        appData["Degree Level"] = degreeLevel
+        appData["University Attended"] = universityAttended
+        appData["A-Level Qualifications"] = alevels
+
+
+        db.addUserScore(userID, appData)  # USER GENERAL SCORE
+
+
+
+
+
+
         db = get_db()
         for job in selectedJobs:
             jobScore = 0 #INSERT APPLICANT PROCESSING HERE
@@ -127,8 +141,7 @@ def newApplication():
 
         db.addUserMetaData(userID, coverLetter, interestingFacts)
 
-        db.addUserScore(userID, 0)  # USER GENERAL SCORE
-
+        
         flash("Application successful")
 
     return render_template('/apl/applicationCreation.html', divisons = db.getDivisions(), roles = db.getRoles(), locations = db.getLocations())
