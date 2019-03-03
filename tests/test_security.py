@@ -3,16 +3,6 @@ from flask import g, session, flash
 from flaskr import csrf
 from flaskr.db import get_db
 
-# Pre test cleanup
-
-def test_pre_apl_cleanup(client, auth):
-    db = get_db()
-    assert db.deleteApplicantAccount("test")
-    
-def test_pre_cli_cleanup():
-    db = get_db()
-    assert db.deleteClientAccount("test")
-
 # Applicant registration tests (R1)
 
 def test_apl_registration_get(client, app):

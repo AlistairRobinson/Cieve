@@ -2,16 +2,6 @@ import pytest
 from flaskr import csrf
 from flaskr.db import get_db
 
-# Pre test cleanup
-
-def test_pre_apl_cleanup(client, auth):
-    db = get_db()
-    assert db.deleteApplicantAccount("test")
-    
-def test_pre_cli_cleanup():
-    db = get_db()
-    assert db.deleteClientAccount("test")
-
 def test_setup_cli(client, page):
     token = csrf.generate_csrf_token_with_session(client)
     page._client.post(
