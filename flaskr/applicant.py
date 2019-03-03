@@ -135,9 +135,9 @@ def newApplication():
 def applications():
     db = get_db()
     applicationsData = db.getApplications(session.get('user_id')[1:])
-    filteredData = {}
+    filteredData = []
     for applicationData in applicationsData:
-        if (applicationData["current stage"] != 0) or (applicationData["preferred"] == 1):
+        if (applicationData["current step"] != 0) or (applicationData["preferred"] == 1):
             filteredData.append(applicationData)
     return render_template('/apl/applications.html', applications = filteredData)
 

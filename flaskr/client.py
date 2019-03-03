@@ -28,7 +28,7 @@ def newJob():
 
     if request.method == 'POST':
         jobTitle = request.form['job_title']
-        division = request.form['divisions']
+        division = request.form['division']
         role = request.form['roles']
         country = request.form['country']
         jobDescription = request.form['job_desc']
@@ -37,8 +37,8 @@ def newJob():
         if request.form['asap'] == 'on':
             startDate = "ASAP"
 
-        minDegreeLevel = request.form['min_deg_level']
-        preferedDegrees = request.form['prefered_degrees']
+        minDegreeLevel = request.form['min_degree_level']
+        preferedDegrees = request.form['preferred_degrees']
 
 
         data = request.form.to_dict(flat=False)
@@ -97,7 +97,7 @@ def newJob():
                 error = "Score is not a number"
 
         for stage in stages:
-            if stage not in get_db().getStages() or get_db().getStageTitle(stage) == "":
+            if stage not in get_db().getStages():
                 error = "Wrong stage"
 
         if error is not None:
