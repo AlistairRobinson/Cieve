@@ -375,9 +375,9 @@ class Mongo:
     def deleteJob(self, title):
         self.db.vacancy.delete_one({"vacancy title": title})
         return True
-    
+
     def addUserEducation(self, userID, alevels, degreeQualification, degreeLevel, universityAttended):
-        self.db.applicantInfo.update_one({"applicant id": ObjectId(userID)}, 
+        self.db.applicantInfo.update_one({"applicant id": ObjectId(userID)},
                                          {"$set": {"a-level qualifications": alevels, "degree qualification": degreeQualification, "degree level": degreeLevel, "attended university": universityAttended}})
         return True
 

@@ -137,16 +137,16 @@ def newJob():
             for i in range(len(langs)):
                 langDic[langs[i]] = langVal[i]
             json['languages'] = langDic
-            
+
             json['stagesDetail'] = []
 
             interviews = {}
             i = 1
             for stage in json['stages']:
-                
+
                 title = db.getStageTitle(stage)
                 json['stagesDetail'].append(title)
-                
+
                 if stage != '000000000000000000000000':
                     if stage in db.getInterviewStages():
                         interviews[str(i)] = [title, str(stage)]
@@ -162,7 +162,7 @@ def newJobSummary():
         db = get_db()
 
         data = request.form.to_dict(flat=False)
-        
+
         jsonData = data["json"][0].replace("'",'"')
         jsonData = jsonData.replace('u"','"')
         jsonData = json.loads(jsonData)
@@ -182,11 +182,11 @@ def newJobSummary():
             if len(startTimes) != len(endTimes) or len(dates) != len(startTimes):
                 flash("An unexpected error occured")
                 continue
-            
+
             if len(vacancies) == 0:
                 flash("An unexpected error occured")
                 continue
-            
+
             if any(int(v) <= 0 for v in vacancies):
                 flash("An unexpected error occured")
                 continue
@@ -194,13 +194,13 @@ def newJobSummary():
             stagesData = []
             for i in range(len(dates)):
                 stagesData.append([dates[i], startTimes[i], endTimes[i], vacancies[i]])
-            
+
             for stageData in stagesData:
                 db.insertStageAvailability(stageID, jobID, stageData)
 
         flash("Vacancy post successful")
         return redirect(url_for('client.jobs'))
-        
+
     render_template(url_for('client.dashboard'))
 
 #Definition for the application
@@ -217,20 +217,27 @@ def jobBreakdown():
     if request.method == "POST":
         db = get_db()
         jobID = request.form['jobID']
+<<<<<<< HEAD
         jobData = db.getJob(jobID)
+=======
+        #jobData = db.getJob(jobID)
+
+        jobData = ""
+>>>>>>> e5a3f8ebdf156990420e91f728e904f65827a048
         applicants = {}
+        print(request.form)
 
         stepNumber = 0
         try:
             stepNumber = request.form["stageID"]
         except:
             pass
-        
+
         error = None
-        
+
         if error is None:
             applicants = db.getApplicantsJob(jobID, stepNumber)
-        
+
         return render_template('/cli/jobBreakdown.html', jobData = jobData, applicants = applicants)
 
     return redirect(url_for('client.jobs'))
