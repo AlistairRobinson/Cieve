@@ -126,7 +126,11 @@ def newApplication():
             appData["Languages Known"].append({"Language" : language[0], "Expertise" : language[1]})
         appData["Previous Employment"] = []
         for employ in employmentHistory:
-            appData["Previous Employment"].append({"Company" : employ[0], "Position" : employ[1], "Length of Employment" : (datetime.strptime(employ[3],"%Y-%m-%d")-datetime.strptime(employ[2],"%Y-%m-%d")).days})
+            try:
+                x = datetime.strptime(employ[3],"%Y-%m-%d")
+            except:
+                x = datetime.today()
+            appData["Previous Employment"].append({"Company" : employ[0], "Position" : employ[1], "Length of Employment" : (x-datetime.strptime(employ[2],"%Y-%m-%d")).days})
         appData["Skills"] = []
         for skill in skills:
             appData["Skills"].append({"Skill" : skill[0], "Expertise" : skill[1]})
