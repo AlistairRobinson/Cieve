@@ -270,7 +270,7 @@ def moveApplicant():
         appID = request.form["applicant id"]
         jobID = request.form["job id"]
         db = get_db()
-        # db.moveToNextStage(appID, jobID)
+        db.moveToNextStage(appID, jobID)
         return "Success"
     return "Fail"
 
