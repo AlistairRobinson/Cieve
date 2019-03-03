@@ -1,22 +1,33 @@
 import json
 import random
 import math
+import pprint
 # Skeleto for evaluation class
 
 class Evaluator:
     def __init__(self):
+
+        self.test = False
+        self.alpha = 0.01
+
+        self.weightsFileName = 'weights.json'
+
         self.weights = self.getWeights()
-        self.rankings = self.getRankings()
+        # self.rankings = self.getRankings()
+
         self.degreeLevelConversion = {"1":1,"2:1":0.7,"2:2":0.3}
         self.ALevelConversion = {"A":1,"B":0.7,"C":0.3}
-        self.BaseDegreeQualificationWeight = 1
-        self.BaseAlevelWeight = 1
-        self.BaseLanguageWeight = 1
-        self.baseSkillWeight = 1
+
+        self.baseWeights = {"Degree Qualifications":0.1, "Universities weight":0.1,
+         "A-Level Qualifications":0.1, "Languages Known":0.1,
+         "Skills":0.1, "Previous Employment position":0.1, "Previous Employment Company":0.1}
+
+
     def getWeights(self):
-        with open('weights.json') as w:
-            weights = json.load(w)
-        return weights
+        if self.test:
+            with open(self.weightsFileName) as w:
+                weights = json.load(w)
+            return weights
 
     def getRankings(self):
         # Connect to database to get rankings
@@ -35,100 +46,115 @@ class Evaluator:
       #  Use 2/(1 + exp(-x))-1 with x > 0, x = 0 if x < 0 ??????????? Done
       # Change gPrime to be function above derivative   ///////////// Done
 
-    def gprime(x):
-        return sigmoid(x) * (1 - sigmoid(x))
+    def gprime(self, x):
+        return 2 * self.sigmoid(x) * (1 - self.sigmoid(x))
         # 2*exp(x)/(exp(x)+1)^2
+        #
+
+    def getWeight(self, attribute, value):
+        if value in self.weights[attribute]:
+            weight = self.weights[attribute].get(value)
+        else:
+            weight = self.baseWeights.get(attribute)
+            self.addNewWeight(attribute, value, weight)
+        return weight
+
+
+    def levelConversion(self, group, level):
+        score = 0
+        if group == "A-Level Qualifications":
+            if level in self.ALevelConversion:
+                score = self.ALevelConversion.get(level)
+        elif group == "Languages Known" or group == "Skills":
+            score = float(float(level) / 10)
+
+        return score
+
+    def attributeGroup(self, applicant, group, weightAttribute, levelAttribute, outputs):
+        sum = 0
+
+        if group in applicant:
+            outputs[group] = list()
+            for apl in applicant[group]:
+                attributeValue = apl[weightAttribute]
+                weight = self.getWeight(group, attributeValue)
+
+                level = apl[levelAttribute]
+                score = self.levelConversion(group, level)
+                sum += score * weight
+                outputs[group].append({"weight Attribute":str(attributeValue), "score": score})
+        return sum
+
 
     def basicEvaluate(self, applicant):
+        return self.basicEvaluateFeedback(applicant, {})
 
+    def basicEvaluateFeedback(self, applicant, outputs):
+
+        scores = {}
+        scores['score'] = random.uniform(0, 1)
+        scores['education_score'] = random.uniform(0, 1)
+        scores['experience_score'] = random.uniform(0, 1)
+        scores['skills_score'] = random.uniform(0, 1)
+        return scores
         # Calculate education, skills and experience scores
 
-        # ////////////////////// education
+        #                       ////////////////////// education
+
 
         partialES1 = 0
 
         if "Degree Qualification" in applicant:
-            degreeQualification = applicant["Degree Qualification"]
 
-            if degreeQualification in self.weights["Degree Qualifications"]:
-                degreeQualificationWeight = self.weights["Degree Qualifications"].get(degreeQualification)
-            else:
-                degreeQualificationWeight = self.BaseDegreeQualificationWeight
-                self.addNewWeight("Degree Qualifications", degreeQualification, degreeQualificationWeight)
+            degreeQualification = applicant["Degree Qualification"]
+            degreeQualificationWeight = self.getWeight("Degree Qualifications", degreeQualification)
+
+            uni = applicant["University Attended"].upper()
+            UniversityWeight = self.getWeight("Universities weight", uni)
 
             degreeLevel = applicant["Degree Level"]
             degreeLevelScore = 0
             if degreeLevel in self.degreeLevelConversion:
                 degreeLevelScore = self.degreeLevelConversion.get(degreeLevel)
 
-            uni = applicant["University Attended"].upper()
-            uniScore = 0
-            if uni in self.rankings:
-                uniScore = float(self.rankings[uni]) / 100
-
             partialES1 = self.activation(1 * degreeQualificationWeight
             + degreeLevelScore * self.weights["Degree Level Weight"]
-            + uniScore * self.weights["University Attended Weight"])
+            + 1 * UniversityWeight)
 
-        partialES2 = 0
-        if "A-Level Qualifications" in applicant:
-            for q in applicant["A-Level Qualifications"]:
-                subject = q["Subject"]
-                subjectWeight = 0
-                grade = q["Grade"]
-                gradeScore = 0
-                if grade in self.ALevelConversion:
-                    gradeScore = self.ALevelConversion.get(grade)
+            outputs["Degree Qualification"] = degreeQualification
+            outputs["University Attended"] = uni
+            outputs["Degree Level Score"] = degreeLevelScore
+            outputs["University Score"] = partialES1
 
-                if subject in self.weights["A-Level Qualifications"]:
-                    subjectWeight = self.weights["A-Level Qualifications"].get(subject)
-                else:
-                    subjectWeight = self.BaseAlevelWeight
-                    self.addNewWeight("A-Level Qualifications", subject, subjectWeight)
-                partialES2 += gradeScore * subjectWeight
-            partialES2 = self.activation(partialES2)
+        partialES2 = self.attributeGroup(applicant,"A-Level Qualifications","Subject","Grade",outputs)
+        partialES2 = self.activation(partialES2)
+
+        outputs["A-levels Score"] = partialES2
 
         ES = self.activation(partialES1 * self.weights["University experience Weight"]
         + partialES2 * self.weights["Subjects Weight"])
-        #
+
+        outputs["Education Score"] = ES
+
         # print("Education =   " + str(partialES1) + "   " + str(partialES2) + "    " + str(ES))
 
 
+        #                        ////////////////////// skills
 
-        # ////////////////////// skills
+        partialS1 = self.attributeGroup(applicant, "Languages Known", "Language", "Expertise",outputs)
+        partialS1 = self.activation(partialS1)
 
-        partialS1 = 0
-        if "Languages Known" in applicant:
-            for q in applicant["Languages Known"]:
-                language = q["Language"]
-                languageWeight = 0
-                expertiseScore = float(q["Expertise"]) / 10
+        outputs["Languages Score"] = partialS1
 
-                if language in self.weights["Languages Known"]:
-                    languageWeight = self.weights["Languages Known"].get(language)
-                else:
-                    languageWeight = self.BaseLanguageWeight
-                    self.addNewWeight("Languages Known", language, languageWeight)
-                partialS1 += languageWeight * expertiseScore
-            partialS1 = self.activation(partialS1)
+        partialS2 = self.attributeGroup(applicant, "Skills", "Skill", "Expertise",outputs)
+        partialS2 = self.activation(partialS2)
 
-        partialS2 = 0
-        if "Skills" in applicant:
-            for q in applicant["Skills"]:
-                skill = q["Skill"]
-                skillWeight = 0
-                expertiseScore = float(q["Expertise"]) / 10
-
-                if skill in self.weights["Skills"]:
-                    skillWeight = self.weights["Skills"].get(skill)
-                else:
-                    skillWeight = self.baseSkillWeight
-                    self.addNewWeight("Skills", skill, skillWeight)
-                partialS2 += skillWeight * expertiseScore
-            partialS2 = self.activation(partialS1)
+        outputs["Skillset Score"] = partialS2
 
         SS = self.activation(partialS1 * self.weights["Languages weight"]
         + partialS2 * self.weights["Subjects Weight"])
+
+        outputs["Skill Score"] = SS
 
         #
         # print("Skills =  " + str(partialS1) + "   " + str(partialS2) + "    " + str(SS))
@@ -138,17 +164,25 @@ class Evaluator:
 
         ExS = 0
         if "Previous Employment" in applicant:
+            outputs["Previous Employment"] = []
             for q in applicant["Previous Employment"]:
                 position = q["Position"]
-                positionWeight = 0
+                positionWeight = self.getWeight("Previous Employment position", position)
+
+                company = q["Company"]
+                companyWeight = self.getWeight("Previous Employment Company", company)
+
                 lengthScore = self.getLengthScore(q["Length of Employment"])
-                if position in self.weights["Previous Employment"]:
-                    positionWeight = self.weights["Previous Employment"].get(position)
-                else:
-                    positionWeight = self.baseSkillWeight
-                    self.addNewWeight("Previous Employment", position, positionWeight)
-                ExS += positionWeight * lengthScore
-            ExS = self.activation(ExS)
+
+                EmploymentScore = self.activation(self.weights["Employment length weight"] * lengthScore +
+                positionWeight * 1 + companyWeight *1)
+
+                outputs["Previous Employment"].append({"Position":position, "Company":company,"Length of Employment Score":lengthScore,"Employment Score":EmploymentScore})
+
+                ExS += EmploymentScore
+
+        ExS = self.activation(ExS)
+        outputs["Experience Score"] = ExS
         #
         # print("Experience =  " + str(ExS))
 
@@ -158,20 +192,27 @@ class Evaluator:
         + SS * self.weights["Skills Weight"]
         + ExS * self.weights["Experience Weight"])
 
+        outputs["Base Score"] = score
+
         # print("Overall score : " + str(score) )
         # print()
         # print()
 
-        applicant['score'] = score
-        applicant['education_score'] = ES
-        applicant['experience_score'] = ExS
-        applicant['skills_score'] = SS
-        return applicant
+
+        scores = {}
+        scores['score'] = score
+        scores['education_score'] = ES
+        scores['experience_score'] = ExS
+        scores['skills_score'] = SS
+
+        self.writeWeights()
+
+        return scores
         # return score
 
         # Match job and applicant data
     def jobEvaluate(self, job, applicant):
-
+        return random.uniform(0, 1)
         sum = 0
         count = 0
         if "Degree Qualification" in job:
@@ -180,23 +221,23 @@ class Evaluator:
                 degreeQualification = applicant["Degree Qualification"]
                 if degreeQualification in job["Degree Qualification"]:
                     sum += 1
+                    if "Minimum Degree Level" in job:
+                        degreeLevel = applicant["Degree Level"]
+                        minDegreeLevel = job["Minimum Degree Level"]
+                        if degreeLevel in self.degreeLevelConversion and minDegreeLevel in self.degreeLevelConversion:
+                            if self.degreeLevelConversion.get(degreeLevel) >= self.degreeLevelConversion.get(minDegreeLevel):
+                                sum += 1
+        if "Minimum Degree Level" in job:
+            count += 1
 
-            if "Minimum Degree Level" in job:
-                count += 1
-                degreeLevel = applicant["Degree Level"]
-                minDegreeLevel = job["Minimum Degree Level"]
-                if degreeLevel in self.degreeLevelConversion and minDegreeLevel in self.degreeLevelConversion:
-                    if self.degreeLevelConversion.get(degreeLevel) >= self.degreeLevelConversion(minDegreeLevel):
-                        sum += 1
-
-        langSum = 0
+        langSum = 0.0
         langCount = 0
         if "Languages Known" in job:
             for l in job["Languages Known"]:
                 langCount += 1
                 language = l["Language"]
                 expertise = l["Expertise"]
-                lSum = 0
+                lSum = 0.0
                 if "Languages Known" in applicant:
                     for appLang in applicant["Languages Known"]:
                         if appLang["Language"] == language:
@@ -204,9 +245,10 @@ class Evaluator:
                             if appExpertise >= expertise:
                                 lSum = 1
                             else:
-                                lSum = appExpertise / expertise
+                                lSum = float(appExpertise / expertise)
                 langSum += lSum
 
+        print(str(langCount) + "   " + str(langSum))
         if langCount > 0:
             count += 1
             sum += langSum / langCount
@@ -232,31 +274,44 @@ class Evaluator:
             count += 1
             sum += langSum / langCount
 
-        if "Minimum Work Experience" in job:
-            minExp = job["Minimum Work Experience"]
-            count += 1
-            expSum = 0
-            if "Previous Employment" in applicant:
-                for q in applicant["Previous Employment"]:
-                    expSum += self.getLength(q["Length of Employment"])
-            if minExp < expSum:
-                sum += 1
 
         if count != 0:
             score = sum / count
         else:
             score = 0
 
+        if "Type" in job:
+            if job["Type"] != "Intern":
+                if "Start Date" in job:
+                    if "graduation date" in applicant:
+                        if job["Start Date"] < applicant["graduation date"]:
+                            score = score * 0.3
+
+
         return score
 
 
     def addNewWeight(self, dictionaryName, weightName, weight):
-        return 0
+        if not (dictionaryName in self.weights):
+            self.weights[dictionaryName] = {}
+        self.weights[dictionaryName][weightName] = weight
+
+
+    def writeWeights(self):
+        if self.test:
+            f = open(self.weightsFileName, "r+")
+            f.seek(0)        # <--- should reset file position to the beginning.
+            json.dump(self.weights, f, indent=4)
+            f.truncate()     # remove remaining part
 
     def getLengthScore(self, s):
-        p = s.find('year')
+        p = str(s).find('year')
         if p == -1:
-            return 0
+            l = s /365
+            if l > 5:
+                return 1
+            else:
+                 return l/5
         else:
             l = float(s[0:(p-1)])
             if l > 5:
@@ -264,10 +319,117 @@ class Evaluator:
             else:
                  return l/5
 
-    def getLength(self, s):
-        p = s.find('year')
-        if p == -1:
-            return 0
-        else:
-            l = float(s[0:(p-1)])
-            return l
+
+    def getError(self, weight, prevError, score):
+        return weight * prevError * self.gprime(score)
+
+    def updateWeights(self, applicant, wantedScore):
+
+        outputs = {}
+        self.basicEvaluateFeedback(applicant, outputs)
+        # pprint.pprint(outputs)
+        # print()
+        # print("................")
+        # print()
+
+        baseError =  wantedScore - outputs["Base Score"]
+        # print(baseError)
+        errors = {"Base Error": baseError}
+#
+
+        errors["Education Error"] = self.getError(self.weights["Education Weight"], baseError, outputs["Education Score"])
+        errors["Experience Error"] = self.getError(self.weights["Experience Weight"], baseError, outputs["Experience Score"])
+        errors["Skills Error"] = self.getError(self.weights["Skills Weight"], baseError, outputs["Skill Score"])
+
+
+        errors["Skillset Error"] = self.getError(self.weights["Subjects Weight"], errors["Skills Error"], outputs["Skillset Score"])
+        errors["Languages Error"] = self.getError(self.weights["Languages weight"], errors["Skills Error"], outputs["Languages Score"])
+
+        errors["University Error"] = self.getError(self.weights["University experience Weight"], errors["Education Error"], outputs["University Score"])
+        errors["A-levels Error"] = self.getError(self.weights["Subjects Weight"], errors["Education Error"], outputs["A-levels Score"])
+
+        if "Previous Employment" in outputs:
+
+
+            errors["Previous Employment Errors"] = []
+            for q in outputs["Previous Employment"]:
+                company = q["Company"]
+                position = q["Position"]
+                EmploymentScore = q["Employment Score"]
+                EmploymentError = self.getError(1, errors["Experience Error"], outputs["Experience Score"])
+                errors["Previous Employment Errors"].append({"Company":company,"Position":position,"Employment Error":EmploymentError})
+
+        newWeights = dict(self.weights)
+
+        self.updateSkillsWeight(outputs["Skill Score"], baseError, newWeights)
+        self.updateExperienceWeight(outputs["Experience Score"], baseError, newWeights)
+        self.updateEducationWeight(outputs["Education Score"], baseError, newWeights)
+
+
+        self.updateSkillSetWeight(outputs["Skillset Score"], errors["Skills Error"], newWeights)
+        self.updateLanguagesWeight(outputs["Languages Score"], errors["Skills Error"], newWeights)
+
+        self.updateALevelsWeight(outputs["A-levels Score"], errors["Education Error"], newWeights)
+        self.updateUniversityExperienceWeight(outputs["University Score"], errors["Education Error"], newWeights)
+
+        self.updateDegreeLevelWeight(outputs["Degree Level Score"], errors["University Error"], newWeights)
+
+        self.updateUniversityWeight(outputs["University Attended"], errors["University Error"], newWeights)
+        self.updateDegreeWeight(outputs["Degree Qualification"], errors["University Error"], newWeights)
+
+        self.updateGroup("Languages Known", errors["Languages Error"], outputs, newWeights)
+        self.updateGroup("A-Level Qualifications", errors["A-levels Error"], outputs, newWeights)
+        self.updateGroup("Skills", errors["Skillset Error"], outputs, newWeights)
+
+        self.weights = newWeights
+        self.writeWeights()
+        #
+        # pprint.pprint(errors)
+        # pprint.pprint(outputs)
+
+
+        return 0
+
+    def updateSkillsWeight(self, output, error, weights):
+        weights["Skills Weight"] += self.multiplyToWeight(output, error)
+
+    def updateExperienceWeight(self, output, error, weights):
+        weights["Experience Weight"] += self.multiplyToWeight(output, error)
+
+    def updateEducationWeight(self, output, error, weights):
+        weights["Education Weight"] += self.multiplyToWeight(output, error)
+
+    def updateSkillSetWeight(self, output, error, weights):
+        weights["Skillset weight"] += self.multiplyToWeight(output, error)
+
+    def updateLanguagesWeight(self, output, error, weights):
+        weights["Languages weight"] += self.multiplyToWeight(output, error)
+
+    def updateALevelsWeight(self, output, error, weights):
+        weights["Subjects Weight"] += self.multiplyToWeight(output, error)
+
+    def updateUniversityExperienceWeight(self, output, error, weights):
+        weights["University experience Weight"] += self.multiplyToWeight(output, error)
+
+    def updateEmploymentLengthWeight(self, output, error, weights):
+        weights["Employment length weight"] += self.multiplyToWeight(output, error)
+
+    def updateDegreeLevelWeight(self, output, error, weights):
+        weights["Degree Level Weight"] += self.multiplyToWeight(output, error)
+
+    def updateUniversityWeight(self, university, error, weights):
+        weights["Universities weight"][university] += self.multiplyToWeight(1, error)
+
+    def updateDegreeWeight(self, degree, error, weights):
+        weights["Degree Qualifications"][degree] += self.multiplyToWeight(1, error)
+
+    def updateGroup(self, group, error, outputs, weights):
+
+        if group in outputs:
+            for attribute in outputs[group]:
+                name = attribute["weight Attribute"]
+                score = attribute["score"]
+                weights[group][name] += self.multiplyToWeight(score, error)
+
+    def multiplyToWeight(self, score, error):
+        return score * error * self.alpha

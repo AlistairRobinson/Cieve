@@ -42,8 +42,10 @@ def newJob():
             pass
 
         minDegreeLevel = request.form['min_degree_level']
-        preferedDegrees = request.form['preferred_degrees']
-
+        x = request.form['preferred_degrees']
+        preferedDegrees = []
+        if x != "No Preference":
+            preferedDegrees = x
 
         data = request.form.to_dict(flat=False)
         try:
