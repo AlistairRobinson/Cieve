@@ -109,7 +109,10 @@ class Mongo:
             return query
         else:
             return None
-
+    
+    def getApplicantNameID(self, id):
+        query = self.db.accountInfo.find_one({"applicant id": ObjectId(id)})["name"]
+        return query
 
     # Return JSON of client info populated based on id
     def getClientUserID(self, id):
@@ -215,7 +218,7 @@ class Mongo:
 
     #Move applicants to the next stage in the steps for the jobs and update completed flag
     def moveToNextStage(self, applicationID, jobID):
-        self.db.application.update_one({"applicant id": ObjectId(applicationID)}, {"$inc": {"current step": 1}}, {"$set": {"completed": False}})
+        self.db.application.update_one({"applicant id": ObjectId(applicationID)}, {"$inc": {"current step": 1}, "$set": {"completed": False}})
 
 
     # Return the total number of pages for a specific job sort

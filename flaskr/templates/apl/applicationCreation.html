@@ -777,8 +777,9 @@
                                   <div class="select is-fullwidth">
                                       <select name="divisions" id="divisionDropDown">
                                           <option>Please Select</option>
-                                          <option>Tech</option>
-                                          <option>Hr</option>
+                                          {%for division in divisions%}
+                                            <option>{{ division }}</option>
+                                          {%endfor%}
                                       </select>
                                   </div>
                               </div>

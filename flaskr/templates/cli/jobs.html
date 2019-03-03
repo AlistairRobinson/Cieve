@@ -33,29 +33,7 @@
                           form.appendChild(input);
                       }
                       form.submit();
-
-                      // $.ajax({
-                      //     url: '/cli/jobBreakdown',
-                      //     type: 'POST',
-                      //     data: jobdata,
-                      //     success: function(response){
-                      //         alert("data posted");
-                      //     }
-                      // })
                   });
-
-                  // $.ajax({
-                  //     url: '/cli/jobBreakdown',
-                  //     data: {
-                  //       jobID: status,
-                  //       _csrf_token: token
-                  //     },
-                  //     type: 'POST',
-                  //     success: function(response) {
-                  //     },
-                  //     error: function(error) {
-                  //     }
-                  // });
         });
     </script>
 
@@ -167,12 +145,6 @@
                   <div><h5 class="title is-5">{{job["vacancy title"]}}</h5>
                 </div> <span class="tag is-light"><b> Division </b> &nbsp {{job["division"]}}</span> <span class="tag is-light"><b> Role Type </b> &nbsp {{job["role type"]}}</span> <span class="tag is-light"><b> <i class="fas fa-map-marker-alt"> </i> </b> &nbsp {{job["location"]}}</span></div>
 
-                <!-- <form action="/cli/jobBreakdown" method="POST">
-                    <div class="box"> <div><h5 class="title is-5"></h5></div>
-                    <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
-                    <input name="jobID" value="{{job["_id"]}}"" type="hidden">
-                    <div class="box"><button>{{job}}</button></div>
-                </form> -->
             {%endfor%}
             </div>
 

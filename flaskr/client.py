@@ -220,7 +220,7 @@ def jobBreakdown():
         db = get_db()
         jobID = request.form['jobID']
         jobData = db.getJob(jobID)
-       
+
         jobData["stagesDetail"] = []
         for stage in jobData["stages"]:
             title = db.getStageTitle(stage)
@@ -239,6 +239,9 @@ def jobBreakdown():
 
         if error is None:
             applicants = db.getApplicantsJob(jobID, stepNumber)
+            for applicant in applicants:
+                applicant["name"] = db.getApplicantNameID(applicant["applicant id"])
+                applicant["basic scores"] = db.getApplicantUserID(applicant["applicant id"])["basic score"]
 
         return render_template('/cli/jobBreakdown.html', jobData = jobData, applicants = applicants)
 
@@ -253,7 +256,7 @@ def stageDetail():
         jobID = request.form['jobID']
         stepNo = request.form['stepNo']
         error = None
-        
+
         if error is None:
             applicants = db.getApplicantsJob(jobID, stepNo)
         return applicants
@@ -263,9 +266,21 @@ def stageDetail():
 @bp.route('/moveApplicant', methods=('GET', 'POST'))
 @login_required_C
 def moveApplicant():
-    return None
+    if request.method == "POST":
+        appID = request.form["applicant id"]
+        jobID = request.form["job id"]
+        db = get_db()
+        db.moveToNextStage(appID, jobID)
+        return "Success"
+    return "Fail"
 
 @bp.route('/rejectApplicant', methods=('GET', 'POST'))
 @login_required_C
 def rejectApplicant():
-    return None
+    if request.method == "POST":
+        appID = request.form["applicant id"]
+        jobID = request.form["job id"]
+        db = get_db()
+        db.reject(appID, jobID)
+        return "Success"
+    return "Fail"
