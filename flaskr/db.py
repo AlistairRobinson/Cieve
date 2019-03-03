@@ -144,7 +144,7 @@ class Mongo:
             return Jobs[(number-1)*20:((number-1)*20)+20]
 
     def getJob(self, jobID):
-        return 
+        return
 
     # Wiil accept a json parameter which will be defined by the input, adds the new job to the DB
     def addNewJob(self, json, clientID):
@@ -206,7 +206,6 @@ class Mongo:
     def getApplicantsJob(self, jobID, stepOrder):
         applicantList = []
         applicationQuery = self.db.application.find({"vacancy id": ObjectId(jobID), "current step": stepOrder})#.sort({"specialized score": -1})
-        print applicationQuery
         for doc in applicationQuery:
             applicantList.append(doc)
         return applicantList
@@ -375,9 +374,9 @@ class Mongo:
     def deleteJob(self, title):
         self.db.vacancy.delete_one({"vacancy title": title})
         return True
-    
+
     def addUserEducation(self, userID, alevels, degreeQualification, degreeLevel, universityAttended):
-        self.db.applicantInfo.update_one({"applicant id": ObjectId(userID)}, 
+        self.db.applicantInfo.update_one({"applicant id": ObjectId(userID)},
                                          {"$set": {"a-level qualifications": alevels, "degree qualification": degreeQualification, "degree level": degreeLevel, "attended university": universityAttended}})
         return True
 
