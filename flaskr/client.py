@@ -217,9 +217,7 @@ def jobBreakdown():
     if request.method == "POST":
         db = get_db()
         jobID = request.form['jobID']
-        #jobData = db.getJob(jobID)
-
-        jobData = ""
+        jobData = db.getJob(jobID)
         applicants = {}
         print(request.form)
 
@@ -237,3 +235,19 @@ def jobBreakdown():
         return render_template('/cli/jobBreakdown.html', jobData = jobData, applicants = applicants)
 
     return redirect(url_for('client.jobs'))
+
+
+@bp.route('/stageDetail', methods=('GET', 'POST'))
+@login_required_C
+def stageDetail():
+    if request.method == "POST":
+        db = get_db()
+        jobID = request.form['jobID']
+        stepNo = request.form['stepNo']
+        error = None
+        
+        if error is None:
+            applicants = db.getApplicantsJob(jobID, stepNo)
+        return applicants
+
+    return None
