@@ -241,8 +241,7 @@ def jobBreakdown():
             applicant["basic scores"] = db.getApplicantUserID(applicant["applicant id"])["basic score"]
             applicantsData[str((applicant["specialized score"] + applicant["basic scores"]["score"])/2)] = applicant
 
-        return render_template('/cli/jobBreakdown.html', jobData = jobData, applicants = sorted(applicantsData)
-
+        return render_template('/cli/jobBreakdown.html', jobData = jobData, applicants = sorted(applicantsData))
     return redirect(url_for('client.jobs'))
 
 
