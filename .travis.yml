@@ -9,6 +9,7 @@ install:
 before_script:
   - export FLASK_APP=flaskr
   - export FLASK_ENV=development
+  - python -m flask run &
 
 script:
-  - python -m flask run &
+  - python -m pytest
