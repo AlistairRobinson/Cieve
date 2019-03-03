@@ -91,13 +91,15 @@ def newApplication():
         except:
             pass
 
-
         unselectedJobs = []
         if request.form['Consider_for_other_roles'] == "1":
             try:
                 unselected_Jobs = request.form.to_dict(flat=False)["Unselected_Jobs[]"]
             except:
                 pass
+
+        if request.form['Consider_for_other_roles'] == "0" and selectedJobs == []:
+            flash("An unexpected error occurred")
 
         coverLetter = request.form['Cover_Letter']
         interestingFacts = request.form['Interesting_Facts']
