@@ -239,7 +239,8 @@ def jobBreakdown():
 
         if error is None:
             applicants = db.getApplicantsJob(jobID, stepNumber)
-
+            for applicant in applicants:
+                applicant["name"] = db.getApplicantNameID(applicant["applicant id"])
         return render_template('/cli/jobBreakdown.html', jobData = jobData, applicants = applicants)
 
     return redirect(url_for('client.jobs'))
