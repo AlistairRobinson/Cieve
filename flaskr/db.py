@@ -409,9 +409,4 @@ class Mongo:
     def addUserScore(self, userID, userScore):
         self.db.applicantInfo.update_one({"applicant id": ObjectId(userID)},
                                          {"$set": {"basic score": userScore}})
-<<<<<<< HEAD
         return True
-get_db().getApplications("5c7afead8c5b5b278068d293")
-=======
-        return True
->>>>>>> 0acff2cd8963387cbb984af9ab9ac7551ed1fad8
