@@ -143,8 +143,9 @@ class Mongo:
         else:
             return Jobs[(number-1)*20:((number-1)*20)+20]
 
+    #Return the data of a job given the jobID
     def getJob(self, jobID):
-        return 
+        return list(self.db.vacancy.find_one({"_id": ObjectId(jobID)}))
 
     # Wiil accept a json parameter which will be defined by the input, adds the new job to the DB
     def addNewJob(self, json, clientID):
@@ -409,4 +410,3 @@ class Mongo:
         self.db.applicantInfo.update_one({"applicant id": ObjectId(userID)},
                                          {"$set": {"basic score": userScore}})
         return True
-get_db().getApplications("5c7afead8c5b5b278068d293")
