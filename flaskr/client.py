@@ -156,47 +156,46 @@ def newJob():
 @login_required_C
 def newJobSummary():
     if request.method == "POST":
-            db = get_db()
+        db = get_db()
 
-            data = request.form.to_dict(flat=False)
-            
-            jsonData = data["json"][0].replace("'",'"')
-            jsonData = jsonData.replace('u"','"')
-            jsonData = json.loads(jsonData)
+        data = request.form.to_dict(flat=False)
+        
+        jsonData = data["json"][0].replace("'",'"')
+        jsonData = jsonData.replace('u"','"')
+        jsonData = json.loads(jsonData)
+        if 'stagesDetail' in jsonData:
             del jsonData['stagesDetail']
 
-            userID = session.get('user_id')[1:]
-            jobID =  db.addNewJob(jsonData, userID)
+        userID = session.get('user_id')[1:]
+        jobID =  db.addNewJob(jsonData, userID)
+        interviewsData = json.loads(data["interviews"][0].replace("'",'"').replace('u"','"'))
+        for stepID, interviews in interviewsData.items():
+            stageID = interviews[1]
+            dates = data["Date[]" + stepID]
+            startTimes = data["startTime[]" + stepID]
+            endTimes = data["endTime[]" + stepID]
+            vacancies = data["vacancies[]" + stepID]
+            """
+            if vacancies <= 0:
+                flash("Number of vacancies must be positive")
+                interviews = {}
+                i = 1
+                for stage in jsonData['stages']:
+                    if stage != '000000000000000000000000':
+                        if stage in db.getInterviewStages():
+                            interviews[str(i)] = [title, str(stage)]
+                    i += 1
+                return render_template('cli/review.html', json = json, interviews = interviews)
+            """
+            stagesData = []
+            for i in range(len(dates)):
+                stagesData.append([dates[i], startTimes[i], endTimes[i], vacancies[i]])
+            
+            for stageData in stagesData:
+                db.insertStageAvailability(stageID, jobID, stageData)
 
-            interviewsData = json.loads(data["interviews"][0].replace("'",'"').replace('u"','"'))
-
-            for stepID, interviews in interviewsData.items():
-                stageID = interviews[1]
-                dates = data["Date[]" + stepID]
-                startTimes = data["startTime[]" + stepID]
-                endTimes = data["endTime[]" + stepID]
-                vacancies = data["vacancies[]" + stepID]
-                """
-                if vacancies <= 0:
-                    flash("Number of vacancies must be positive")
-                    interviews = {}
-                    i = 1
-                    for stage in jsonData['stages']:
-                        if stage != '000000000000000000000000':
-                            if stage in db.getInterviewStages():
-                                interviews[str(i)] = [title, str(stage)]
-                        i += 1
-                    return render_template('cli/review.html', json = json, interviews = interviews)
-                """
-                stagesData = []
-                for i in range(len(dates)):
-                    stagesData.append([dates[i], startTimes[i], endTimes[i], vacancies[i]])
-                
-                for stageData in stagesData:
-                    db.insertStageAvailability(stageID, jobID, stageData)
-
-            flash("Vacancy post successful")
-            return redirect(url_for('client.jobs'))
+        flash("Vacancy post successful")
+        return redirect(url_for('client.jobs'))
         
     render_template(url_for('client.dashboard'))
 

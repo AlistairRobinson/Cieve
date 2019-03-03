@@ -159,7 +159,7 @@ def test_setup_cli(client, jobs):
         'preferred_degrees': 'University of Warwick'
     }, 'Vacancy data accepted'),
 ))
-def test_post_vacancy(client, jobs, data, message):
+def test_post_vacancy_validation(client, jobs, data, message):
     token = csrf.generate_csrf_token_with_session(jobs._client)
     jobs._client.post('/cli/auth/login', data={'username': 'test', 'password': 'test', '_csrf_token': token})
     response = jobs.post_vacancy(data)
@@ -174,27 +174,60 @@ def test_post_vacancy(client, jobs, data, message):
 
 # Vacancy post tests (R8, R14)
 
-@pytest.mark.parametrize(('data', 'message'), (
+@pytest.mark.parametrize(('data_input', 'message'), (
 ({
-        'job_title': 'test',
-        'division': 'HR',
-        'roles': 'Graduate',
-        'country': 'Germany',
-        'job_desc': 'test',
-        'numVacancies': 1,
-        'Stage_Description': ["000000000000000000000000", "5c74389bad9bb61fbcc01a3b"],
-        'skill': ['Git', 'Presentation'],
-        'skillVal': [7, 6],
-        'lang': ['Python', 'C'],
-        'langVal': [7, 6],
-        'start_date': '03/03/2019',
-        'asap': 'off',
-        'min_degree_level': '1:1',
-        'preferred_degrees': 'University of Warwick',
-        'interviews': {
-            '1': 'Logic Test'
-        }
-    }, 'Vacancy post successful'))
+        'json': "{'vacancy title': 'test'," + 
+            "'division': 'HR'," +
+            "'role type': 'Graduate'," +
+            "'country': 'Germany'," +
+            "'job_desc': 'test'," +
+            "'positions available': '1'," +
+            "'skills': {'Git': 7, 'Presentation': 6}," +
+            "'languages': {'Python': 6, 'C':7}," +
+            "'start date': '03/03/2019'," +
+            "'asap': 'off'," + 
+            "'min degree level': '1:1'," + 
+            "'preferred degrees': 'University of Warwick'" + 
+        "}",
+        'interviews': "{'3': ['Interview', '5c74389bad9bb61fbcc01a3a'],'2': ['Mobile Interview', '5c7438ecad9bb61ff6d81d38']}",
+        "vacancies[]2": ["2", "3"],
+        "Date[]2": ["03/03/2019", "04/03/2019"],
+        "startTime[]2": ["12:00", "13:00"],
+        "endTime[]2": ["15:00", "17:00"],
+        "vacancies[]3": ["2", "3"],
+        "Date[]3": ["05/03/2019"],
+        "startTime[]3": ["11:00"],
+        "endTime[]3": ["17:00"]
+    }, 'Vacancy post successful'),
+))
+
+# {'job_title': 'test','division': 'HR','roles': 'Graduate','country': 'Germany','job_desc': 'test','numVacancies': 1,'Stage_Description': ['000000000000000000000000', '5c74389bad9bb61fbcc01a3b'],'skill': ['Git', 'Presentation'],'skillVal': [7, 6],'lang': ['Python', 'C'],'langVal': [7, 6],'start_date': '03/03/2019','asap': 'off','min_degree_level': '1:1','preferred_degrees': 'University of Warwick'}
+
+def test_post_vacancy(client, jobs, data_input, message):
+    token = csrf.generate_csrf_token_with_session(jobs._client)
+    jobs._client.post('/cli/auth/login', data={'username': 'test', 'password': 'test', '_csrf_token': token})
+    token = csrf.generate_csrf_token_with_session(jobs._client)
+    print(data_input['json'])
+    response = jobs._client.post('/cli/newJobSummary', data={
+        'json': data_input['json'],
+        'interviews': data_input['interviews'],
+        'vacancies[]2': data_input['vacancies[]2'],
+        "Date[]2": data_input['Date[]2'],
+        "startTime[]2": data_input['startTime[]2'],
+        "endTime[]2": data_input['endTime[]2'],
+        "vacancies[]3": data_input['vacancies[]3'],
+        "Date[]3": data_input['Date[]3'],
+        "startTime[]3": data_input['startTime[]3'],
+        "endTime[]3": data_input['endTime[]3'],
+        '_csrf_token': token
+    })
+    with jobs._client.session_transaction() as session:
+        try:
+            print(session['_flashes'])
+            error = session['_flashes'][1]
+        except KeyError:
+            raise AssertionError('nothing flashed')
+        assert message in error[1]
 
 # Vacancy retrieval tests (R15)
 
@@ -232,7 +265,6 @@ def test_post_application(client, jobs, data, message):
 def test_cleanup_job():
     db = get_db()
     assert db.deleteJob("test") 
-    
 def test_cleanup_appl():
     db = get_db()
     assert db.deleteApplication("test") 
