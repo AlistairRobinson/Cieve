@@ -12,20 +12,79 @@
     <script src="../../static/dist/js/bulma-steps.js"></script>
     <script src="../../static/accordion-dist/js/bulma-accordion.js"></script>
     <link href="../../static/accordion-dist/css/bulma-accordion.min.css" rel="stylesheet">
+    <link href="../../static/tooltip-dist/css/bulma-tooltip.min.css" rel="stylesheet">
+
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-steps@2.2.1/dist/css/bulma-steps.min.css">
     <script>
       $(document).ready(function() {
-      $('#tab_header ul li.item').on('click', function() {
-        var number = $(this).data('option');
-        $('#tab_header ul li.item').removeClass('is-active');
-        $(this).addClass('is-active');
-        $('#tab_container .container_item').removeClass('is-active');
-        $('div[data-item="' + number + '"]').addClass('is-active');
-      });
+          $('#tab_header ul li.item').on('click', function() {
+            var number = $(this).data('option');
+            $('#tab_header ul li.item').removeClass('is-active');
+            $(this).addClass('is-active');
+            $('#tab_container .container_item').removeClass('is-active');
+            $('div[data-item="' + number + '"]').addClass('is-active');
+          });
+
+          $('.advanceCandidate').click(function(event) {
+              var candidateID = $(this).attr('id');
+              alert(candidateID);
+          });
+
+          $('#scoreButton').click(function(event) {
+              alert("test");
+          });
     });
     </script>
+    <!-- <script>
+        $(document).ready(function() {
+
+                  var token = document.getElementById('_csrf_token').value;
+
+                  $('.box').click(function(event) {
+                      var boxID = $(this).attr('id');
+                      var jobdata = {};
+                      jobdata["jobID"] = boxID
+                      jobdata["_csrf_token"] = document.getElementById('_csrf_token').value;
+
+                      var form = document.createElement('form');
+                      document.body.appendChild(form);
+                      form.method = 'post';
+                      form.action = '/cli/jobBreakdown';
+                      for (var name in jobdata) {
+                          var input = document.createElement('input');
+                          input.type = 'hidden';
+                          input.name = name;
+                          input.value =jobdata[name];
+                          form.appendChild(input);
+                      }
+                      form.submit();
+
+                      // $.ajax({
+                      //     url: '/cli/jobBreakdown',
+                      //     type: 'POST',
+                      //     data: jobdata,
+                      //     success: function(response){
+                      //         alert("data posted");
+                      //     }
+                      // })
+                  });
+
+                  // $.ajax({
+                  //     url: '/cli/jobBreakdown',
+                  //     data: {
+                  //       jobID: status,
+                  //       _csrf_token: token
+                  //     },
+                  //     type: 'POST',
+                  //     success: function(response) {
+                  //     },
+                  //     error: function(error) {
+                  //     }
+                  // });
+        });
+    </script> -->
 
     <!-- <script>
         $(document).ready(function() {
@@ -168,7 +227,9 @@
 
             </div>
             <div class="column">
+            <input name=_csrf_token id="_csrf_token" type=hidden value="{{ csrf_token() }}">
             <h3 class="title is-3">{{jobData["vacancy title"]}}</h3>
+            <div id="chosenJobID" style='display:none;'>{{jobData["_id"]}}</div>
             <div class="steps" id="jobStages">
               <div class="step-item is-active is-success">
                 <div class="step-marker">1</div>
@@ -191,9 +252,10 @@
                     <table class="table is-fullwidth is-hoverable center-table" id="dynamic_field_aLevels">
                         <tr>
                              <td><b>#</b></td>
-                             <td><b>Applicant Name</b></td>
-                             <td><b>Score</b></td>
-                             <td><b>Job Match</b></td>
+                             <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="A star indicates that this candidate has selected this as their preffered job"><i class="fas fa-info"></button></td>
+                             <td><b class="is-pulled-left">Applicant Name</b></td>
+                             <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" id="scoreButton" data-tooltip="The computed ability of each candidate independent of the job"><b>Score</b></button></td>
+                             <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The suitability of the candiate specifically for the job"><b>Job Match</b></button></td>
                              <td></td>
                              <td></td>
                         </tr>
@@ -201,16 +263,45 @@
                         {% for i in range (0, applicants|length) %}
                           <tr>
                             <td>{{i+1}}</td>
-                            <td>{{applicants[i].preferred}}</td>
+                            {% if applicants[i].preferred %}
+                              <td><i class="fas fa-star" style='color:#FFDF00;'></i></td>
+                            {% else %}
+                              <td></td>
+                            {% endif %}
+                            <td><p class="is-pulled-left">Josh</p></td>
                             <td>{{applicants[i].score}}</td>
                             <td>4</td>
-                            <td><i class="fas fa-arrow-right"></i></td>
-                            <td><i class="fas fa-times"></i></td>
+                            <td><div onclick="advanceCandidate(this)" style='cursor: pointer;' id={{applicants[i]._id}}><i class="fas fa-arrow-right"></i></div></td>
+                            <td><div onclick="rejectCandidate(this)" style='cursor: pointer;' id={{applicants[i]._id}}><i class="fas fa-times"</i></td>
                           </tr>
                         {%endfor%}
                      </table>
                   </div>
                 </div>
+
+                <script>
+                  function advanceCandidate(elem){
+                    var id = $(elem).attr("id");
+                    $(elem).parent().parent().remove();
+                    var candidateData = {};
+                    candidateData["candidateID"] = id;
+                    candidateData["jobID"] = $(chosenJobID).text();
+                    candidateData["_csrf_token"] = document.getElementById('_csrf_token').value;
+                    $.ajax({
+                        url: '/cli/jobBreakdown',
+                        type: 'POST',
+                        data: candidateData,
+                        success: function(response){
+                            alert("data posted");
+                        }
+                    })
+                  }
+
+                  function rejectCandidate(elem){
+                    var id = $(elem).attr("id");
+                    $(elem).parent().parent().remove();
+                  }
+                </script>
 
                 <div class="step-content has-text-centered">
                     <div class="tabs is-centered is-boxed" id="tab_header">
@@ -227,6 +318,7 @@
                                  <td><b>Applicant Name</b></td>
                                  <td><b>Score</b></td>
                                  <td><b>Job Match</b></td>
+                                 <td><button class="button is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="Computated score based on the candidates ability and their"><b>Stage Score</b></button></td>
                                  <td></td>
                                  <td></td>
                             </tr>
