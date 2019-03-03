@@ -252,7 +252,7 @@
                     <table class="table is-fullwidth is-hoverable center-table" id="dynamic_field_aLevels">
                         <tr>
                              <td><b>#</b></td>
-                             <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="A star indicates that this candidate has selected this as their preffered job"><i class="fas fa-info"></button></td>
+                             <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="A star indicates that this candidate has selected this as their prefered job"><i class="fas fa-info"></button></td>
                              <td><b class="is-pulled-left">Applicant Name</b></td>
                              <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" id="scoreButton" data-tooltip="The computed ability of each candidate independent of the job"><b>Score</b></button></td>
                              <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The suitability of the candiate specifically for the job"><b>Job Match</b></button></td>
@@ -284,15 +284,15 @@
                     var id = $(elem).attr("id");
                     $(elem).parent().parent().remove();
                     var candidateData = {};
-                    candidateData["candidateID"] = id;
-                    candidateData["jobID"] = $(chosenJobID).text();
+                    candidateData["applicant id"] = id;
+                    candidateData["job id"] = $(chosenJobID).text();
                     candidateData["_csrf_token"] = document.getElementById('_csrf_token').value;
                     $.ajax({
-                        url: '/cli/jobBreakdown',
+                        url: '/cli/moveApplicant',
                         type: 'POST',
                         data: candidateData,
                         success: function(response){
-                            alert("data posted");
+                            console.log(response);
                         }
                     })
                   }
