@@ -109,7 +109,10 @@ class Mongo:
             return query
         else:
             return None
-
+    
+    def getApplicantNameID(self, id):
+        query = self.db.accountInfo.find_one({"applicant id": ObjectId(id)})["name"]
+        return query
 
     # Return JSON of client info populated based on id
     def getClientUserID(self, id):
