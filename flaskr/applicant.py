@@ -134,7 +134,7 @@ def newApplication():
         
         
 
-        #db.addUserScore(userID, Evaluator().basicEvaluate(appData))  # USER GENERAL SCORE
+        db.addUserScore(userID, Evaluator().basicEvaluate(appData))  # USER GENERAL SCORE
 
 
 
@@ -155,7 +155,7 @@ def newApplication():
             jobData["Skills"] = []
             for skill, expertise in data["skills"].items():
                 jobData["Skills"].append({"Skill" : skill, "Expertise" : expertise})
-            print(jobData)
+            
 
             jobScore = Evaluator().jobEvaluate(jobData, appData)
         
