@@ -263,9 +263,21 @@ def stageDetail():
 @bp.route('/moveApplicant', methods=('GET', 'POST'))
 @login_required_C
 def moveApplicant():
-    return None
+    if request.method == "POST":
+        appID = request.form["applicant id"]
+        jobID = request.form["job id"]
+        db = get_db()
+        db.moveToNextStage(appID, jobID)
+        return "Success"
+    return "Fail"
 
 @bp.route('/rejectApplicant', methods=('GET', 'POST'))
 @login_required_C
 def rejectApplicant():
-    return None
+    if request.method == "POST":
+        appID = request.form["applicant id"]
+        jobID = request.form["job id"]
+        db = get_db()
+        db.reject(appID, jobID)
+        return "Success"
+    return "Fail"
