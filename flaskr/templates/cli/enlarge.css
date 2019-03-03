@@ -1,0 +1,2 @@
+.box { transition: all .2s ease-in-out; }
+.box:hover { transform: scale(1.1); }
