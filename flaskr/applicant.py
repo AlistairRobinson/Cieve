@@ -145,6 +145,7 @@ def newApplication():
             jobData = {}
             jobData["Degree Qualification"] = [] #CHANGE
             jobData["Minimum Degree Level"] = data["min degree level"]
+            jobData["Type"] = data["role type"]
             try:
                 jobData["Start Date"] = datetime.strptime(data["start date"], "%d/%m/%Y").year
             except:
