@@ -172,6 +172,30 @@ def test_post_vacancy(client, jobs, data, message):
             raise AssertionError('nothing flashed')
         assert message in error[1]
 
+# Vacancy post tests (R8, R14)
+
+@pytest.mark.parametrize(('data', 'message'), (
+({
+        'job_title': 'test',
+        'division': 'HR',
+        'roles': 'Graduate',
+        'country': 'Germany',
+        'job_desc': 'test',
+        'numVacancies': 1,
+        'Stage_Description': ["000000000000000000000000", "5c74389bad9bb61fbcc01a3b"],
+        'skill': ['Git', 'Presentation'],
+        'skillVal': [7, 6],
+        'lang': ['Python', 'C'],
+        'langVal': [7, 6],
+        'start_date': '03/03/2019',
+        'asap': 'off',
+        'min_degree_level': '1:1',
+        'preferred_degrees': 'University of Warwick',
+        'interviews': {
+            '1': 'Logic Test'
+        }
+    }, 'Vacancy post successful'))
+
 # Vacancy retrieval tests (R15)
 
 def test_get_vacancies(client, jobs):
