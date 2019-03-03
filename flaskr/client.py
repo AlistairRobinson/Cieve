@@ -220,7 +220,7 @@ def jobBreakdown():
         db = get_db()
         jobID = request.form['jobID']
         jobData = db.getJob(jobID)
-       
+
         jobData["stagesDetail"] = []
         for stage in jobData["stages"]:
             title = db.getStageTitle(stage)
@@ -256,7 +256,7 @@ def stageDetail():
         jobID = request.form['jobID']
         stepNo = request.form['stepNo']
         error = None
-        
+
         if error is None:
             applicants = db.getApplicantsJob(jobID, stepNo)
         return applicants
@@ -270,7 +270,7 @@ def moveApplicant():
         appID = request.form["applicant id"]
         jobID = request.form["job id"]
         db = get_db()
-        db.moveToNextStage(appID, jobID)
+        # db.moveToNextStage(appID, jobID)
         return "Success"
     return "Fail"
 
