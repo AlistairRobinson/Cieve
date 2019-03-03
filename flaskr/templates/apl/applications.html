@@ -134,20 +134,25 @@ color: green;
               {% for i in range(application["stages"]|length) %}
               {% if application['current step'] == i %}
                 <div class="step-item is-success is-active">
-                  <div class="step-details">
-                    <p class="step-title"></p>
-                  </div>
+
                   <div class="step-marker">{{i+1}}</div>
+                  <div class="step-details">
+                    <p class="step-title">blah blah</p>
+                  </div>
                 </div>
               {%else%}
               <div class="step-item is-success">
                 <div class="step-marker">{{i+1}}</div>
+                <div class="step-details">
+                  <p class="step-title">blah blah</p>
+                </div>
               </div>
               {%endif%}
               {%endfor%}
                 </div>
               <span class="tag"><b>Division:&nbsp</b> {{application['division']}}</span>
               <span class="tag"><b>Location:&nbsp</b> {{application['location']}} &nbsp<i class="fas fa-map-marker-alt"> </i></span>
+              <span class="tag"><b>Role:&nbsp</b> {{application['role type']}} &nbsp<i class="fas fa-users"></i></span>
               <span class="icon is-pulled-right">
                 {% if application['completed'] == True%}
                 <i class="far fa-check-circle fa-3x" ></i>
