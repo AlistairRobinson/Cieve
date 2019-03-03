@@ -241,6 +241,8 @@ def jobBreakdown():
             applicants = db.getApplicantsJob(jobID, stepNumber)
             for applicant in applicants:
                 applicant["name"] = db.getApplicantNameID(applicant["applicant id"])
+                applicant["basic scores"] = db.getApplicantUserID(applicant["applicant id"])["basic score"]
+
         return render_template('/cli/jobBreakdown.html', jobData = jobData, applicants = applicants)
 
     return redirect(url_for('client.jobs'))
