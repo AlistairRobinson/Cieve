@@ -7,6 +7,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <link rel="stylesheet" href="../../static/main.css" />
+    <style media=>
+    .fa-check-circle {
+color: green;
+}
+    </style>
   </head>
   <body>
 
@@ -114,13 +119,25 @@
 
             </div>
             <div class="column">
+              <form id="revform" action="/apl/applications" method="POST">
+                <input name="_csrf_token" id="_csrf_token" type=hidden value="{{ csrf_token() }}">
+                <input name="applications" value="{{applications}}" type="hidden">
             <h3 class="title is-3">Your Applications</h3>
             {{applications}}
             {%for application in applications%}
             <div class="box">
               <h3 class="title is-4">{{application['vacancy title']}}</h3>
-              <span class="tag">Division: {{application['division']}}</span>
-              <span class="tag">Location: {{application['location']}}</span>
+              <p>{{application['vacancy description']}}</p><br>
+              <span class="tag"><b>Division:</b> {{application['division']}}</span>
+              <span class="tag"><b>Location:</b> {{application['location']}} &nbsp<i class="fas fa-map-marker-alt"> </i></span>
+              <span class="icon is-pulled-right">
+                {% if application['completed'] == True%}
+                <i class="far fa-check-circle fa-3x" ></i>
+                  {%else%}
+                  <a class="button is-primary" id="completeStage">Complete Stage</a>
+
+                {% endif%}
+              </span>
             </div>
             {%endfor%}
             </div>
