@@ -145,7 +145,7 @@ class Mongo:
 
     #Return the data of a job given the jobID
     def getJob(self, jobID):
-        return list(self.db.vacancy.find_one({"_id": ObjectId(jobID)}))
+        return list(self.db.vacancy.find({"_id": ObjectId(jobID)}))[0]
 
     # Wiil accept a json parameter which will be defined by the input, adds the new job to the DB
     def addNewJob(self, json, clientID):
