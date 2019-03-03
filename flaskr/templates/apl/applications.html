@@ -112,8 +112,14 @@
             </div>
             <div class="column">
             <h3 class="title is-3">Your Applications</h3>
-
             {{applications}}
+            {%for application in applications%}
+            <div class="box">
+              <h3 class="title is-4">{{application['vacancy title']}}</h3>
+              <span class="tag">Division: {{application['division']}}</span>
+              <span class="tag">Location: {{application['location']}}</span>
+            </div>
+            {%endfor%}
             </div>
 
       </section>
