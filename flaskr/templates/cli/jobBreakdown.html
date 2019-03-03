@@ -1,6 +1,177 @@
-{{jobData}}
-<br>
-<br>
-HELLO FRIEND
-{{applicants}}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <link rel="stylesheet" href="../../static/main.css" />
+    <script src="../../static/js/jquery-3.3.1.min.js"></script>
 
+    <!-- <script>
+        $(document).ready(function() {
+
+                  var token = document.getElementById('_csrf_token').value;
+
+                  $('.box').click(function(event) {
+                      var boxID = $(this).attr('id');
+                      var jobdata = {};
+                      jobdata["jobID"] = boxID
+                      jobdata["_csrf_token"] = document.getElementById('_csrf_token').value;
+
+                      var form = document.createElement('form');
+                      document.body.appendChild(form);
+                      form.method = 'post';
+                      form.action = '/cli/jobBreakdown';
+                      for (var name in jobdata) {
+                          var input = document.createElement('input');
+                          input.type = 'hidden';
+                          input.name = name;
+                          input.value =jobdata[name];
+                          form.appendChild(input);
+                      }
+                      form.submit();
+
+                      // $.ajax({
+                      //     url: '/cli/jobBreakdown',
+                      //     type: 'POST',
+                      //     data: jobdata,
+                      //     success: function(response){
+                      //         alert("data posted");
+                      //     }
+                      // })
+                  });
+        });
+    </script> -->
+
+  </head>
+  <body>
+
+    <nav class="navbar has-shadow">
+      <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/apl">
+                <img src="../../static/CieveNavBar.png" alt="Cieve: an automated applicant solution">
+            </a>
+            <div class="navbar-burger burger" data-target="navMenuColorprimary-example">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+
+        <div id="navMenuColorprimary-example" class="navbar-menu">
+
+            <div class="navbar-start">
+              <a class="navbar-item" href="/apl">
+                <strong>Home</strong>
+              </a>
+
+              <a class="navbar-item" href="/about">
+                About
+              </a>
+            </div>
+
+            <div class="navbar-end">
+
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link" href="#">
+                        Josh Hankins
+                    </a>
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item is-leveled " href="#">
+                            <span class="icon ">
+                                    <i class="fa fa-user-circle "></i>
+                                </span>
+                            Edit Details
+                        </a>
+                        <a class="navbar-item is-leveled " href="# ">
+                            <span class="icon ">
+                                    <i class="fa fa-key "></i>
+                                </span>
+                            Change Password
+                        </a>
+                        <a class="navbar-item is-leveled " href="/logout">
+                            <span class="icon ">
+                                    <i class="fa fa-sign-out-alt"></i>
+                                </span>
+                            Sign Out
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </nav>
+
+
+      <div class="container">
+      <section class="section">
+
+        <div class="columns ">
+            <div class="column is-4-tablet is-3-desktop is-2-widescreen">
+
+              <aside class="menu ">
+                  <p class="menu-label ">
+                      General
+                  </p>
+                  <ul class="menu-list">
+                      <li>
+                          <a href="/cli"><span class="icon ">
+                                  <i class="fa fa-tachometer-alt"></i>
+                              </span>Dashboard</a>
+                      </li>
+                      <li>
+                          <a class="is-active" href="/cli/jobs">
+                              <span class="icon">
+                                  <i class="fa fa-search"></i>
+                              </span>
+                              Your Jobs
+                          </a>
+                      </li>
+                      <li>
+                          <a href="/cli/newjob">
+                              <span class="icon">
+                                  <i class="fa fa-plus"></i>
+                              </span>
+                              New Job
+                          </a>
+                      </li>
+                  </ul>
+              </aside>
+
+
+
+
+            </div>
+            <div class="column">
+            <h3 class="title is-3">Your Jobs</h3>
+
+            <!-- {{applicants}} -->
+
+            <input name=_csrf_token type=hidden id="_csrf_token" value="{{ csrf_token() }}">
+            {%for job in jobData%}
+                <div class="box" id="{{job["_id"]}}">
+                  <div><h5 class="title is-5">{{job["vacancy title"]}}</h5>
+                </div> <span class="tag is-light"><b> Division </b> &nbsp {{job["division"]}}</span> <span class="tag is-light"><b> Role Type </b> &nbsp {{job["role type"]}}</span> <span class="tag is-light"><b> <i class="fas fa-map-marker-alt"> </i> </b> &nbsp {{job["location"]}}</span></div>
+
+                <!-- <form action="/cli/jobBreakdown" method="POST">
+                    <div class="box"> <div><h5 class="title is-5"></h5></div>
+                    <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+                    <input name="jobID" value="{{job["_id"]}}"" type="hidden">
+                    <div class="box"><button>{{job}}</button></div>
+                </form> -->
+            {%endfor%}
+            </div>
+
+            {{jobData}}
+            <br>
+            <br>
+            HELLO FRIEND
+            {{applicants}}
+
+      </section>
+    </div>
+  </body>
+</html>
