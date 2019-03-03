@@ -218,7 +218,7 @@ def jobBreakdown():
         db = get_db()
         jobID = request.form['jobID']
         #jobData = db.getJob(jobID)
-        print jobID
+
         jobData = ""
         applicants = {}
         print(request.form)
