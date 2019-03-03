@@ -7,8 +7,86 @@
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <link rel="stylesheet" href="../static/main.css" />
     <script async type="text/javascript" src="../static/js/bulma.js"></script>
+
+    <style>
+    /* Materialize overly specific disable */
+ul li {
+list-style-type: none;
+}
+
+/* not specific enough to put default back */
+ul.browser-default {
+list-style-type: initial;
+}
+
+ul:not(.browser-default) {
+	padding-left: 30px;
+	margin-top: 10px;
+	margin-bottom: 15px;
+}
+
+ul:not(.browser-default) li {
+    list-style-type: disc;
+}
+    </style>
 </head>
 <body>
+  <nav class="navbar has-shadow">
+    <div class="container">
+      <div class="navbar-brand">
+          <a class="navbar-item" href="/cli">
+              <img src="../static/CieveNavBar.png" alt="Cieve: an automated applicant solution">
+          </a>
+          <div class="navbar-burger burger" data-target="navMenuColorprimary-example">
+              <span></span>
+              <span></span>
+              <span></span>
+          </div>
+      </div>
+
+      <div id="navMenuColorprimary-example" class="navbar-menu">
+
+          <div class="navbar-start">
+            <a class="navbar-item" href="/cli">
+              <strong>Home</strong>
+            </a>
+
+            <a class="navbar-item" href="/about">
+              About
+            </a>
+          </div>
+
+          <div class="navbar-end">
+
+              <div class="navbar-item has-dropdown is-hoverable">
+                  <a class="navbar-link" href="#">
+                      Josh Hankins
+                  </a>
+                  <div class="navbar-dropdown">
+                      <a class="navbar-item is-leveled " href="#">
+                          <span class="icon ">
+                                  <i class="fa fa-user-circle "></i>
+                              </span>
+                          Edit Details
+                      </a>
+                      <a class="navbar-item is-leveled " href="# ">
+                          <span class="icon ">
+                                  <i class="fa fa-key "></i>
+                              </span>
+                          Change Password
+                      </a>
+                      <a class="navbar-item is-leveled " href="/logout">
+                          <span class="icon ">
+                                  <i class="fa fa-sign-out-alt"></i>
+                              </span>
+                          Sign Out
+                      </a>
+                  </div>
+              </div>
+          </div>
+      </div>
+      </div>
+  </nav>
   <section class="hero has-background-primary has-text-white ">
     <div class="hero-body">
 
@@ -24,17 +102,17 @@
 </section>
 <section class="section">
   <div class="container">
-    <div class="box has-background-grey-lighter">
+    <div class="box has-background-white-ter">
 
-        <h2 class="subtitle is-size-4 has-text-weight-bold">Information Collection And Use</h2>
+        <h2 class="subtitle is-size-4 has-text-weight-semibold is-family-primary">Information Collection And Use</h2>
 
-        <p>We collect several different types of information for various purposes to provide and improve our Service to you.</p>
+        <p>We collect several different types of information for various purposes to provide and improve our Service to you.</p><br>
 
-        <h3 class="is-size-5 has-text-weight-semibold">Types of Data Collected</h3>
-
-        <h4 class="is-size-5 has-text-weight-semibold">Personal Data</h4>
-
-        <p class="">While using our Service, we may ask you to provide us with certain personally identifiable information that can be used to contact or identify you ("Personal Data"). Personally identifiable information may include, but is not limited to:</p>
+        <h3 class=" is-size-5 has-text-weight-semibold">Types of Data Collected:</h3><br>
+        <ol type="I">
+      <li>  <h4 class="is-size-6 has-text-weight-semibold">Personal Data</h4></li>
+      </ol>
+        <p>While using our Service, we may ask you to provide us with certain personally identifiable information that can be used to contact or identify you ("Personal Data"). Personally identifiable information may include, but is not limited to:</p>
 
         <ul>
             <li>Email address</li>
@@ -50,14 +128,18 @@
         </ul>
 
             </div>
-        <h2>Rectification Of Data</h2>
-        <p>Should you wish to exercise your right to rectification under Article 16 of GDPR, please contact a data controller at WarwickCieve@gmail.com</p>
 
-        <h2>Erasure Of Data</h2>
+          <div class="box has-background-white-ter">
+        <h2 class="subtitle is-size-4 has-text-weight-semibold">Rectification Of Data</h2>
+        <p>Should you wish to exercise your right to rectification under Article 16 of GDPR, please contact a data controller at: WarwickCieve@gmail.com</p>
+      </div>
+      <div class="box has-background-white-ter">
+        <h2 class="subtitle is-size-4 has-text-weight-semibold" >Erasure Of Data</h2>
         <p>Should you wish to exercise your right of erasure under Article 17 of GDPR, please contact a data controller at WarwickCieve@gmail.com</p>
         <p>Your application data will only be stored in our system for 6 months, after which it will be permanently deleted.</p>
-
-        <h2>Use of Data</h2>
+      </div>
+        <div class="box has-background-white-ter">
+        <h2 class="subtitle is-size-4 has-text-weight-semibold">Use of Data</h2>
 
         <p>Cieve uses the collected data for various purposes:</p>
         <ul>
@@ -69,7 +151,7 @@
             <li>To detect, prevent and address technical issues</li>
         </ul>
 
-        <h3>Application data</h3>
+        <h3 class=" is-size-5 has-text-weight-semibold">Application data</h3><br>
         <p>Data collected for the purposes of supporting your application via the Service expires 6 months after the submission of an application. After expiry, this data will be removed permanently. This includes but is not limited to:</p>
         <ul>
             <li>Qualifications</li>
@@ -79,17 +161,19 @@
         </ul>
         <p>Application data is processed by us through the use of automated profiling. This means that your personal data may be quantified to assist us in providing the Service. If you would like to object to the use of automated profiling, please contact a data controller at WarwickCieve@gmail.com. However, we cannot guarantee our ability to provide the service if you object to the use of automated profiling.</p>
         <p>Our automated profiling system uses machine learning to improve based on your personal data. However, this machine learning data cannot be used to identify you.</p>
-
-        <h2>Transfer Of Data</h2>
+      </div>
+      <div class="box has-background-white-ter">
+        <h2 class="subtitle is-size-4 has-text-weight-semibold">Transfer Of Data</h2 class="subtitle is-size-4 has-text-weight-semibold">
         <p>Your information, including Personal Data, may be transferred to — and maintained on — computers located outside of your state, province, country or other governmental jurisdiction where the data protection laws may differ than those from your jurisdiction.</p>
         <p>If you are located outside United Kingdom and choose to provide information to us, please note that we transfer the data, including Personal Data, to United Kingdom and process it there.</p>
         <p>Your consent to this Privacy Policy followed by your submission of such information represents your agreement to that transfer.</p>
         <p>Cieve will take all steps reasonably necessary to ensure that your data is treated securely and in accordance with this Privacy Policy and no transfer of your Personal Data will take place to an organization or a country unless there are adequate controls in place including the security of your data and other personal information.</p>
-
-        <h2>Disclosure Of Data</h2>
+      </div>
+      <div class="box has-background-white-ter">
+        <h2 class="subtitle is-size-4 has-text-weight-semibold">Disclosure Of Data</h2>
         <p>Should you wish to exercise your right of access under Article 15 of GDPR, please contact a data controller at WarwickCieve@gmail.com</p>
 
-        <h3>Legal Requirements</h3>
+        <h3 class=" is-size-5 has-text-weight-semibold">Legal Requirements</h3><br>
         <p>Cieve may disclose your Personal Data in the good faith belief that such action is necessary to:</p>
         <ul>
             <li>To comply with a legal obligation</li>
@@ -98,31 +182,37 @@
             <li>To protect the personal safety of users of the Service or the public</li>
             <li>To protect against legal liability</li>
         </ul>
-
-        <h2>Security Of Data</h2>
+</div>
+<div class="box has-background-white-ter">
+        <h2 class="subtitle is-size-4 has-text-weight-semibold">Security Of Data</h2>
         <p>The security of your data is important to us, but remember that no method of transmission over the Internet, or method of electronic storage is 100% secure. While we strive to use commercially acceptable means to protect your Personal Data, we cannot guarantee its absolute security.</p>
-
-        <h2>Service Providers</h2>
+</div>
+<div class="box has-background-white-ter">
+        <h2 class="subtitle is-size-4 has-text-weight-semibold">Service Providers</h2>
         <p>We may employ third party companies and individuals to facilitate our Service ("Service Providers"), to provide the Service on our behalf, to perform Service-related services or to assist us in analyzing how our Service is used.</p>
         <p>These third parties have access to your Personal Data only to perform these tasks on our behalf and are obligated not to disclose or use it for any other purpose.</p>
-
-        <h2>Children's Privacy</h2>
+</div>
+<div class="box has-background-white-ter">
+        <h2 class="subtitle is-size-4 has-text-weight-semibold">Children's Privacy</h2>
         <p>Our Service does not address anyone under the age of 18 ("Children").</p>
         <p>We do not knowingly collect personally identifiable information from anyone under the age of 18. If you are a parent or guardian and you are aware that your Children has provided us with Personal Data, please contact us. If we become aware that we have collected Personal Data from children without verification of parental consent, we take steps to remove that information from our servers.</p>
-
-        <h2>Changes To This Privacy Policy</h2>
+      </div>
+        <div class="box has-background-white-ter">
+        <h2 class="subtitle is-size-4 has-text-weight-semibold">Changes To This Privacy Policy</h2>
         <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
         <p>We will let you know via email and/or a prominent notice on our Service, prior to the change becoming effective and update the "effective date" at the top of this Privacy Policy.</p>
         <p>You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page.</p>
-
+</div>
           </div>
 
 </section>
+<footer class="footer has-background-grey-lighter">
+  <div class="content has-text-centered">
         <h2>Contact Us</h2>
         <p>If you have any questions about this Privacy Policy, please contact us:</p>
-        <ul>
-            <li>By email: WarwickCieve@gmail.com</li>
-            <li>By visiting this page on our website: <a href="http://www.cieve.com/privacy">http://www.cieve.com/privacy</a></li>
-        </ul>
+            <p>By email: WarwickCieve@gmail.com</p>
+            <p>By visiting this page on our website: <a href="http://www.cieve.com/privacy">http://www.cieve.com/privacy</a></p>
+          </div>
+</footer>
 </body>
 </html>
