@@ -790,23 +790,23 @@
                                   <div class="select is-fullwidth">
                                       <select name="roles" id="roleDropDown">
                                           <option>Please Select</option>
-                                          <option>Full-Time</option>
-                                          <option>Grad.</option>
-                                          <option>Intern</option>
+                                          {%for role in roles%}
+                                            <option>{{ role }}</option>
+                                          {%endfor%}
                                       </select>
                                   </div>
                               </div>
                           </div>
                           <div class="column">
-                              <label class="label">Country
-                                <div class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltiptext">Which country do you want to work in?</span></div></label>
-                              <p class="control has-icons-left">
+                              <label class="label">Location
+                                <div class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltiptext">Which location do you want to work in?</span></div></label>
+                                <p class="control has-icons-left">
                                 <span class="select is-fullwidth">
                                   <select id="countryDropDown">
                                     <option selected>Please Select</option>
-                                    <option>United Kingdom</option>
-                                    <option>America</option>
-                                    <option>France</option>
+                                    {%for location in locations%}
+                                      <option>{{ location }}</option>
+                                    {%endfor%}
                                   </select>
                                 </span>
                                 <span class="icon is-small is-left">

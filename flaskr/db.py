@@ -301,23 +301,23 @@ class Mongo:
     # Return a list of all divisions
     def getDivisions(self):
         divisions = []
-        query = self.db.metaData.find({"divisions": 1, "_id": 0})
-        for doc in query:
-            divisions.append(doc)
+        query = self.db.metaData.find({},{"divisions": 1, "_id": 0})
+        for x in query[0]["divisions"]:
+            divisions.append(x)
         return divisions
 
     def getRoles(self):
         roles = []
-        query = self.db.metaData.find({"roles": 1, "_id": 0})
-        for doc in query:
-            roles.append(doc)
+        query = self.db.metaData.find({},{"roles": 1, "_id": 0})
+        for x in query[0]["roles"]:
+            roles.append(x)
         return roles
 
     def getLocations(self):
         locations = []
-        query = self.db.metaData.find({"locations": 1, "_id": 0})
-        for doc in query:
-            locations.append(doc)
+        query = self.db.metaData.find({},{"locations": 1, "_id": 0})
+        for x in query[0]["locations"]:
+            locations.append(x)
         return locations
 
     def newDivision(self, division):

@@ -25,7 +25,7 @@ def dashboard():
 @login_required_A
 def jobSearch():
     db = get_db()
-    return render_template('/apl/jobSearch.html', divisons = db.getDivisions(), roles = db.getRoles(), locations = db.getLocations())
+    return render_template('/apl/jobSearch.html', divisions = db.getDivisions(), roles = db.getRoles(), locations = db.getLocations())
             # Return first 20 (use a page count, get[1,2,...])
 
 #Definition for the application
@@ -197,8 +197,7 @@ def newApplication():
 
         
         flash("Application successful")
-
-    return render_template('/apl/applicationCreation.html', divisons = db.getDivisions(), roles = db.getRoles(), locations = db.getLocations())
+    return render_template('/apl/applicationCreation.html', divisions = db.getDivisions(), roles = db.getRoles(), locations = db.getLocations())
 
 #Definition for the application
 @bp.route('/applications')
