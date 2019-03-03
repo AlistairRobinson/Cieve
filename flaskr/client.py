@@ -218,6 +218,7 @@ def jobBreakdown():
         db = get_db()
         jobID = request.form['jobID']
         #jobData = db.getJob(jobID)
+        print jobID
         jobData = ""
         applicants = {}
 
@@ -232,6 +233,6 @@ def jobBreakdown():
         if error is None:
             applicants = db.getApplicantsJob(jobID, stepNumber)
         
-        return render_template('/cli/jobBreakdown.html', jobData = jobData, applicants = {})
+        return render_template('/cli/jobBreakdown.html', jobData = jobData, applicants = applicants)
 
     return redirect(url_for('client.jobs'))
