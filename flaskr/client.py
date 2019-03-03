@@ -58,7 +58,7 @@ def newJob():
         languages = data['lang']
 
         stage_list.insert(0,'000000000000000000000000') #Onboarding Stage
-
+        stage_list.append('111111111111111111111111') #Accepted Stage
         error = None
 
         if jobTitle == "":
@@ -148,10 +148,11 @@ def newJob():
 
                 title = db.getStageTitle(stage)
                 json['stagesDetail'].append(title)
-
+                print stage
                 if stage != '000000000000000000000000':
-                    if stage in db.getInterviewStages():
-                        interviews[str(i)] = [title, str(stage)]
+                    if stage != '111111111111111111111111':
+                        if stage in db.getInterviewStages():
+                            interviews[str(i)] = [title, str(stage)]
                 i += 1
             return render_template('cli/review.html', json = json, interviews = interviews)
     # Generate post data and pass to front end
@@ -167,6 +168,7 @@ def newJobSummary():
 
         jsonData = data["json"][0].replace("'",'"')
         jsonData = jsonData.replace('u"','"')
+        print jsonData
         jsonData = json.loads(jsonData)
         if 'stagesDetail' in jsonData:
             del jsonData['stagesDetail']
@@ -258,4 +260,14 @@ def stageDetail():
             applicants = db.getApplicantsJob(jobID, stepNo)
         return applicants
 
+    return None
+
+@bp.route('/moveApplicant', methods=('GET', 'POST'))
+@login_required_C
+def moveApplicant():
+    return None
+
+@bp.route('/rejectApplicant', methods=('GET', 'POST'))
+@login_required_C
+def rejectApplicant():
     return None
