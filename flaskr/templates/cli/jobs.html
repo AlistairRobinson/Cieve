@@ -7,6 +7,57 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <link rel="stylesheet" href="../../static/main.css" />
+    <script src="../../static/js/jquery-3.3.1.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+
+                  var token = document.getElementById('_csrf_token').value;
+
+                  $('.box').click(function(event) {
+                      var boxID = $(this).attr('id');
+                      var jobdata = {};
+                      jobdata["jobID"] = boxID
+                      jobdata["_csrf_token"] = document.getElementById('_csrf_token').value;
+
+                      var form = document.createElement('form');
+                      document.body.appendChild(form);
+                      form.method = 'post';
+                      form.action = '/cli/jobBreakdown';
+                      for (var name in jobdata) {
+                          var input = document.createElement('input');
+                          input.type = 'hidden';
+                          input.name = name;
+                          input.value =jobdata[name];
+                          form.appendChild(input);
+                      }
+                      form.submit();
+
+                      // $.ajax({
+                      //     url: '/cli/jobBreakdown',
+                      //     type: 'POST',
+                      //     data: jobdata,
+                      //     success: function(response){
+                      //         alert("data posted");
+                      //     }
+                      // })
+                  });
+
+                  // $.ajax({
+                  //     url: '/cli/jobBreakdown',
+                  //     data: {
+                  //       jobID: status,
+                  //       _csrf_token: token
+                  //     },
+                  //     type: 'POST',
+                  //     success: function(response) {
+                  //     },
+                  //     error: function(error) {
+                  //     }
+                  // });
+        });
+    </script>
+
   </head>
   <body>
 
@@ -103,19 +154,29 @@
                   </ul>
               </aside>
 
+
+
+
             </div>
             <div class="column">
             <h3 class="title is-3">Your Jobs</h3>
+            <input name=_csrf_token type=hidden id="_csrf_token" value="{{ csrf_token() }}">
             {%for job in jobData%}
-                <form action="/cli/jobBreakdown" method="POST">
+                <div class="box" id="{{job["_id"]}}">
+                  <div><h5 class="title is-5">{{job["vacancy title"]}}</h5>
+                </div> <span class="tag is-light"><b> Division </b> &nbsp {{job["division"]}}</span> <span class="tag is-light"><b> Role Type </b> &nbsp {{job["role type"]}}</span> <span class="tag is-light"><b> <i class="fas fa-map-marker-alt"> </i> </b> &nbsp {{job["location"]}}</span></div>
+
+                <!-- <form action="/cli/jobBreakdown" method="POST">
+                    <div class="box"> <div><h5 class="title is-5"></h5></div>
                     <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
                     <input name="jobID" value="{{job["_id"]}}"" type="hidden">
-                    <button>{{job}}</button>
-                </form>
+                    <div class="box"><button>{{job}}</button></div>
+                </form> -->
             {%endfor%}
-
-
             </div>
+
+
+
 
       </section>
     </div>
