@@ -143,6 +143,8 @@ class Mongo:
         else:
             return Jobs[(number-1)*20:((number-1)*20)+20]
 
+    def getJob(self, jobID):
+        return 
 
     # Wiil accept a json parameter which will be defined by the input, adds the new job to the DB
     def addNewJob(self, json, clientID):
@@ -158,7 +160,6 @@ class Mongo:
             vacancy = list(self.db.vacancy.find({"_id": ObjectId(vacancyID)}, {"positions available": 0, "skills": 0, "_id": 0}))[0]
             for key, item in vacancy.items():
                 application[key] = item
-        print(applicationQuery)
         return applicationQuery
 
 
@@ -195,6 +196,7 @@ class Mongo:
             for id in doc['vacancies']:
                 jobQuery = self.db.vacancy.find({"_id": ObjectId(id)})
                 for job in jobQuery:
+                    job["_id"] = str(job["_id"])
                     jobDetails.append(job)
         return jobDetails
 
@@ -203,7 +205,8 @@ class Mongo:
     # In order of job related score
     def getApplicantsJob(self, jobID, stepOrder):
         applicantList = []
-        applicationQuery = self.db.application.find({"vacancy id": jobID, "current step": stepOrder}).sort({"specialized score": -1})
+        applicationQuery = self.db.application.find({"vacancy id": ObjectId(jobID), "current step": stepOrder})#.sort({"specialized score": -1})
+        print applicationQuery
         for doc in applicationQuery:
             applicantList.append(doc)
         return applicantList

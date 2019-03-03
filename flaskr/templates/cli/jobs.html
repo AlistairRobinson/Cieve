@@ -1,1 +1,123 @@
-{{jobData}}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <link rel="stylesheet" href="../../static/main.css" />
+  </head>
+  <body>
+
+    <nav class="navbar has-shadow">
+      <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/apl">
+                <img src="../../static/CieveNavBar.png" alt="Cieve: an automated applicant solution">
+            </a>
+            <div class="navbar-burger burger" data-target="navMenuColorprimary-example">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+
+        <div id="navMenuColorprimary-example" class="navbar-menu">
+
+            <div class="navbar-start">
+              <a class="navbar-item" href="/apl">
+                <strong>Home</strong>
+              </a>
+
+              <a class="navbar-item" href="/about">
+                About
+              </a>
+            </div>
+
+            <div class="navbar-end">
+
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link" href="#">
+                        Josh Hankins
+                    </a>
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item is-leveled " href="#">
+                            <span class="icon ">
+                                    <i class="fa fa-user-circle "></i>
+                                </span>
+                            Edit Details
+                        </a>
+                        <a class="navbar-item is-leveled " href="# ">
+                            <span class="icon ">
+                                    <i class="fa fa-key "></i>
+                                </span>
+                            Change Password
+                        </a>
+                        <a class="navbar-item is-leveled " href="/logout">
+                            <span class="icon ">
+                                    <i class="fa fa-sign-out-alt"></i>
+                                </span>
+                            Sign Out
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </nav>
+
+
+      <div class="container">
+      <section class="section">
+
+        <div class="columns ">
+            <div class="column is-4-tablet is-3-desktop is-2-widescreen">
+
+              <aside class="menu ">
+                  <p class="menu-label ">
+                      General
+                  </p>
+                  <ul class="menu-list">
+                      <li>
+                          <a href="/cli"><span class="icon ">
+                                  <i class="fa fa-tachometer-alt"></i>
+                              </span>Dashboard</a>
+                      </li>
+                      <li>
+                          <a class="is-active" href="/cli/jobs">
+                              <span class="icon">
+                                  <i class="fa fa-search"></i>
+                              </span>
+                              Your Jobs
+                          </a>
+                      </li>
+                      <li>
+                          <a href="/cli/newjob">
+                              <span class="icon">
+                                  <i class="fa fa-plus"></i>
+                              </span>
+                              New Job
+                          </a>
+                      </li>
+                  </ul>
+              </aside>
+
+            </div>
+            <div class="column">
+            <h3 class="title is-3">Your Jobs</h3>
+            {%for job in jobData%}
+                <form action="/cli/jobBreakdown" method="POST">
+                    <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+                    <input name="jobID" value="{{job["_id"]}}"" type="hidden">
+                    <button>{{job}}</button>
+                </form>
+            {%endfor%}
+
+
+            </div>
+
+      </section>
+    </div>
+  </body>
+</html>
