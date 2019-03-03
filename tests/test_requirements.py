@@ -4,25 +4,6 @@ from flask import g, session, jsonify
 from flaskr import csrf
 from flaskr.db import get_db
 
-# Pre test cleanup
-
-def test_pre_cleanup_job():
-    db = get_db()
-    assert db.deleteJob("test") 
-
-def test_pre_cleanup_appl():
-    db = get_db()
-    assert db.deleteApplication("test") 
-
-def test_pre_apl_cleanup(client, auth):
-    db = get_db()
-    assert db.deleteApplicantAccount("test")
-    
-def test_pre_cli_cleanup():
-    db = get_db()
-    assert db.deleteClientAccount("test")
-
-
 # Client registration tests (to ensure security)
 
 def test_setup_cli(client, jobs):
