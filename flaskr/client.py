@@ -171,22 +171,23 @@ def newJobSummary():
         interviewsData = json.loads(data["interviews"][0].replace("'",'"').replace('u"','"'))
         for stepID, interviews in interviewsData.items():
             stageID = interviews[1]
-            dates = data["Date[]" + stepID]
-            startTimes = data["startTime[]" + stepID]
-            endTimes = data["endTime[]" + stepID]
-            vacancies = data["vacancies[]" + stepID]
-            """
-            if vacancies <= 0:
-                flash("Number of vacancies must be positive")
-                interviews = {}
-                i = 1
-                for stage in jsonData['stages']:
-                    if stage != '000000000000000000000000':
-                        if stage in db.getInterviewStages():
-                            interviews[str(i)] = [title, str(stage)]
-                    i += 1
-                return render_template('cli/review.html', json = json, interviews = interviews)
-            """
+            dates = data.get("Date[]" + stepID, [])
+            startTimes = data.get("startTime[]" + stepID, [])
+            endTimes = data.get("endTime[]" + stepID, [])
+            vacancies = data.get("vacancies[]" + stepID, [])
+
+            if len(startTimes) != len(endTimes) or len(dates) != len(startTimes):
+                flash("An unexpected error occured")
+                continue
+            
+            if len(vacancies) == 0:
+                flash("An unexpected error occured")
+                continue
+            
+            if any(int(v) <= 0 for v in vacancies):
+                flash("An unexpected error occured")
+                continue
+
             stagesData = []
             for i in range(len(dates)):
                 stagesData.append([dates[i], startTimes[i], endTimes[i], vacancies[i]])
