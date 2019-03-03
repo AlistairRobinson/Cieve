@@ -153,7 +153,7 @@ def newJob():
                 i += 1
             return render_template('cli/review.html', json = json, interviews = interviews)
     # Generate post data and pass to front end
-    return render_template('cli/createjob.html', stages=stages,divisons = db.getDivisions(), roles = db.getRoles(), locations = db.getLocations())
+    return render_template('cli/createjob.html', stages=stages, divisons = db.getDivisions(), roles = db.getRoles(), locations = db.getLocations())
 
 @bp.route('/newJobSummary' , methods=('GET', 'POST'))
 @login_required_C
@@ -218,6 +218,12 @@ def jobBreakdown():
         db = get_db()
         jobID = request.form['jobID']
         jobData = db.getJob(jobID)
+       
+        jobData["stagesDetail"] = []
+        for stage in jobData["stages"]:
+            title = db.getStageTitle(stage)
+            jobData['stagesDetail'].append(title)
+
         applicants = {}
         print(request.form)
 
