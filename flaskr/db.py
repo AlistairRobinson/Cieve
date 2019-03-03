@@ -185,7 +185,8 @@ class Mongo:
         query = self.db.stage.find({}, {"title": 1})
         for doc in query:
             if str(doc['_id']) != '000000000000000000000000':
-                stageDic[str(doc['_id'])] = doc['title']
+                if str(doc['_id']) != '111111111111111111111111':
+                    stageDic[str(doc['_id'])] = doc['title']
         return stageDic
 
 

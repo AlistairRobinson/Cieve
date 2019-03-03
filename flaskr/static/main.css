@@ -42,5 +42,24 @@
 
 html { scroll-behavior: smooth; }
 
+.center-table th {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.center-table td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+#tab_container .container_item {
+  display: none;
+}
+
+#tab_container .container_item.is-active {
+  display: block;
+}
+
+
 /* .box { transition: all .2s ease-in-out; }
 .box:hover { transform: scale(1.1); } */

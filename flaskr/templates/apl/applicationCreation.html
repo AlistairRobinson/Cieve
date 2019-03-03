@@ -155,7 +155,7 @@
                   <p class="step-title">Attributes</p>
                 </div>
               </div>
-              <div class="step-item">
+              <div class="step-item" id="jobSelectorStage">
                 <div class="step-marker">5</div>
                 <div class="step-details">
                   <p class="step-title">Job Selector</p>
@@ -469,6 +469,23 @@
                     $(document).ready(function() {
                         var languageCounter = 1;
                         var skillCounter = 1;
+
+                        $('body').on('click', '#nextStepBttn', function(e) {
+                          if ($('#jobSelectorStage').hasClass('is-active')) {
+                            var selectedDivision = $('#divisionDropDown').val();
+                            var selectedRole = $('#roleDropDown').val();
+                            var selectedLocation = $('#countryDropDown').val();
+                            if ((selectedDivision == "Please Select")||(selectedRole == "Please Select")||(selectedLocation == "Please Select")) {
+                              $('#nextStepBttn').prop('disabled', true);
+                              alert("test");
+                            } else {
+                              $('#nextStepBttn').prop('disabled', false);
+                            }
+                          } else {
+                            $('#nextStepBttn').prop('disabled', false);
+                          }
+                        });
+
 
                         $('body').on('click', '#submitApplicationBttn', function(e) {
                             var applicationData = {};
@@ -949,7 +966,7 @@
                   <a href="#" data-nav="previous" class="button is-light">Previous</a>
                 </div>
                 <div class="steps-action">
-                  <a href="#" data-nav="next" class="button is-light">Next</a>
+                  <a href="#" data-nav="next" class="button is-light" id="nextStepBttn">Next</a>
                 </div>
               </div>
             </div>
