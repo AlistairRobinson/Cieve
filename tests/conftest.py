@@ -78,7 +78,7 @@ class JobActions(object):
             '/cli/newjob', # TODO
             data={
                 'job_title': vacancy['job_title'],
-                'divisions': vacancy['division'],
+                'division': vacancy['division'],
                 'roles': vacancy['roles'],
                 'country': vacancy['country'],
                 'job_desc': vacancy['job_desc'],
@@ -86,6 +86,12 @@ class JobActions(object):
                 'Stage_Description': vacancy['Stage_Description'],
                 'skill': vacancy['skill'],
                 'skillVal': vacancy['skillVal'],
+                'lang': vacancy['lang'],
+                'langVal': vacancy['langVal'],
+                'start_date': vacancy['start_date'],
+                'min_degree_level': vacancy['min_degree_level'],
+                'preferred_degrees': vacancy['preferred_degrees'],
+                'asap': vacancy['asap'],
                 '_csrf_token': token
             }
         )

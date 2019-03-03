@@ -8,7 +8,7 @@ from flaskr.db import get_db
 from bcrypt import gensalt
 
 with open('flaskr/static/wordlist.txt') as f:
-    words = [l.rstrip('\n') for l in f]
+    words = [l.rstrip('\n').rstrip() for l in f]
 
 bp = Blueprint('auth', __name__)
 
@@ -113,7 +113,7 @@ def applicantLogin():
 
         if error is None:
             session.clear()
-            session['user_id'] = "A" + str(user['_id'])
+            session['user_id'] = "A" + str(user['applicant id'])
             flash('Login successful')
             return redirect(url_for('applicant.dashboard'))
 

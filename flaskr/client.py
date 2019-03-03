@@ -28,12 +28,17 @@ def newJob():
 
     if request.method == 'POST':
         jobTitle = request.form['job_title']
-        division = request.form['divisions']
+        division = request.form['division']
         role = request.form['roles']
         country = request.form['country']
         jobDescription = request.form['job_desc']
         noVacancies = request.form['numVacancies']
+        startDate = request.form['start_date']
+        if request.form['asap'] == 'on':
+            startDate = "ASAP"
 
+        minDegreeLevel = request.form['min_degree_level']
+        preferedDegrees = request.form['preferred_degrees']
 
 
         data = request.form.to_dict(flat=False)
@@ -92,7 +97,7 @@ def newJob():
                 error = "Score is not a number"
 
         for stage in stages:
-            if stage not in get_db().getStages() or get_db().getStageTitle(stage) == "":
+            if stage not in get_db().getStages():
                 error = "Wrong stage"
 
         if error is not None:
@@ -106,6 +111,9 @@ def newJob():
                     'location':country,
                     'vacancy description':jobDescription,
                     'positions available':noVacancies,
+                    'start date':startDate,
+                    'min degree level':minDegreeLevel,
+                    'prefered degrees':preferedDegrees,
                     'stages':stage_list,
                     'skills':skills,
                     'skillVal':skillVal,
@@ -139,6 +147,7 @@ def newJob():
                     if stage in db.getInterviewStages():
                         interviews[str(i)] = [title, str(stage)]
                 i += 1
+            print(json)
             return render_template('cli/review.html', json = json, interviews = interviews)
     # Generate post data and pass to front end
     return render_template('cli/createjob.html', stages=stages,divisons = db.getDivisions(), roles = db.getRoles(), locations = db.getLocations())
@@ -167,6 +176,18 @@ def newJobSummary():
                 startTimes = data["startTime[]" + stepID]
                 endTimes = data["endTime[]" + stepID]
                 vacancies = data["vacancies[]" + stepID]
+                """
+                if vacancies <= 0:
+                    flash("Number of vacancies must be positive")
+                    interviews = {}
+                    i = 1
+                    for stage in jsonData['stages']:
+                        if stage != '000000000000000000000000':
+                            if stage in db.getInterviewStages():
+                                interviews[str(i)] = [title, str(stage)]
+                        i += 1
+                    return render_template('cli/review.html', json = json, interviews = interviews)
+                """
                 stagesData = []
                 for i in range(len(dates)):
                     stagesData.append([dates[i], startTimes[i], endTimes[i], vacancies[i]])
@@ -174,12 +195,7 @@ def newJobSummary():
                 for stageData in stagesData:
                     db.insertStageAvailability(stageID, jobID, stageData)
 
-
-
-
             flash("Vacancy post successful")
-            
-            
             return redirect(url_for('client.jobs'))
         
     render_template(url_for('client.dashboard'))
