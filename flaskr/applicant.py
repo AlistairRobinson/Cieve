@@ -101,7 +101,7 @@ def newApplication():
         unselectedJobs = []
         if request.form['Consider_for_other_roles'] == "1":
             try:
-                unselected_Jobs = request.form.to_dict(flat=False)["Unselected_Jobs[]"]
+                unselectedJobs = request.form.to_dict(flat=False)["Unselected_Jobs[]"]
             except:
                 pass
 
@@ -172,6 +172,7 @@ def newApplication():
             db.applyJob(userID, job, 1, jobScore)
 
         for job in unselectedJobs:
+            print job
             data = db.getJob(job)
             jobData = {}
             jobData["Degree Qualification"] = [] #CHANGE

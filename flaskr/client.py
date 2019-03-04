@@ -229,7 +229,7 @@ def jobBreakdown():
             jobData['stagesDetail'].append(title)
             type = db.getStageType(stage)
             jobData['stagesType'].append(type)
-            
+
         stepNumber = 0
 
 
@@ -297,10 +297,8 @@ def moveApplicant():
 @login_required_C
 def rejectApplicant():
     if request.method == "POST":
-        appID = request.form["applicant id"]
-        jobID = request.form["job id"]
-        stepNo = request.form["step no"]
+        appID = request.form["_id"]
         db = get_db()
-        db.reject(appID, jobID, stepNo)
+        db.rejectApplication(appID)
         return "Success"
     return "Fail"
