@@ -111,8 +111,16 @@ class Mongo:
             return None
     
     def getApplicantNameID(self, id):
-        query = self.db.accountInfo.find_one({"applicant id": ObjectId(id)})["name"]
-        return query
+        query = self.db.accountInfo.find_one({"applicant id": ObjectId(id)})
+        if query is not None:
+            return query.get("name", "")
+        return None
+
+    def getClientNameID(self, id):
+        query = self.db.client.find_one({"_id": ObjectId(id)})
+        if query is not None:
+            return query.get("name", "")
+        return None
 
     # Return JSON of client info populated based on id
     def getClientUserID(self, id):
