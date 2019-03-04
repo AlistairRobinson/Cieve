@@ -293,6 +293,7 @@ def moveApplicant():
     if request.method == "POST":
         appID = request.form["applicant id"]
         jobID = request.form["job id"]
+        print(request.form)
         db = get_db()
         db.moveToNextStage(appID, jobID)
         return "Success"
