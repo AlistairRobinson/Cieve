@@ -228,22 +228,22 @@ def jobBreakdown():
             jobData['stagesDetail'].append(title)
             type = db.getStageType(stage)
             jobData['stagesType'].append(type)
-        
+
         jobData["stagesType"] = []
         """for stage in jobData["stages"]:
             title = db.getStageTitle(stage)
             jobData['stagesDetail'].append(title)
         """
         stepNumber = 0
-        
-        
+
+
         applicants = db.getApplicantsJob(jobID, stepNumber)
         applicantsData = {}
         for applicant in applicants:
             applicant["name"] = db.getApplicantNameID(applicant["applicant id"])
             applicant["basic scores"] = db.getApplicantUserID(applicant["applicant id"])["basic score"]
             applicantsData[str((applicant["specialized score"] + applicant["basic scores"]["score"])/2)] = applicant
-        
+
         appData = []
         for key, val in reverse(sorted(applicantsData)):
             appData.append(val)
@@ -259,7 +259,7 @@ def stageDetail():
         db = get_db()
         jobID = request.form['jobID']
         stepNumber = request.form["stageID"]
-        
+
         applicants = db.getApplicantsJob(jobID, stepNumber)
         applicantsData = {}
         for applicant in applicants:
@@ -267,15 +267,12 @@ def stageDetail():
             applicant["basic scores"] = db.getApplicantUserID(applicant["applicant id"])["basic score"]
             applicantsData[str((applicant["specialized score"] + applicant["basic scores"]["score"])/2)] = applicant
 
-<<<<<<< HEAD
         appData = []
         for key, val in reverse(sorted(applicantsData)):
             appData.append(val)
 
         return appData
-=======
-        return jsonify(sorted(applicantsData))
->>>>>>> a148abf774dad65b26958a342756c0fdcd435df3
+
 
     return None
 
