@@ -135,7 +135,7 @@ class Mongo:
     def getJobs(self, number, division, role, location):
         Jobs = []
         number = int(number)
-        queryMaker = {"positions available": {"$gt": 0}}
+        queryMaker = {"positions available": {"$gt": "0"}}
         if division != "":
             queryMaker['division'] = division
 
