@@ -111,8 +111,16 @@ class Mongo:
             return None
     
     def getApplicantNameID(self, id):
-        query = self.db.accountInfo.find_one({"applicant id": ObjectId(id)})["name"]
-        return query
+        query = self.db.accountInfo.find_one({"applicant id": ObjectId(id)})
+        if query is not None:
+            return query.get("name", "")
+        return None
+
+    def getClientNameID(self, id):
+        query = self.db.client.find_one({"_id": ObjectId(id)})
+        if query is not None:
+            return query.get("name", "")
+        return None
 
     # Return JSON of client info populated based on id
     def getClientUserID(self, id):
@@ -369,15 +377,15 @@ class Mongo:
         return True
 
     def deleteClientAccount(self, username):
-        self.db.client.delete_one({"username": username})
+        self.db.client.delete_many({"username": username})
         return True
 
     def deleteApplication(self, username):
-        self.db.application.delete_one({"username": username})
+        self.db.application.delete_many({"applicant id": self.getApplicantAccount(username)['applicant id']})
         return True
 
     def deleteJob(self, title):
-        self.db.vacancy.delete_one({"vacancy title": title})
+        self.db.vacancy.delete_many({"vacancy title": title})
         return True
 
     def addUserEducation(self, userID, alevels, degreeQualification, degreeLevel, universityAttended):

@@ -212,6 +212,11 @@ def applications():
     filteredData = []
     for applicationData in applicationsData:
         if (applicationData["current step"] != 0) or (applicationData["preferred"] == 1):
+            applicationData["stagesDetail"] = []
+            for stage in applicationData["stages"]:
+                title = db.getStageTitle(stage)
+                applicationData['stagesDetail'].append(title)
+
             filteredData.append(applicationData)
     return render_template('/apl/applications.html', applications = filteredData)
 

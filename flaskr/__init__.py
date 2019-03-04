@@ -58,10 +58,19 @@ def create_app(test_config=None):
                 return get_db().getClientPhish(session['user_id'])
         return ""
 
+    def get_name():
+        if 'user_id' in session:
+            if get_db().getApplicantNameID(session['user_id'][1:]) != "":
+                return get_db().getApplicantNameID(session['user_id'][1:])
+            if get_db().getClientNameID(session['user_id'][1:]) != "":
+                return get_db().getClientNameID(session['user_id'][1:])
+        return ""
+
     # Allows templates to set unique CSRF tokens on load
                 
     app.jinja_env.globals['csrf_token'] = csrf.generate_csrf_token
     app.jinja_env.globals['phish'] = get_phish
+    app.jinja_env.globals['name'] = get_name
     
     @app.route('/LandingPage')
     @app.route('/index')
