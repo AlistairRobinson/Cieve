@@ -24,13 +24,12 @@
 
           $('#nextStepBttn').on('click', function() {
             currentStage++;
-            alert(currentStage);
             var candidateData = {};
-            candidateData["jobID"] = $(chosenJobID).text();
+            candidateData["jobID"] = $("#chosenJobID").text();
             candidateData["stageID"] = currentStage;
             candidateData["_csrf_token"] = document.getElementById('_csrf_token').value;
             $.ajax({
-                url: '/cli/moveApplicant',
+                url: '/cli/stageDetail',
                 type: 'POST',
                 data: candidateData,
                 success: function(response){
@@ -338,7 +337,7 @@
                     $(elem).parent().parent().remove();
                     var candidateData = {};
                     candidateData["applicant id"] = id;
-                    candidateData["job id"] = $(chosenJobID).text();
+                    candidateData["job id"] = $("#chosenJobID").text();
                     candidateData["_csrf_token"] = document.getElementById('_csrf_token').value;
                     $.ajax({
                         url: '/cli/moveApplicant',
