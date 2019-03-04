@@ -372,6 +372,12 @@ class Mongo:
             return query['title']
         return ""
 
+    def getStageType(self, id):
+        query = self.db.stage.find_one({"_id": ObjectId(id)}, {"type": 1, "_id": 0})
+        if query is not None:
+            return query['type']
+        return ""
+
     def deleteApplicantAccount(self, username):
         self.db.accountInfo.delete_many({"username": username})
         return True

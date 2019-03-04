@@ -222,9 +222,12 @@ def jobBreakdown():
         jobData = db.getJob(jobID)
 
         jobData["stagesDetail"] = []
+        jobData['stagesType'] = []
         for stage in jobData["stages"]:
             title = db.getStageTitle(stage)
             jobData['stagesDetail'].append(title)
+            type = db.getStageType(stage)
+            jobData['stagesType'].append(type)
         
         jobData["stagesType"] = []
         """for stage in jobData["stages"]:
