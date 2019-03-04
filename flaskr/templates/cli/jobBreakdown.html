@@ -42,20 +42,43 @@
             } else if (stageToDisplay == "Accepted") {
               displayAccepted(currentStage);
             }
-            // var candidateData = {};
-            // candidateData["jobID"] = $("#chosenJobID").text();
-            // candidateData["stageID"] = currentStage;
-            // candidateData["_csrf_token"] = document.getElementById('_csrf_token').value;
-            // $.ajax({
-            //     url: '/cli/stageDetail',
-            //     type: 'POST',
-            //     data: candidateData,
-            //     success: function(response){
-            //         console.log(response);
-            //     }
-            // })
+
+            var candidateData = {};
+            candidateData["jobID"] = $("#chosenJobID").text();
+            candidateData["stageID"] = currentStage;
+            candidateData["_csrf_token"] = document.getElementById('_csrf_token').value;
+            $.ajax({
+                url: '/cli/stageDetail',
+                type: 'POST',
+                data: candidateData,
+                success: function(response){
+                    console.log(response);
+                    obj = jQuery.parseJSON(JSON.stringify(response));
+                    completed = obj[0];
+                    uncompleted = obj[1];
+                    if (stageToDisplay == "Test") {
+                      addToTestStep(completed, uncompleted);
+                    } else if (stageToDisplay == "Interview") {
+                      addToInterviewStep(completed, uncompleted);
+                    } else {
+                      addToAcceptStep(uncompleted);
+                    }
+                    // add colours to scores
+                    addColourToScores();
+                }
+            })
 
           });
+
+          function addColourToScores(){
+            $('div[class="scoreValue"]').each(function(index,item){
+                var r = parseInt((255 * (125 - $(this).text())) / 100);
+                var g = parseInt((255 * $(this).text()) / 80);
+                var b = 0;
+                var bgColor="rgb("+r+","+g+","+b+")";
+                $(item).css('color', bgColor);
+            });
+          }
 
           function displayTest(stageNum){
             $('#step' + currentStage).append('<div class="tabs is-centered is-boxed" id="tab_header"> <ul> <li class="item is-active" data-option="1"><a><i class="fas fa-check"></i>&nbsp Completed</a></li> <li class="item" data-option="2"><a><i class="fas fa-times"></i>&nbsp Uncompleted</a></li> </ul> </div> <div class="box" id="tab_container"> <div class="container_item is-active" data-item="1"> <table class="table is-fullwidth is-hoverable center-table" id="CompleteCandidates"> <tr> <td><b>#</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="A star indicates that this candidate has selected this as their prefered job"><i class="fas fa-info"></button></td> <td style="width: 80%;"><b class="is-pulled-left">Applicant Name</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" id="scoreButton" data-tooltip="The computed ability of each candidate independent of the job"><b>Score</b></button></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The suitability of the candiate specifically for the job"><b>Job Match</b></button></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The candidate score in the given test"><b>Test Score</b></button></td> <td></td> <td></td> </tr> </table> </div> <div class="container_item" data-item="2"> <table class="table is-fullwidth is-hoverable center-table" id="UncompleteCandidates"> <tr> <td><b>#</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="A star indicates that this candidate has selected this as their prefered job"><i class="fas fa-info"></button></td> <td style="width: 80%;"><b class="is-pulled-left">Applicant Name</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" id="scoreButton" data-tooltip="The computed ability of each candidate independent of the job"><b>Score</b></button></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The suitability of the candiate specifically for the job"><b>Job Match</b></button></td> <td></td> <td></td> </tr> </table> </div> </div>');
@@ -69,6 +92,74 @@
             $('#step' + currentStage).append('<div class="box"> <table class="table is-fullwidth is-hoverable center-table" id="acceptedCandidates"> <tr> <td><b>#</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="A star indicates that this candidate has selected this as their prefered job"><i class="fas fa-info"></button></td> <td style="width: 80%;"><b class="is-pulled-left">Applicant Name</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" id="scoreButton" data-tooltip="The computed ability of each candidate independent of the job"><b>Score</b></button></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The suitability of the candiate specifically for the job"><b>Job Match</b></button></td> </tr> </table></div>');
           }
 
+          function displayOnboarding(stageNum){
+            $('#step' + currentStage).append('<div class="box"> <table class="table is-fullwidth is-hoverable center-table" id="onboardingCandidates"> <tr> <td><b>#</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="A star indicates that this candidate has selected this as their prefered job"><i class="fas fa-info"></button></td> <td style="width: 80%;"><b class="is-pulled-left">Applicant Name</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" id="scoreButton" data-tooltip="The computed ability of each candidate independent of the job"><b>Score</b></button></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The suitability of the candiate specifically for the job"><b>Job Match</b></button></td><td></td><td></td> </tr> </table></div>');
+          }
+
+          function addToTestStep(completed, uncompleted) {
+            var rank=1;
+            uncompleted.forEach(e => {
+                var rowString = "<tr><td>"+rank+"</td>";
+                rank++;
+                if (e['preferred']==1) {
+                  rowString = rowString + '<td><i class="fas fa-star" style="color:#FFDF00;""></i></td>';
+                } else {
+                  rowString = rowString + '<td></td>';
+                }
+                rowString = rowString + '<td><p class="is-pulled-left">'+e['name']+'</p></td>';
+                var score = Math.round((e['basic scores'].score)*100);
+                var jobScore = Math.round((e['specialized score'])*100);
+                rowString = rowString + '<td><b><div class="scoreValue">'+score+'</div></b></td>';
+                rowString = rowString + '<td><b><div class="scoreValue">'+jobScore+'</div></b></td>';
+                rowString = rowString + '<td><div onclick="advanceCandidate(this)" style="cursor: pointer;" id='+e["applicant id"]+'><i class="fas fa-arrow-right"></i></div></td>';
+                rowString = rowString + '<td><div onclick="rejectCandidate(this)" style="cursor: pointer;" id='+e["_id"]+'><i class="fas fa-times"</i></td>';
+                rowString = rowString + '</tr>';
+                $('#UncompleteCandidates').append(rowString);
+            })
+          }
+
+          function addToInterviewStep(completed, uncompleted) {
+            var rank=1;
+            uncompleted.forEach(e => {
+                var rowString = "<tr><td>"+rank+"</td>";
+                rank++;
+                if (e['preferred']==1) {
+                  rowString = rowString + '<td><i class="fas fa-star" style="color:#FFDF00;""></i></td>';
+                } else {
+                  rowString = rowString + '<td></td>';
+                }
+                rowString = rowString + '<td><p class="is-pulled-left">'+e['name']+'</p></td>';
+                var score = Math.round((e['basic scores'].score)*100);
+                var jobScore = Math.round((e['specialized score'])*100);
+                rowString = rowString + '<td><b><div class="scoreValue">'+score+'</div></b></td>';
+                rowString = rowString + '<td><b><div class="scoreValue">'+jobScore+'</div></b></td>';
+                rowString = rowString + '<td><div onclick="advanceCandidate(this)" style="cursor: pointer;" id='+e["applicant id"]+'><i class="fas fa-arrow-right"></i></div></td>';
+                rowString = rowString + '<td><div onclick="rejectCandidate(this)" style="cursor: pointer;" id='+e["_id"]+'><i class="fas fa-times"</i></td>';
+                rowString = rowString + '</tr>';
+                $('#UncompleteCandidates').append(rowString);
+            })
+          }
+
+          function addToAcceptStep(uncompleted) {
+            var rank=1;
+            uncompleted.forEach(e => {
+                var rowString = "<tr><td>"+rank+"</td>";
+                rank++;
+                if (e['preferred']==1) {
+                  rowString = rowString + '<td><i class="fas fa-star" style="color:#FFDF00;""></i></td>';
+                } else {
+                  rowString = rowString + '<td></td>';
+                }
+                rowString = rowString + '<td><p class="is-pulled-left">'+e['name']+'</p></td>';
+                var score = Math.round((e['basic scores'].score)*100);
+                var jobScore = Math.round((e['specialized score'])*100);
+                rowString = rowString + '<td><b><div class="scoreValue">'+score+'</div></b></td>';
+                rowString = rowString + '<td><b><div class="scoreValue">'+jobScore+'</div></b></td>';
+                rowString = rowString + '</tr>';
+                $('#acceptedCandidates').append(rowString);
+            })
+          }
+
           $('#previousStepBttn').on('click', function() {
             $('#step' + currentStage).empty();
             currentStage--;
@@ -80,20 +171,55 @@
               displayTest(currentStage);
             } else if (stageToDisplay == "Interview") {
               displayInterview(currentStage);
+            } else {
+              displayOnboarding(currentStage);
             }
 
-            // candidateData["jobID"] = $("#chosenJobID").text();
-            // candidateData["stageID"] = currentStage;
-            // candidateData["_csrf_token"] = document.getElementById('_csrf_token').value;
-            // $.ajax({
-            //     url: '/cli/stageDetail',
-            //     type: 'POST',
-            //     data: candidateData,
-            //     success: function(response){
-            //         console.log(response);
-            //     }
-            // })
+            candidateData["jobID"] = $("#chosenJobID").text();
+            candidateData["stageID"] = currentStage;
+            candidateData["_csrf_token"] = document.getElementById('_csrf_token').value;
+            $.ajax({
+                url: '/cli/stageDetail',
+                type: 'POST',
+                data: candidateData,
+                success: function(response){
+                    console.log(response);
+                    obj = jQuery.parseJSON(JSON.stringify(response));
+                    completed = obj[0];
+                    uncompleted = obj[1];
+                    if (stageToDisplay == "Onboarding") {
+                      addToOnboardingStep(completed);
+                    } else if (stageToDisplay == "Interview") {
+                      addToInterviewStep(completed, uncompleted);
+                    } else {
+                      addToTestStep(completed, uncompleted);
+                    }
+                    addColourToScores();
+                }
+            })
           });
+
+          function addToOnboardingStep(completed) {
+            var rank=1;
+            completed.forEach(e => {
+                var rowString = "<tr><td>"+rank+"</td>";
+                rank++;
+                if (e['preferred']==1) {
+                  rowString = rowString + '<td><i class="fas fa-star" style="color:#FFDF00;""></i></td>';
+                } else {
+                  rowString = rowString + '<td></td>';
+                }
+                rowString = rowString + '<td><p class="is-pulled-left">'+e['name']+'</p></td>';
+                var score = Math.round((e['basic scores'].score)*100);
+                var jobScore = Math.round((e['specialized score'])*100);
+                rowString = rowString + '<td><b><div class="scoreValue">'+score+'</div></b></td>';
+                rowString = rowString + '<td><b><div class="scoreValue">'+jobScore+'</div></b></td>';
+                rowString = rowString + '<td><div onclick="advanceCandidate(this)" style="cursor: pointer;" id='+e["applicant id"]+'><i class="fas fa-arrow-right"></i></div></td>';
+                rowString = rowString + '<td><div onclick="rejectCandidate(this)" style="cursor: pointer;" id='+e["_id"]+'><i class="fas fa-times"</i></td>';
+                rowString = rowString + '</tr>';
+                $('#onboardingCandidates').append(rowString);
+            })
+          }
 
           // $(document).on('click', '#previousStepBttn:enabled', function(){
           //   currentStage--;
@@ -118,22 +244,10 @@
           });
 
           $('div[class="scoreValue"]').each(function(index,item){
-              // if(parseInt($(item).data('index'))>2){
-              //     $(item).html('Testimonial '+(index+1)+' by each loop');
-              // }
               var r = parseInt((255 * (125 - $(this).text())) / 100);
               var g = parseInt((255 * $(this).text()) / 80);
               var b = 0;
               var bgColor="rgb("+r+","+g+","+b+")";
-
-              // var score = $(item).text();
-              // if (score >= 60) {
-              //     color = 'green';
-              // } else if (score >= 40) {
-              //     color = 'orange';
-              // } else if (score < 40) {
-              //   color = 'red';
-              // }
               $(item).css('color', bgColor);
           });
     });
