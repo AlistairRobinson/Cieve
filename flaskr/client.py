@@ -117,7 +117,7 @@ def newJob():
                     'role type':role,
                     'location':country,
                     'vacancy description':jobDescription,
-                    'positions available':noVacancies,
+                    'positions available': int(noVacancies),
                     'start date':startDate,
                     'min degree level':minDegreeLevel,
                     'prefered degrees':preferedDegrees,
