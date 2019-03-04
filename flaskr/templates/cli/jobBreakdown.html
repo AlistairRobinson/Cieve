@@ -291,7 +291,7 @@
                             <td><b><div class="scoreValue">{{(applicants[i]["basic scores"]["score"]*100)|int}}</div></b></td>
                             <td><b><div class="scoreValue">{{(applicants[i]["specialized score"]*100)|int}}</div></b></td>
                             <td><div onclick="advanceCandidate(this)" style='cursor: pointer;' id={{applicants[i]['applicant id']}}><i class="fas fa-arrow-right"></i></div></td>
-                            <td><div onclick="rejectCandidate(this)" style='cursor: pointer;' id={{applicants[i]['applicant id']}}><i class="fas fa-times"</i></td>
+                            <td><div onclick="rejectCandidate(this)" style='cursor: pointer;' id={{applicants[i]['_id']}}><i class="fas fa-times"</i></td>
                           </tr>
                         {%endfor%}
                      </table>
@@ -325,6 +325,17 @@
                   function rejectCandidate(elem){
                     var id = $(elem).attr("id");
                     $(elem).parent().parent().remove();
+                    var candidateData = {};
+                    candidateData["_id"] = id;
+                    candidateData["_csrf_token"] = document.getElementById('_csrf_token').value;
+                    $.ajax({
+                        url: '/cli/rejectApplicant',
+                        type: 'POST',
+                        data: candidateData,
+                        success: function(response){
+                            console.log(response);
+                        }
+                    })
                   }
                 </script>
 
