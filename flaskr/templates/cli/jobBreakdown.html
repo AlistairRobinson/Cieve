@@ -23,10 +23,12 @@
           var currentStage = 0;
 
           $('#nextStepBttn').on('click', function() {
+            $('#step' + currentStage).empty();
             currentStage++;
             var stages = {{jobData["stagesType"]|safe}};
             console.log(stages);
             var stageToDisplay = stages[currentStage];
+
             if (stageToDisplay == "Test") {
               displayVerbalTest(currentStage);
             }
@@ -70,7 +72,7 @@
           //   alert(currentStage);
           // });
 
-          $('#tab_header ul li.item').on('click', function() {
+          $('body').on('click', '#tab_header ul li.item', function() {
             var number = $(this).data('option');
             $('#tab_header ul li.item').removeClass('is-active');
             $(this).addClass('is-active');
