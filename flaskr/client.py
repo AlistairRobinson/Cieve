@@ -8,6 +8,7 @@ import operator
 import json
 from flaskr.auth import login_required_C
 from flaskr.db import get_db
+import collections
 
 bp = Blueprint('client', __name__, url_prefix='/cli')
 
@@ -245,7 +246,7 @@ def jobBreakdown():
             applicantsData[str((applicant["specialized score"] + applicant["basic scores"]["score"])/2)] = applicant
             
         appData = []
-        for key, val in sorted(applicantsData).items():
+        for key, val in sorted(applicantsData.items(), reverse=True):
             appData.append(val)
 
         return render_template('/cli/jobBreakdown.html', jobData = jobData, applicants = appData)
@@ -268,12 +269,10 @@ def stageDetail():
             applicantsData[str((applicant["specialized score"] + applicant["basic scores"]["score"])/2)] = applicant
 
         appData = []
-        for key, val in sorted(applicantsData):
+        for key, val in sorted(applicantsData.items(), reverse=True):
             appData.append(val)
 
         return appData
-
-
     return None
 
 @bp.route('/moveApplicant', methods=('GET', 'POST'))
