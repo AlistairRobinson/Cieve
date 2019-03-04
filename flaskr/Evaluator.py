@@ -2,6 +2,7 @@ import json
 import random
 import math
 import pprint
+from db import get_db
 # Skeleto for evaluation class
 
 class Evaluator:
@@ -10,10 +11,12 @@ class Evaluator:
         self.test = False
         self.alpha = 0.01
 
+
+        self.db = get_db()
+
         self.weightsFileName = 'weights.json'
 
         self.weights = self.getWeights()
-        # self.rankings = self.getRankings()
 
         self.degreeLevelConversion = {"1":1,"2:1":0.7,"2:2":0.3}
         self.ALevelConversion = {"A":1,"B":0.7,"C":0.3}
@@ -28,26 +31,33 @@ class Evaluator:
             with open(self.weightsFileName) as w:
                 weights = json.load(w)
             return weights
+        else:
+            return self.db.getWeights()[0]
 
-    def getRankings(self):
-        # Connect to database to get rankings
-        with open('rankings2.txt') as f:
-            ranks = json.load(f)
-        return ranks
+    def writeWeights(self):
+        if self.test:
+            f = open(self.weightsFileName, "r+")
+            f.seek(0)        # <--- should reset file position to the beginning.
+            json.dump(self.weights, f, indent=4)
+            f.truncate()     # remove remaining part
+        else:
+            self.db.updateWeights(self.weights)
+            # self.weights = self.weights
+
 
     def activation(self, x):
         return self.sigmoid(x)
 
     def sigmoid(self, x):
-        return 2 / (1 + math.exp(-x*2)) - 1
-      # return 1 / (1 + math.exp(-x))
+     # return 2 / (1 + math.exp(-x*2)) - 1
+        return 1 / (1 + math.exp(-x))
       # 2/(1 + exp(-x))-1
 
       #  Use 2/(1 + exp(-x))-1 with x > 0, x = 0 if x < 0 ??????????? Done
       # Change gPrime to be function above derivative   ///////////// Done
 
     def gprime(self, x):
-        return 2 * self.sigmoid(x) * (1 - self.sigmoid(x))
+        return self.sigmoid(x) * (1 - self.sigmoid(x))
         # 2*exp(x)/(exp(x)+1)^2
         #
 
@@ -91,12 +101,15 @@ class Evaluator:
 
     def basicEvaluateFeedback(self, applicant, outputs):
 
-        scores = {}
-        scores['score'] = random.uniform(0, 1)
-        scores['education_score'] = random.uniform(0, 1)
-        scores['experience_score'] = random.uniform(0, 1)
-        scores['skills_score'] = random.uniform(0, 1)
-        return scores
+        if not self.test and False:
+
+            scores = {}
+            scores['score'] = random.uniform(0, 1)
+            scores['education_score'] = random.uniform(0, 1)
+            scores['experience_score'] = random.uniform(0, 1)
+            scores['skills_score'] = random.uniform(0, 1)
+            print(self.weights)
+            return scores
         # Calculate education, skills and experience scores
 
         #                       ////////////////////// education
@@ -212,7 +225,8 @@ class Evaluator:
 
         # Match job and applicant data
     def jobEvaluate(self, job, applicant):
-        return random.uniform(0, 1)
+        if not self.test:
+            return random.uniform(0, 1)
         sum = 0
         count = 0
         if "Degree Qualification" in job:
@@ -283,9 +297,10 @@ class Evaluator:
         if "Type" in job:
             if job["Type"] != "Intern":
                 if "Start Date" in job:
-                    if "graduation date" in applicant:
-                        if job["Start Date"] < applicant["graduation date"]:
-                            score = score * 0.3
+                    if "Graduation Date" in applicant:
+                        if len(applicant["Graduation Date"]) > 0:
+                            if job["Start Date"] < applicant["Graduation Date"]:
+                                score = score * 0.3
 
 
         return score
@@ -297,17 +312,13 @@ class Evaluator:
         self.weights[dictionaryName][weightName] = weight
 
 
-    def writeWeights(self):
-        if self.test:
-            f = open(self.weightsFileName, "r+")
-            f.seek(0)        # <--- should reset file position to the beginning.
-            json.dump(self.weights, f, indent=4)
-            f.truncate()     # remove remaining part
 
     def getLengthScore(self, s):
         p = str(s).find('year')
-        if p == -1:
-            l = s /365
+        b = str(s).find('months')
+        if p == -1 or b== -1:
+            return 0
+            l = float(s) / 365
             if l > 5:
                 return 1
             else:
@@ -323,7 +334,20 @@ class Evaluator:
     def getError(self, weight, prevError, score):
         return weight * prevError * self.gprime(score)
 
-    def updateWeights(self, applicant, wantedScore):
+
+    def updateWeights(self, applicants):
+        # Applicant = [applicant, wantedScore]#
+        newWeights = dict(self.weights)
+        for apl in applicants:
+            self.getWeightsUpdate(apl[0], apl[1], newWeights)
+
+        self.weights = newWeights
+        self.writeWeights()
+
+    def getWeightsUpdate(self, applicant, wantedScore, newWeights):
+
+        # if not self.test:
+        #     return True
 
         outputs = {}
         self.basicEvaluateFeedback(applicant, outputs)
@@ -349,17 +373,14 @@ class Evaluator:
         errors["A-levels Error"] = self.getError(self.weights["Subjects Weight"], errors["Education Error"], outputs["A-levels Score"])
 
         if "Previous Employment" in outputs:
-
-
             errors["Previous Employment Errors"] = []
             for q in outputs["Previous Employment"]:
                 company = q["Company"]
                 position = q["Position"]
-                EmploymentScore = q["Employment Score"]
+                lengthScore = q["Length of Employment Score"]
                 EmploymentError = self.getError(1, errors["Experience Error"], outputs["Experience Score"])
-                errors["Previous Employment Errors"].append({"Company":company,"Position":position,"Employment Error":EmploymentError})
+                errors["Previous Employment Errors"].append({"Company":company,"Position":position,"Employment Error":EmploymentError,"Length of Employment Score":lengthScore})
 
-        newWeights = dict(self.weights)
 
         self.updateSkillsWeight(outputs["Skill Score"], baseError, newWeights)
         self.updateExperienceWeight(outputs["Experience Score"], baseError, newWeights)
@@ -381,12 +402,15 @@ class Evaluator:
         self.updateGroup("A-Level Qualifications", errors["A-levels Error"], outputs, newWeights)
         self.updateGroup("Skills", errors["Skillset Error"], outputs, newWeights)
 
-        self.weights = newWeights
-        self.writeWeights()
-        #
-        # pprint.pprint(errors)
-        # pprint.pprint(outputs)
-
+        if "Previous Employment Errors" in errors:
+            for q in errors["Previous Employment Errors"]:
+                company = q["Company"]
+                lengthScore = q["Length of Employment Score"]
+                position = q["Position"]
+                EmploymentError = q["Employment Error"]
+                self.updateCompanyWeight(company, EmploymentError, newWeights)
+                self.updatePrevPositionWeight(position, EmploymentError, newWeights)
+                self.updateEmploymentLengthWeight(lengthScore, EmploymentError, newWeights)
 
         return 0
 
@@ -422,6 +446,14 @@ class Evaluator:
 
     def updateDegreeWeight(self, degree, error, weights):
         weights["Degree Qualifications"][degree] += self.multiplyToWeight(1, error)
+
+    def updateCompanyWeight(self, company, error, weights):
+        weights["Previous Employment Company"][company] += self.multiplyToWeight(1, error)
+
+    def updatePrevPositionWeight(self, position, error, weights):
+        weights["Previous Employment position"][position] += self.multiplyToWeight(1, error)
+
+
 
     def updateGroup(self, group, error, outputs, weights):
 
