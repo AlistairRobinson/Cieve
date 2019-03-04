@@ -13,6 +13,7 @@
     <script src="../../static/accordion-dist/js/bulma-accordion.js"></script>
     <link href="../../static/accordion-dist/css/bulma-accordion.min.css" rel="stylesheet">
     <link href="../../static/tooltip-dist/css/bulma-tooltip.min.css" rel="stylesheet">
+    <link rel="icon" href="../static/cieve.ico">
 
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css" />
@@ -40,14 +41,20 @@
               // if(parseInt($(item).data('index'))>2){
               //     $(item).html('Testimonial '+(index+1)+' by each loop');
               // }
-              var score = $(item).text();
-              if (score >= 40) {
-                  color = 'orange';
-              }
-              if (score >= 60) {
-                  color = 'green';
-              }
-              $(item).css('color', color);
+              var r = parseInt((255 * (125 - $(this).text())) / 100);
+              var g = parseInt((255 * $(this).text()) / 80);
+              var b = 0;
+              var bgColor="rgb("+r+","+g+","+b+")";
+
+              // var score = $(item).text();
+              // if (score >= 60) {
+              //     color = 'green';
+              // } else if (score >= 40) {
+              //     color = 'orange';
+              // } else if (score < 40) {
+              //   color = 'red';
+              // }
+              $(item).css('color', bgColor);
           });
     });
     </script>
@@ -172,7 +179,7 @@
 
                 <div class="navbar-item has-dropdown is-hoverable">
                     <a class="navbar-link" href="#">
-                        Josh Hankins
+                      {{name()}}
                     </a>
                     <div class="navbar-dropdown">
                         <a class="navbar-item is-leveled " href="#">
@@ -267,7 +274,7 @@
                         <tr>
                              <td><b>#</b></td>
                              <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="A star indicates that this candidate has selected this as their prefered job"><i class="fas fa-info"></button></td>
-                             <td><b class="is-pulled-left">Applicant Name</b></td>
+                             <td style="width: 80%;"><b class="is-pulled-left">Applicant Name</b></td>
                              <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" id="scoreButton" data-tooltip="The computed ability of each candidate independent of the job"><b>Score</b></button></td>
                              <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The suitability of the candiate specifically for the job"><b>Job Match</b></button></td>
                              <td></td>
@@ -283,8 +290,8 @@
                               <td></td>
                             {% endif %}
                             <td><p class="is-pulled-left">{{applicants[i].name}}</p></td>
-                            <td>n/a</td>
-                            <td><div class="scoreValue">{{(applicants[i]["specialized score"]*100)|round(1, 'floor')}}</div></td>
+                            <td><b><div class="scoreValue">{{(applicants[i]["basic scores"]["score"]*100)|int}}</div></b></td>
+                            <td><b><div class="scoreValue">{{(applicants[i]["specialized score"]*100)|int}}</div></b></td>
                             <td><div onclick="advanceCandidate(this)" style='cursor: pointer;' id={{applicants[i]._id}}><i class="fas fa-arrow-right"></i></div></td>
                             <td><div onclick="rejectCandidate(this)" style='cursor: pointer;' id={{applicants[i]._id}}><i class="fas fa-times"</i></td>
                           </tr>
