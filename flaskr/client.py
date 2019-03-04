@@ -263,7 +263,7 @@ def stageDetail():
             applicant["basic scores"] = db.getApplicantUserID(applicant["applicant id"])["basic score"]
             applicantsData[str((applicant["specialized score"] + applicant["basic scores"]["score"])/2)] = applicant
 
-        return sorted(applicantsData)
+        return jsonify(sorted(applicantsData))
 
     return None
 

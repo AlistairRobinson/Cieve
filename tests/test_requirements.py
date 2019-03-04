@@ -163,7 +163,7 @@ def test_setup_apl(client, jobs):
         'country': 'Germany',
         'job_desc': 'test',
         'numVacancies': 1,
-        'Stage_Description': ["000000000000000000000000"],
+        'Stage_Description': ["000000000000000000000000", "111111111111111111111111"],
         'skill': ['Git', 'Presentation'],
         'skillVal': [7, 6],
         'lang': ['Python', 'C'],
@@ -402,6 +402,22 @@ def test_post_application(client, jobs, data_input, message):
         except KeyError:
             raise AssertionError('nothing flashed')
         assert message in error[1]
+
+@pytest.mark.parametrize(('stageID'), (
+    ('1'),
+    ('2')
+))
+def test_retrieve_applicants(client, jobs, stageID):
+    jobID = get_db().getJobID('test')
+    token = csrf.generate_csrf_token_with_session(jobs._client)
+    jobs._client.post('/cli/auth/login', data={'username': 'test', 'password': 'test', '_csrf_token': token})
+    token = csrf.generate_csrf_token_with_session(jobs._client)
+    response = jobs._client.post('/cli/stageDetail', data={'jobID': jobID, 'stageID': stageID, '_csrf_token': token})
+    print(response.data)
+    if stageID == '000000000000000000000000':
+        assert 'test' in response.data.rstrip()
+    if stageID == '111111111111111111111111':
+        assert response.data.rstrip() == '[]'
 
 def test_cleanup_job():
     db = get_db()
