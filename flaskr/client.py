@@ -229,12 +229,7 @@ def jobBreakdown():
             jobData['stagesDetail'].append(title)
             type = db.getStageType(stage)
             jobData['stagesType'].append(type)
-
-        jobData["stagesType"] = []
-        """for stage in jobData["stages"]:
-            title = db.getStageTitle(stage)
-            jobData['stagesDetail'].append(title)
-        """
+            
         stepNumber = 0
 
 
@@ -277,7 +272,6 @@ def stageDetail():
             val["_id"] = str(val["_id"])
             val["vacancy id"] = str(val["vacancy id"])
             val["applicant id"] = str(val["applicant id"])
-            print(val)
             if val["completed"]:
                 appDataComp.append(val)
             else:
