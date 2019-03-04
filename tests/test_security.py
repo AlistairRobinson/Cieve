@@ -1,5 +1,5 @@
 import pytest
-from flask import g, session, flash
+from flask import g, session, flash, request
 from flaskr import csrf
 from flaskr.db import get_db
 
@@ -51,7 +51,7 @@ def test_cli_registration(client, auth, username, password, name, message):
             raise AssertionError('nothing flashed')
         assert message in error[1]
 
-# Client login tests (R1)
+# Client login tests (R1, R11, R16)
 
 def test_cli_login_get(client, auth):
     assert client.get('/cli/auth/login').status_code == 200
@@ -72,14 +72,14 @@ def test_cli_login(auth, username, password, message):
             raise AssertionError('nothing flashed')
         assert message in error[1]
 
-# Phish code tests
+# Phish code tests (R16)
 
 def test_cli_phish(client, auth):
     auth.login_cli('test', 'test')
     with auth._client.session_transaction() as session:
         assert get_db().getClientPhish(session['user_id']) != ""
 
-# Phish error check
+# Phish error check (R16)
 
 def test_cli_phish_error(client, auth):
     auth.login_cli('test', 'test')
@@ -119,14 +119,14 @@ def test_apl_login(auth, username, password, message):
             raise AssertionError('nothing flashed')
         assert message in error[1]
 
-# Phish code tests
+# Phish code tests (R16)
 
 def test_apl_phish(client, auth):
     auth.login_apl('test', 'test')
     with auth._client.session_transaction() as session:
         assert get_db().getApplicantPhish(session['user_id']) != ""
 
-# Phish error check
+# Phish error check (R16)
 
 def test_apl_phish_error(client, auth):
     auth.login_apl('test', 'test')

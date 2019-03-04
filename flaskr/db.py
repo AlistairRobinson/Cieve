@@ -183,6 +183,8 @@ class Mongo:
                                         "specialized score": score,
                                         "completed": True})
 
+    def getJobID(self, title):
+        return self.db.vacancy.find_one({"vacancy title": title})['_id']
 
     def addNewStage(self, stageType, title, description):
         self.db.stage.insert_one({"type": stageType,
@@ -218,7 +220,7 @@ class Mongo:
     # In order of job related score
     def getApplicantsJob(self, jobID, stepOrder):
         applicantList = []
-        applicationQuery = self.db.application.find({"vacancy id": ObjectId(jobID), "current step" : int(stepOrder)})#.sort({"specialized score": -1})
+        applicationQuery = self.db.application.find({"vacancy id": ObjectId(jobID), "current step" : stepOrder})#.sort({"specialized score": -1})
         for doc in applicationQuery:
             applicantList.append(doc)
         return applicantList
