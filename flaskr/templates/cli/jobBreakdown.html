@@ -13,12 +13,44 @@
     <script src="../../static/accordion-dist/js/bulma-accordion.js"></script>
     <link href="../../static/accordion-dist/css/bulma-accordion.min.css" rel="stylesheet">
     <link href="../../static/tooltip-dist/css/bulma-tooltip.min.css" rel="stylesheet">
+    <link rel="icon" href="../static/cieve.ico">
 
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-steps@2.2.1/dist/css/bulma-steps.min.css">
     <script>
       $(document).ready(function() {
+          var currentStage = 0;
+
+          $('#nextStepBttn').on('click', function() {
+            currentStage++;
+            var candidateData = {};
+            candidateData["jobID"] = $("#chosenJobID").text();
+            candidateData["stageID"] = currentStage;
+            candidateData["_csrf_token"] = document.getElementById('_csrf_token').value;
+            $.ajax({
+                url: '/cli/stageDetail',
+                type: 'POST',
+                data: candidateData,
+                success: function(response){
+                    console.log(response);
+                }
+            })
+          });
+
+          $('#previousStepBttn').on('click', function() {
+            // if ($(this).hasClass('disabled')) {
+            //   alert("disabled");
+            console.log($(this));
+            // currentStage--;
+            // alert(currentStage);
+          });
+
+          // $(document).on('click', '#previousStepBttn:enabled', function(){
+          //   currentStage--;
+          //   alert(currentStage);
+          // });
+
           $('#tab_header ul li.item').on('click', function() {
             var number = $(this).data('option');
             $('#tab_header ul li.item').removeClass('is-active');
@@ -34,6 +66,26 @@
 
           $('#scoreButton').click(function(event) {
               alert("test");
+          });
+
+          $('div[class="scoreValue"]').each(function(index,item){
+              // if(parseInt($(item).data('index'))>2){
+              //     $(item).html('Testimonial '+(index+1)+' by each loop');
+              // }
+              var r = parseInt((255 * (125 - $(this).text())) / 100);
+              var g = parseInt((255 * $(this).text()) / 80);
+              var b = 0;
+              var bgColor="rgb("+r+","+g+","+b+")";
+
+              // var score = $(item).text();
+              // if (score >= 60) {
+              //     color = 'green';
+              // } else if (score >= 40) {
+              //     color = 'orange';
+              // } else if (score < 40) {
+              //   color = 'red';
+              // }
+              $(item).css('color', bgColor);
           });
     });
     </script>
@@ -158,7 +210,7 @@
 
                 <div class="navbar-item has-dropdown is-hoverable">
                     <a class="navbar-link" href="#">
-                        Josh Hankins
+                      {{name()}}
                     </a>
                     <div class="navbar-dropdown">
                         <a class="navbar-item is-leveled " href="#">
@@ -252,8 +304,8 @@
                     <table class="table is-fullwidth is-hoverable center-table" id="dynamic_field_aLevels">
                         <tr>
                              <td><b>#</b></td>
-                             <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="A star indicates that this candidate has selected this as their preffered job"><i class="fas fa-info"></button></td>
-                             <td><b class="is-pulled-left">Applicant Name</b></td>
+                             <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="A star indicates that this candidate has selected this as their prefered job"><i class="fas fa-info"></button></td>
+                             <td style="width: 80%;"><b class="is-pulled-left">Applicant Name</b></td>
                              <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" id="scoreButton" data-tooltip="The computed ability of each candidate independent of the job"><b>Score</b></button></td>
                              <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The suitability of the candiate specifically for the job"><b>Job Match</b></button></td>
                              <td></td>
@@ -268,9 +320,9 @@
                             {% else %}
                               <td></td>
                             {% endif %}
-                            <td><p class="is-pulled-left">Josh</p></td>
-                            <td>{{applicants[i].score}}</td>
-                            <td>4</td>
+                            <td><p class="is-pulled-left">{{applicants[i].name}}</p></td>
+                            <td><b><div class="scoreValue">{{(applicants[i]["basic scores"]["score"]*100)|int}}</div></b></td>
+                            <td><b><div class="scoreValue">{{(applicants[i]["specialized score"]*100)|int}}</div></b></td>
                             <td><div onclick="advanceCandidate(this)" style='cursor: pointer;' id={{applicants[i]._id}}><i class="fas fa-arrow-right"></i></div></td>
                             <td><div onclick="rejectCandidate(this)" style='cursor: pointer;' id={{applicants[i]._id}}><i class="fas fa-times"</i></td>
                           </tr>
@@ -284,15 +336,15 @@
                     var id = $(elem).attr("id");
                     $(elem).parent().parent().remove();
                     var candidateData = {};
-                    candidateData["candidateID"] = id;
-                    candidateData["jobID"] = $(chosenJobID).text();
+                    candidateData["applicant id"] = id;
+                    candidateData["job id"] = $("#chosenJobID").text();
                     candidateData["_csrf_token"] = document.getElementById('_csrf_token').value;
                     $.ajax({
-                        url: '/cli/jobBreakdown',
+                        url: '/cli/moveApplicant',
                         type: 'POST',
                         data: candidateData,
                         success: function(response){
-                            alert("data posted");
+                            console.log(response);
                         }
                     })
                   }
@@ -342,10 +394,10 @@
 
               <div class="steps-actions">
                 <div class="steps-action">
-                  <a href="#" data-nav="previous" class="button is-light">Previous</a>
+                  <a href="#" data-nav="previous" id="previousStepBttn" class="button is-light">Previous</a>
                 </div>
                 <div class="steps-action">
-                  <a href="#" data-nav="next" class="button is-light">Next</a>
+                  <a href="#" data-nav="next" id="nextStepBttn" class="button is-light">Next</a>
                 </div>
               </div>
 
@@ -363,7 +415,7 @@
             {%endfor%}
             </div> -->
 
-            {{jobData}}
+            {#{jobData}#}
             <!-- <br>
             <br>
             HELLO FRIEND -->

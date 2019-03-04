@@ -4,10 +4,11 @@ from flask import (
 from werkzeug.exceptions import abort
 from werkzeug.datastructures import ImmutableMultiDict
 from bson.objectid import ObjectId
+import operator
 import json
-
 from flaskr.auth import login_required_C
 from flaskr.db import get_db
+import collections
 
 bp = Blueprint('client', __name__, url_prefix='/cli')
 
@@ -220,28 +221,35 @@ def jobBreakdown():
         db = get_db()
         jobID = request.form['jobID']
         jobData = db.getJob(jobID)
-       
+
         jobData["stagesDetail"] = []
+        jobData['stagesType'] = []
         for stage in jobData["stages"]:
             title = db.getStageTitle(stage)
             jobData['stagesDetail'].append(title)
+            type = db.getStageType(stage)
+            jobData['stagesType'].append(type)
 
-        applicants = {}
-        print(request.form)
-
+        jobData["stagesType"] = []
+        """for stage in jobData["stages"]:
+            title = db.getStageTitle(stage)
+            jobData['stagesDetail'].append(title)
+        """
         stepNumber = 0
-        try:
-            stepNumber = request.form["stageID"]
-        except:
-            pass
 
-        error = None
 
-        if error is None:
-            applicants = db.getApplicantsJob(jobID, stepNumber)
+        applicants = db.getApplicantsJob(jobID, stepNumber)
+        applicantsData = {}
+        for applicant in applicants:
+            applicant["name"] = db.getApplicantNameID(applicant["applicant id"])
+            applicant["basic scores"] = db.getApplicantUserID(applicant["applicant id"])["basic score"]
+            applicantsData[str((applicant["specialized score"] + applicant["basic scores"]["score"])/2)] = applicant
+            
+        appData = []
+        for key, val in sorted(applicantsData.items(), reverse=True):
+            appData.append(val)
 
-        return render_template('/cli/jobBreakdown.html', jobData = jobData, applicants = applicants)
-
+        return render_template('/cli/jobBreakdown.html', jobData = jobData, applicants = appData)
     return redirect(url_for('client.jobs'))
 
 
@@ -251,12 +259,24 @@ def stageDetail():
     if request.method == "POST":
         db = get_db()
         jobID = request.form['jobID']
-        stepNo = request.form['stepNo']
-        error = None
-        
-        if error is None:
-            applicants = db.getApplicantsJob(jobID, stepNo)
-        return applicants
+        stepNumber = request.form["stageID"]
+
+        applicants = db.getApplicantsJob(jobID, stepNumber)
+        applicantsData = {}
+        for applicant in applicants:
+            applicant["name"] = db.getApplicantNameID(applicant["applicant id"])
+            applicant["basic scores"] = db.getApplicantUserID(applicant["applicant id"])["basic score"]
+            applicantsData[str((applicant["specialized score"] + applicant["basic scores"]["score"])/2)] = applicant
+
+        appDataComp = []
+        appDataNon = []
+        for key, val in sorted(applicantsData.items(), reverse=True):
+            if val["completed"]:
+                appDataComp.append(val)
+            else:
+                appDataNon.append(val)
+
+        return [appDataComp, appDataNon]
 
     return None
 
@@ -277,7 +297,8 @@ def rejectApplicant():
     if request.method == "POST":
         appID = request.form["applicant id"]
         jobID = request.form["job id"]
+        stepNo = request.form["step no"]
         db = get_db()
-        db.reject(appID, jobID)
+        db.reject(appID, jobID, stepNo)
         return "Success"
     return "Fail"

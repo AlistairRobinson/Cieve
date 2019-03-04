@@ -130,7 +130,12 @@ def newApplication():
                 x = datetime.strptime(employ[3],"%Y-%m-%d")
             except:
                 x = datetime.today()
-            appData["Previous Employment"].append({"Company" : employ[0], "Position" : employ[1], "Length of Employment" : (x-datetime.strptime(employ[2],"%Y-%m-%d")).days})
+            
+            try:
+                y = datetime.strptime(employ[2],"%Y-%m-%d")
+            except:
+                y = datetime.today()
+            appData["Previous Employment"].append({"Company" : employ[0], "Position" : employ[1], "Length of Employment" : (x-y).days})
         appData["Skills"] = []
         for skill in skills:
             appData["Skills"].append({"Skill" : skill[0], "Expertise" : skill[1]})
@@ -212,6 +217,14 @@ def applications():
     filteredData = []
     for applicationData in applicationsData:
         if (applicationData["current step"] != 0) or (applicationData["preferred"] == 1):
+            applicationData["stagesDetail"] = []
+            applicationData["stagesType"] = []
+            for stage in applicationData["stages"]:
+                title = db.getStageTitle(stage)
+                applicationData['stagesDetail'].append(title)
+                type = db.getStageType(stage)
+                applicationData['stagesType'].append(type)
+
             filteredData.append(applicationData)
     return render_template('/apl/applications.html', applications = filteredData)
 
