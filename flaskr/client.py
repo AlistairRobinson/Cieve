@@ -281,7 +281,8 @@ def rejectApplicant():
     if request.method == "POST":
         appID = request.form["applicant id"]
         jobID = request.form["job id"]
+        stepNo = request.form["step no"]
         db = get_db()
-        db.reject(appID, jobID)
+        db.reject(appID, jobID, stepNo)
         return "Success"
     return "Fail"
