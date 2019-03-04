@@ -260,6 +260,7 @@ def stageDetail():
         db = get_db()
         jobID = request.form['jobID']
         stepNumber = request.form["stageID"]
+        type = request.form["stageType"]
 
         applicants = db.getApplicantsJob(jobID, stepNumber)
         applicantsData = {}
@@ -268,11 +269,24 @@ def stageDetail():
             applicant["basic scores"] = db.getApplicantUserID(applicant["applicant id"])["basic score"]
             applicantsData[str((applicant["specialized score"] + applicant["basic scores"]["score"])/2)] = applicant
 
-        appData = []
-        for key, val in sorted(applicantsData.items(), reverse=True):
-            appData.append(val)
+        if type == "Interview" or type == "Test":
 
-        return appData
+            appDataComp = []
+            appDataNon = []
+            for key, val in sorted(applicantsData.items(), reverse=True):
+                if val["completed"]:
+                    appDataComp.append(val)
+                else:
+                    appDataNon.append(val)
+
+            return [appDataComp, appDataNon]
+        else:
+            appData = []
+            for key, val in sorted(applicantsData.items(), reverse=True):
+                appData.append(val)
+            
+            return [appData]
+
     return None
 
 @bp.route('/moveApplicant', methods=('GET', 'POST'))
