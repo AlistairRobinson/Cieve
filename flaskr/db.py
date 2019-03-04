@@ -135,7 +135,7 @@ class Mongo:
     def getJobs(self, number, division, role, location):
         Jobs = []
         number = int(number)
-        queryMaker = {"positions available": {"$gt": "0"}}
+        queryMaker = {"positions available": {"$gt": 0}}
         if division != "":
             queryMaker['division'] = division
 
@@ -227,13 +227,16 @@ class Mongo:
 
 
     #Move applicants to the next stage in the steps for the jobs and update completed flag
-    def moveToNextStage(self, applicantID, jobID):
+    def moveToNextStage(self, applicationID, jobID):
         stageQuery = self.db.vacancy.find_one({"_id": ObjectId(jobID)}, {"stages": 1, "_id": 0})
         noOfStages = len(stageQuery['stages'])
-        self.db.application.update_one({"applicant id": ObjectId(applicantID), "vacancy id": ObjectId(jobID)}, {"$inc": {"current step": 1}, "$set": {"completed": False}})
-        stepQuery = self.db.application.find_one({"applicant id": ObjectId(applicantID), "vacancy id": ObjectId(jobID), "current step": noOfStages-1})
+        self.db.application.update_one({"applicant id": ObjectId(applicationID), "vacancy id": ObjectId(jobID)}, {"$inc": {"current step": 1}, "$set": {"completed": False}})
+        stepQuery = self.db.application.find_one({"applicant id": ObjectId(applicationID), "vacancy id": ObjectId(jobID), "current step": noOfStages-1})
         if stepQuery != None:
             self.db.vacancy.update_one({"_id": ObjectId(jobID)}, {"$inc": {"positions available": -1}})
+        jobTitle = self.db.vacancy.find_one({"_id": ObjectId(jobID)})
+        message = "You have been moved onto the next stage for your application for the job of " + jobTitle
+        self.db.accountInfo.update_one({"applicant id": })
         return True
 
 
@@ -359,13 +362,23 @@ class Mongo:
         self.db.questionStage.insert_one({"stage id": stageID, "questions": questions})
         return True
 
-    # Return the id's of the stages of type "Interview"
-    def getInterviewStages(self):
-        interviewStages = []
-        query = self.db.stage.find({"type": "Interview"}, {"_id": 1})
-        for doc in query:
-            interviewStages.append(str(doc["_id"]))
-        return interviewStages
+
+    def getInterviewSlots(self, stageID, jobID):
+        timeSlots = self.db.interviewStage.find_one({"stage id": stageID, "vacancy id": jobID})
+        return timeSlots['slots']
+
+
+    def bookInterviewSlots(self, applicantID, jobID, stageID, slot):
+        self.db.application.update_one({"applicant id": applicantID, "vacancy id": jobID}, {"$push": {"interviews": slot}})
+        self.db.interviewStage.update_one({"job id": jobID, "stage id": stageID}, {"$pull": {"interviews": slot}})
+        jobTitle = self.db.vacancy.find_one({"_id": ObjectId(jobID)})['vacancy title']
+        message = "An interview has been booked for your " + jobTitle + " application at the time " + slot[1] + ", " + slot[0]
+        self.db.accountInfo.update_one({"applicant id": applicantID}, {"$set" {"message": message}})
+        return True
+
+    def getBookedInterviews(self, applicantID):
+        return list(self.db.application.find({"applicant id": applicantID}, {"interviews": 1, "_id": 0})        
+
 
     def insertStageAvailability(self, stageID, jobID, stageData):
         self.db.interviewStage.insert_one({"stage id": stageID,
@@ -390,16 +403,19 @@ class Mongo:
 
     #If applicant is rejected on step 0, set step to -1. Otherwise if rejected the set is set to -2
     def rejectApplication(self, applicationID):
-        stepQuery = self.db.application.find_one({"_id": ObjectId(applicationID)}, {"current step": 1, "_id": 0})
+        stepQuery = self.db.application.find_one({"_id": ObjectId(applicationID)}, {"current step": 1, "applicant id": 1, "vacancy id": 1, "_id": 0})
         if stepQuery['current step'] != 0:
             self.db.application.update_one({"_id": ObjectId(applicationID)}, {"$set": {"current step": -1}})
+        jobTitle = self.db.vacancy.find_one({"_id": ObjectId(stepQuery['vacancy id'])})['vacancy title']
+        message = "Your application for the " + jobTitle + " has been rejected"
+        self.db.accountInfo.update_one({"applicant id": stepQuery['applicant id']}, {"$set": {"message": message}})
 
 
     def getAccepted(self, jobID):
         return list(self.db.application.find({"vacancy id": jobID, "current step": {"$gt": 0}}))
 
     def getRejected(self, jobID):
-        return list(self.db.application.find({"vacancy id": jobID, "current step": {"lt": 1}}))       
+        return list(self.db.application.find({"vacancy id": jobID, "current step": {"$lt": 1}}))       
 
 
     #Given an id will return the title of the stage
