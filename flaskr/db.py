@@ -111,8 +111,16 @@ class Mongo:
             return None
     
     def getApplicantNameID(self, id):
-        query = self.db.accountInfo.find_one({"applicant id": ObjectId(id)})["name"]
-        return query
+        query = self.db.accountInfo.find_one({"applicant id": ObjectId(id)})
+        if query is not None:
+            return query.get("name", "")
+        return None
+
+    def getClientNameID(self, id):
+        query = self.db.client.find_one({"_id": ObjectId(id)})
+        if query is not None:
+            return query.get("name", "")
+        return None
 
     # Return JSON of client info populated based on id
     def getClientUserID(self, id):
@@ -175,6 +183,8 @@ class Mongo:
                                         "specialized score": score,
                                         "completed": True})
 
+    def getJobID(self, title):
+        return self.db.vacancy.find_one({"vacancy title": title})['_id']
 
     def addNewStage(self, stageType, title, description):
         self.db.stage.insert_one({"type": stageType,
@@ -210,7 +220,7 @@ class Mongo:
     # In order of job related score
     def getApplicantsJob(self, jobID, stepOrder):
         applicantList = []
-        applicationQuery = self.db.application.find({"vacancy id": ObjectId(jobID), "current step" : int(stepOrder)})#.sort({"specialized score": -1})
+        applicationQuery = self.db.application.find({"vacancy id": ObjectId(jobID), "current step" : stepOrder})#.sort({"specialized score": -1})
         for doc in applicationQuery:
             applicantList.append(doc)
         return applicantList
@@ -364,20 +374,26 @@ class Mongo:
             return query['title']
         return ""
 
+    def getStageType(self, id):
+        query = self.db.stage.find_one({"_id": ObjectId(id)}, {"type": 1, "_id": 0})
+        if query is not None:
+            return query['type']
+        return ""
+
     def deleteApplicantAccount(self, username):
         self.db.accountInfo.delete_many({"username": username})
         return True
 
     def deleteClientAccount(self, username):
-        self.db.client.delete_one({"username": username})
+        self.db.client.delete_many({"username": username})
         return True
 
     def deleteApplication(self, username):
-        self.db.application.delete_one({"username": username})
+        self.db.application.delete_many({"applicant id": self.getApplicantAccount(username)['applicant id']})
         return True
 
     def deleteJob(self, title):
-        self.db.vacancy.delete_one({"vacancy title": title})
+        self.db.vacancy.delete_many({"vacancy title": title})
         return True
 
     def addUserEducation(self, userID, alevels, degreeQualification, degreeLevel, universityAttended):

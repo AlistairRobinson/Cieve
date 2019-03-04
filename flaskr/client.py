@@ -5,7 +5,7 @@ from werkzeug.exceptions import abort
 from werkzeug.datastructures import ImmutableMultiDict
 from bson.objectid import ObjectId
 import operator
-
+import json
 from flaskr.auth import login_required_C
 from flaskr.db import get_db
 
@@ -222,9 +222,12 @@ def jobBreakdown():
         jobData = db.getJob(jobID)
 
         jobData["stagesDetail"] = []
+        jobData['stagesType'] = []
         for stage in jobData["stages"]:
             title = db.getStageTitle(stage)
             jobData['stagesDetail'].append(title)
+            type = db.getStageType(stage)
+            jobData['stagesType'].append(type)
         
         jobData["stagesType"] = []
         """for stage in jobData["stages"]:
@@ -240,8 +243,12 @@ def jobBreakdown():
             applicant["name"] = db.getApplicantNameID(applicant["applicant id"])
             applicant["basic scores"] = db.getApplicantUserID(applicant["applicant id"])["basic score"]
             applicantsData[str((applicant["specialized score"] + applicant["basic scores"]["score"])/2)] = applicant
+        
+        appData = []
+        for key, val in reverse(sorted(applicantsData)):
+            appData.append(val)
 
-        return render_template('/cli/jobBreakdown.html', jobData = jobData, applicants = sorted(applicantsData))
+        return render_template('/cli/jobBreakdown.html', jobData = jobData, applicants = appData)
     return redirect(url_for('client.jobs'))
 
 
@@ -260,7 +267,15 @@ def stageDetail():
             applicant["basic scores"] = db.getApplicantUserID(applicant["applicant id"])["basic score"]
             applicantsData[str((applicant["specialized score"] + applicant["basic scores"]["score"])/2)] = applicant
 
-        return sorted(applicantsData)
+<<<<<<< HEAD
+        appData = []
+        for key, val in reverse(sorted(applicantsData)):
+            appData.append(val)
+
+        return appData
+=======
+        return jsonify(sorted(applicantsData))
+>>>>>>> a148abf774dad65b26958a342756c0fdcd435df3
 
     return None
 
@@ -281,7 +296,8 @@ def rejectApplicant():
     if request.method == "POST":
         appID = request.form["applicant id"]
         jobID = request.form["job id"]
+        stepNo = request.form["step no"]
         db = get_db()
-        db.reject(appID, jobID)
+        db.reject(appID, jobID, stepNo)
         return "Success"
     return "Fail"

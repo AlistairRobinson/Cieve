@@ -4,7 +4,7 @@ from flask import g, session, jsonify
 from flaskr import csrf
 from flaskr.db import get_db
 
-# Client registration tests (to ensure security)
+# Client registration tests (R16, R11)
 
 def test_setup_cli(client, jobs):
     token = csrf.generate_csrf_token_with_session(client)
@@ -19,7 +19,7 @@ def test_setup_cli(client, jobs):
             raise AssertionError('nothing flashed')
         assert 'Registration successful' in error[1]
 
-# Applicant login tests (to ensure security)
+# Applicant login tests (R16)
 
 def test_setup_apl(client, jobs):
     token = csrf.generate_csrf_token_with_session(client)
@@ -34,7 +34,7 @@ def test_setup_apl(client, jobs):
             raise AssertionError('nothing flashed')
         assert 'Registration successful' in error[1]
 
-# Vacany posting tests (R8, R14)
+# Vacany posting tests (R8, R12, R14, R11)
 
 @pytest.mark.parametrize(('data', 'message'), (
     ({
@@ -163,7 +163,7 @@ def test_setup_apl(client, jobs):
         'country': 'Germany',
         'job_desc': 'test',
         'numVacancies': 1,
-        'Stage_Description': ["000000000000000000000000"],
+        'Stage_Description': ["000000000000000000000000", "111111111111111111111111"],
         'skill': ['Git', 'Presentation'],
         'skillVal': [7, 6],
         'lang': ['Python', 'C'],
@@ -187,7 +187,7 @@ def test_post_vacancy_validation(client, jobs, data, message):
             raise AssertionError('nothing flashed')
         assert message in error[1]
 
-# Vacancy post tests (R8, R14)
+# Vacancy post tests (R8, R12, R14, R11)
 
 @pytest.mark.parametrize(('data_input', 'message'), (
 ({
@@ -312,7 +312,7 @@ def test_post_vacancy(client, jobs, data_input, message):
             raise AssertionError('nothing flashed')
         assert message in error[1]
 
-# Vacancy retrieval tests (R15)
+# Vacancy retrieval tests (R13, R15)
 
 def test_get_vacancies(client, jobs):
     json = {}
@@ -324,7 +324,7 @@ def test_get_vacancies(client, jobs):
     print(response.data)
     assert b'test' in response.data
 
-# Application posting tests (R15)
+# Application posting tests (R3, R8, R13, R15, R19)
 
 @pytest.mark.parametrize(('data_input', 'message'), (
 ({
@@ -402,6 +402,22 @@ def test_post_application(client, jobs, data_input, message):
         except KeyError:
             raise AssertionError('nothing flashed')
         assert message in error[1]
+
+@pytest.mark.parametrize(('stageID'), (
+    ('1'),
+    ('2')
+))
+def test_retrieve_applicants(client, jobs, stageID):
+    jobID = get_db().getJobID('test')
+    token = csrf.generate_csrf_token_with_session(jobs._client)
+    jobs._client.post('/cli/auth/login', data={'username': 'test', 'password': 'test', '_csrf_token': token})
+    token = csrf.generate_csrf_token_with_session(jobs._client)
+    response = jobs._client.post('/cli/stageDetail', data={'jobID': jobID, 'stageID': stageID, '_csrf_token': token})
+    print(response.data)
+    if stageID == '000000000000000000000000':
+        assert 'test' in response.data.rstrip()
+    if stageID == '111111111111111111111111':
+        assert response.data.rstrip() == '[]'
 
 def test_cleanup_job():
     db = get_db()
