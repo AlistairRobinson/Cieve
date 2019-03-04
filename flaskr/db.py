@@ -45,7 +45,7 @@ class Mongo:
         if query is not None:
             return query.get('phish', [""])[0]
         return ""
-        
+
     def getInterviewStages(self):
         interviewStages = []
         query = self.db.stage.find({"type": "Interview"}, {"_id": 1})
@@ -234,16 +234,16 @@ class Mongo:
 
 
     #Move applicants to the next stage in the steps for the jobs and update completed flag
-    def moveToNextStage(self, applicationID, jobID):
+    def moveToNextStage(self, applicantID, jobID):
         stageQuery = self.db.vacancy.find_one({"_id": ObjectId(jobID)}, {"stages": 1, "_id": 0})
         noOfStages = len(stageQuery['stages'])
-        self.db.application.update_one({"applicant id": ObjectId(applicationID), "vacancy id": ObjectId(jobID)}, {"$inc": {"current step": 1}, "$set": {"completed": False}})
-        stepQuery = self.db.application.find_one({"applicant id": ObjectId(applicationID), "vacancy id": ObjectId(jobID), "current step": noOfStages-1})
+        self.db.application.update_one({"applicant id": ObjectId(applicantID), "vacancy id": ObjectId(jobID)}, {"$inc": {"current step": 1}, "$set": {"completed": False}})
+        stepQuery = self.db.application.find_one({"applicant id": ObjectId(applicantID), "vacancy id": ObjectId(jobID), "current step": noOfStages-1})
         if stepQuery != None:
             self.db.vacancy.update_one({"_id": ObjectId(jobID)}, {"$inc": {"positions available": -1}})
         jobTitle = self.db.vacancy.find_one({"_id": ObjectId(jobID)})
-        #message = "You have been moved onto the next stage for your application for the job of " + jobTitle
-        #self.db.accountInfo.update_one({"applicant id": })
+        message = "You have been moved onto the next stage for your application for the job of " + jobTitle
+        self.db.accountInfo.update_one({"applicant id": applicantID}, {"$set": {"message": message}})
         return True
 
 
@@ -380,12 +380,11 @@ class Mongo:
         self.db.interviewStage.update_one({"job id": jobID, "stage id": stageID}, {"$pull": {"interviews": slot}})
         jobTitle = self.db.vacancy.find_one({"_id": ObjectId(jobID)})['vacancy title']
         message = "An interview has been booked for your " + jobTitle + " application at the time " + slot[1] + ", " + slot[0]
-      #  self.db.accountInfo.update_one({"applicant id": applicantID}, {"$set" {"message": message}})
+        self.db.accountInfo.update_one({"applicant id": applicantID}, {"$set": {"message": message}})
         return True
 
     def getBookedInterviews(self, applicantID):
-    #    return list(self.db.application.find({"applicant id": applicantID}, {"interviews": 1, "_id": 0}) 
-        return None
+        return list(self.db.application.find({"applicant id": applicantID}, {"interviews": 1, "_id": 0}))        
 
     def insertStageAvailability(self, stageID, jobID, stageData):
         self.db.interviewStage.insert_one({"stage id": stageID,
