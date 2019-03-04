@@ -373,12 +373,33 @@ class Mongo:
                                             "slots": stageData})
         return True
 
-    def assessQuestions(self, question, answer, currentStep, applicantID, jobID):
+
+    #Generate the assessment details for the stage
+    def assessQuestions(self, answers, currentStep, applicantID, jobID):
         self.db.assessement.insert_one({"applicant id": applicantID,
                                         "job id": jobID,
-                                        "current step": currentStep})
-        #stepStage = self.db.vacancy.find_one({"_id": jobID}, {"stages": 1, "_id": 0})
-        #self.db.questionStage.find_one({"stage id": stageID}, {"questions": 1, "_id": 0})
+                                        "current step": currentStep,
+                                        "score": 0})
+        stepStage = self.db.vacancy.find_one({"_id": ObjectId(jobID)}, {"stages": 1, "_id": 0})
+        stepStageID = stepStage['stages'][currentStep]
+        stepQuestions = self.db.questionStage.find_one({"stage id": stepStageID}, {"questions": 1, "_id": 0})
+        for i in range(len(answers)):
+            if answers[i] == stepQuestions['questions'][i][0]:
+                self.db.assessement.update_one({"applicant id": applicantID, "job id": jobID}, {"$inc": {"score"}})
+    
+
+    #If applicant is rejected on step 0, set step to -1. Otherwise if rejected the set is set to -2
+    def rejectApplication(self, applicationID):
+        stepQuery = self.db.application.find_one({"_id": ObjectId(applicationID)}, {"current step": 1, "_id": 0})
+        if stepQuery['current step'] != 0:
+            self.db.application.update_one({"_id": ObjectId(applicationID)}, {"$set": {"current step": -1}})
+
+
+    def getAccepted(self, jobID):
+        return list(self.db.application.find({"vacancy id": jobID, "current step": {"$gt": 0}}))
+
+    def getRejected(self, jobID):
+        return list(self.db.application.find({"vacancy id": jobID, "current step": {"lt": 1}}))       
 
 
     #Given an id will return the title of the stage
