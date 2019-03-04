@@ -243,9 +243,9 @@ def jobBreakdown():
             applicant["name"] = db.getApplicantNameID(applicant["applicant id"])
             applicant["basic scores"] = db.getApplicantUserID(applicant["applicant id"])["basic score"]
             applicantsData[str((applicant["specialized score"] + applicant["basic scores"]["score"])/2)] = applicant
-
+            
         appData = []
-        for key, val in reverse(sorted(applicantsData)):
+        for key, val in sorted(applicantsData).items():
             appData.append(val)
 
         return render_template('/cli/jobBreakdown.html', jobData = jobData, applicants = appData)
@@ -268,7 +268,7 @@ def stageDetail():
             applicantsData[str((applicant["specialized score"] + applicant["basic scores"]["score"])/2)] = applicant
 
         appData = []
-        for key, val in reverse(sorted(applicantsData)):
+        for key, val in sorted(applicantsData):
             appData.append(val)
 
         return appData
