@@ -29,8 +29,18 @@
             console.log(stages);
             var stageToDisplay = stages[currentStage];
 
+            console.log($('#step' + currentStage));
+
+            // for (i = 1; i < (stages.length-1); i++) {
+            //   $('#step' + i).empty();
+            // }
+
             if (stageToDisplay == "Test") {
-              displayVerbalTest(currentStage);
+              displayTest(currentStage);
+            } else if (stageToDisplay == "Interview") {
+              displayInterview(currentStage);
+            } else if (stageToDisplay == "Accepted") {
+              displayAccepted(currentStage);
             }
             // var candidateData = {};
             // candidateData["jobID"] = $("#chosenJobID").text();
@@ -47,24 +57,42 @@
 
           });
 
-          function displayVerbalTest(stageNum){
-            $('#step' + currentStage).append('<div class="tabs is-centered is-boxed" id="tab_header"> <ul> <li class="item is-active" data-option="1"><a><i class="fas fa-check"></i>&nbsp Completed</a></li> <li class="item" data-option="2"><a><i class="fas fa-times"></i>&nbsp Uncompleted</a></li> </ul> </div> <div class="box" id="tab_container"> <div class="container_item is-active" data-item="1"> <table class="table is-fullwidth is-hoverable center-table" id="TestComplete"+stageNum+> <tr> <td><b>#</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="A star indicates that this candidate has selected this as their prefered job"><i class="fas fa-info"></button></td> <td style="width: 80%;"><b class="is-pulled-left">Applicant Name</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" id="scoreButton" data-tooltip="The computed ability of each candidate independent of the job"><b>Score</b></button></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The suitability of the candiate specifically for the job"><b>Job Match</b></button></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The candidate score in the given test"><b>Test Score</b></button></td> <td></td> <td></td> </tr> </table> </div> <div class="container_item" data-item="2"> <table class="table is-fullwidth is-hoverable center-table" id="TestUncomplete"+stageNum+> <tr> <td><b>#</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="A star indicates that this candidate has selected this as their prefered job"><i class="fas fa-info"></button></td> <td style="width: 80%;"><b class="is-pulled-left">Applicant Name</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" id="scoreButton" data-tooltip="The computed ability of each candidate independent of the job"><b>Score</b></button></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The suitability of the candiate specifically for the job"><b>Job Match</b></button></td> <td></td> <td></td> </tr> </table> </div> </div>');
+          function displayTest(stageNum){
+            $('#step' + currentStage).append('<div class="tabs is-centered is-boxed" id="tab_header"> <ul> <li class="item is-active" data-option="1"><a><i class="fas fa-check"></i>&nbsp Completed</a></li> <li class="item" data-option="2"><a><i class="fas fa-times"></i>&nbsp Uncompleted</a></li> </ul> </div> <div class="box" id="tab_container"> <div class="container_item is-active" data-item="1"> <table class="table is-fullwidth is-hoverable center-table" id="CompleteCandidates"> <tr> <td><b>#</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="A star indicates that this candidate has selected this as their prefered job"><i class="fas fa-info"></button></td> <td style="width: 80%;"><b class="is-pulled-left">Applicant Name</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" id="scoreButton" data-tooltip="The computed ability of each candidate independent of the job"><b>Score</b></button></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The suitability of the candiate specifically for the job"><b>Job Match</b></button></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The candidate score in the given test"><b>Test Score</b></button></td> <td></td> <td></td> </tr> </table> </div> <div class="container_item" data-item="2"> <table class="table is-fullwidth is-hoverable center-table" id="UncompleteCandidates"> <tr> <td><b>#</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="A star indicates that this candidate has selected this as their prefered job"><i class="fas fa-info"></button></td> <td style="width: 80%;"><b class="is-pulled-left">Applicant Name</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" id="scoreButton" data-tooltip="The computed ability of each candidate independent of the job"><b>Score</b></button></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The suitability of the candiate specifically for the job"><b>Job Match</b></button></td> <td></td> <td></td> </tr> </table> </div> </div>');
+          }
+
+          function displayInterview(stageNum){
+            $('#step' + currentStage).append('<div class="tabs is-centered is-boxed" id="tab_header"> <ul> <li class="item is-active" data-option="1"><a><i class="fas fa-check"></i>&nbsp Booked</a></li> <li class="item" data-option="2"><a><i class="fas fa-times"></i>&nbsp Unbooked</a></li> </ul></div><div class="box" id="tab_container"> <div class="container_item is-active" data-item="1"> <table class="table is-fullwidth is-hoverable center-table" id="CompleteCandidates"> <tr> <td><b>#</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="A star indicates that this candidate has selected this as their prefered job"><i class="fas fa-info"></button></td> <td style="width: 80%;"><b class="is-pulled-left">Applicant Name</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" id="scoreButton" data-tooltip="The computed ability of each candidate independent of the job"><b>Score</b></button></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The suitability of the candiate specifically for the job"><b>Job Match</b></button></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The time that the candidate has selected"><b>Slot</b></button></td> <td></td> <td></td> </tr> </table> </div> <div class="container_item" data-item="2"> <table class="table is-fullwidth is-hoverable center-table" id="UncompleteCandidates"> <tr> <td><b>#</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="A star indicates that this candidate has selected this as their prefered job"><i class="fas fa-info"></button></td> <td style="width: 80%;"><b class="is-pulled-left">Applicant Name</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" id="scoreButton" data-tooltip="The computed ability of each candidate independent of the job"><b>Score</b></button></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The suitability of the candiate specifically for the job"><b>Job Match</b></button></td> <td></td> <td></td> </tr> </table> </div></div>');
+          }
+
+          function displayAccepted(stageNum){
+            $('#step' + currentStage).append('<div class="box"> <table class="table is-fullwidth is-hoverable center-table" id="acceptedCandidates"> <tr> <td><b>#</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="A star indicates that this candidate has selected this as their prefered job"><i class="fas fa-info"></button></td> <td style="width: 80%;"><b class="is-pulled-left">Applicant Name</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" id="scoreButton" data-tooltip="The computed ability of each candidate independent of the job"><b>Score</b></button></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The suitability of the candiate specifically for the job"><b>Job Match</b></button></td> </tr> </table></div>');
           }
 
           $('#previousStepBttn').on('click', function() {
+            $('#step' + currentStage).empty();
             currentStage--;
             var candidateData = {};
-            candidateData["jobID"] = $("#chosenJobID").text();
-            candidateData["stageID"] = currentStage;
-            candidateData["_csrf_token"] = document.getElementById('_csrf_token').value;
-            $.ajax({
-                url: '/cli/stageDetail',
-                type: 'POST',
-                data: candidateData,
-                success: function(response){
-                    console.log(response);
-                }
-            })
+            var stages = {{jobData["stagesType"]|safe}};
+            console.log(stages);
+            var stageToDisplay = stages[currentStage];
+            if (stageToDisplay == "Test") {
+              displayTest(currentStage);
+            } else if (stageToDisplay == "Interview") {
+              displayInterview(currentStage);
+            }
+
+            // candidateData["jobID"] = $("#chosenJobID").text();
+            // candidateData["stageID"] = currentStage;
+            // candidateData["_csrf_token"] = document.getElementById('_csrf_token').value;
+            // $.ajax({
+            //     url: '/cli/stageDetail',
+            //     type: 'POST',
+            //     data: candidateData,
+            //     success: function(response){
+            //         console.log(response);
+            //     }
+            // })
           });
 
           // $(document).on('click', '#previousStepBttn:enabled', function(){
@@ -110,90 +138,7 @@
           });
     });
     </script>
-    <!-- <script>
-        $(document).ready(function() {
 
-                  var token = document.getElementById('_csrf_token').value;
-
-                  $('.box').click(function(event) {
-                      var boxID = $(this).attr('id');
-                      var jobdata = {};
-                      jobdata["jobID"] = boxID
-                      jobdata["_csrf_token"] = document.getElementById('_csrf_token').value;
-
-                      var form = document.createElement('form');
-                      document.body.appendChild(form);
-                      form.method = 'post';
-                      form.action = '/cli/jobBreakdown';
-                      for (var name in jobdata) {
-                          var input = document.createElement('input');
-                          input.type = 'hidden';
-                          input.name = name;
-                          input.value =jobdata[name];
-                          form.appendChild(input);
-                      }
-                      form.submit();
-
-                      // $.ajax({
-                      //     url: '/cli/jobBreakdown',
-                      //     type: 'POST',
-                      //     data: jobdata,
-                      //     success: function(response){
-                      //         alert("data posted");
-                      //     }
-                      // })
-                  });
-
-                  // $.ajax({
-                  //     url: '/cli/jobBreakdown',
-                  //     data: {
-                  //       jobID: status,
-                  //       _csrf_token: token
-                  //     },
-                  //     type: 'POST',
-                  //     success: function(response) {
-                  //     },
-                  //     error: function(error) {
-                  //     }
-                  // });
-        });
-    </script> -->
-
-    <!-- <script>
-        $(document).ready(function() {
-
-                  var token = document.getElementById('_csrf_token').value;
-
-                  $('.box').click(function(event) {
-                      var boxID = $(this).attr('id');
-                      var jobdata = {};
-                      jobdata["jobID"] = boxID
-                      jobdata["_csrf_token"] = document.getElementById('_csrf_token').value;
-
-                      var form = document.createElement('form');
-                      document.body.appendChild(form);
-                      form.method = 'post';
-                      form.action = '/cli/jobBreakdown';
-                      for (var name in jobdata) {
-                          var input = document.createElement('input');
-                          input.type = 'hidden';
-                          input.name = name;
-                          input.value =jobdata[name];
-                          form.appendChild(input);
-                      }
-                      form.submit();
-
-                      // $.ajax({
-                      //     url: '/cli/jobBreakdown',
-                      //     type: 'POST',
-                      //     data: jobdata,
-                      //     success: function(response){
-                      //         alert("data posted");
-                      //     }
-                      // })
-                  });
-        });
-    </script> -->
     <script>document.addEventListener("DOMContentLoaded", function(event) {
               console.log("DOM fully loaded and parsed");
               bulmaSteps.attach();
@@ -354,8 +299,8 @@
                 </div>
 
 
-                {% for i in range (0, applicants|length) %}
-                  <div class="step-content has-text-centered is-active" id="step{{i+1}}">
+                {% for i in range (1, jobData["stagesType"]|length) %}
+                  <div class="step-content has-text-centered is-active" id="step{{i}}">
                   </div>
                 {%endfor%}
 
