@@ -114,6 +114,13 @@
     </footer>
     </div>
 
+    <script>
+        $('form').submit(function() {
+          var regex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+          var password = document.getElementsByName('password')[0].value;
+          return (regex.test(password)) 
+        })
+      </script>
 
   </body>
 </html>
