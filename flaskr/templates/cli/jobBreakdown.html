@@ -290,8 +290,8 @@
                               <td></td>
                             {% endif %}
                             <td><p class="is-pulled-left">{{applicants[i].name}}</p></td>
-                            <td><b><div class="scoreValue">{{(applicants[i]["basic scores"]["score"]*100)|int}}</div></b></td>
-                            <td><b><div class="scoreValue">{{(applicants[i]["specialized score"]*100)|int}}</div></b></td>
+                            <td><b><div class="scoreValue">{#{(applicants[i]["basic scores"]["score"]*100)|int}#}</div></b></td>
+                            <td><b><div class="scoreValue">{#{(applicants[i]["specialized score"]*100)|int}#}</div></b></td>
                             <td><div onclick="advanceCandidate(this)" style='cursor: pointer;' id={{applicants[i]._id}}><i class="fas fa-arrow-right"></i></div></td>
                             <td><div onclick="rejectCandidate(this)" style='cursor: pointer;' id={{applicants[i]._id}}><i class="fas fa-times"</i></td>
                           </tr>
@@ -384,7 +384,7 @@
             {%endfor%}
             </div> -->
 
-            {{jobData}}
+            {#{jobData}#}
             <!-- <br>
             <br>
             HELLO FRIEND -->

@@ -8,6 +8,7 @@ import operator
 import json
 from flaskr.auth import login_required_C
 from flaskr.db import get_db
+import collections
 
 bp = Blueprint('client', __name__, url_prefix='/cli')
 
@@ -228,24 +229,24 @@ def jobBreakdown():
             jobData['stagesDetail'].append(title)
             type = db.getStageType(stage)
             jobData['stagesType'].append(type)
-        
+
         jobData["stagesType"] = []
         """for stage in jobData["stages"]:
             title = db.getStageTitle(stage)
             jobData['stagesDetail'].append(title)
         """
         stepNumber = 0
-        
-        
+
+
         applicants = db.getApplicantsJob(jobID, stepNumber)
         applicantsData = {}
         for applicant in applicants:
             applicant["name"] = db.getApplicantNameID(applicant["applicant id"])
             applicant["basic scores"] = db.getApplicantUserID(applicant["applicant id"])["basic score"]
             applicantsData[str((applicant["specialized score"] + applicant["basic scores"]["score"])/2)] = applicant
-        
+            
         appData = []
-        for key, val in reverse(sorted(applicantsData)):
+        for key, val in sorted(applicantsData.items(), reverse=True):
             appData.append(val)
 
         return render_template('/cli/jobBreakdown.html', jobData = jobData, applicants = appData)
@@ -259,7 +260,7 @@ def stageDetail():
         db = get_db()
         jobID = request.form['jobID']
         stepNumber = request.form["stageID"]
-        
+
         applicants = db.getApplicantsJob(jobID, stepNumber)
         applicantsData = {}
         for applicant in applicants:
@@ -268,11 +269,10 @@ def stageDetail():
             applicantsData[str((applicant["specialized score"] + applicant["basic scores"]["score"])/2)] = applicant
 
         appData = []
-        for key, val in reverse(sorted(applicantsData)):
+        for key, val in sorted(applicantsData.items(), reverse=True):
             appData.append(val)
 
         return appData
-
     return None
 
 @bp.route('/moveApplicant', methods=('GET', 'POST'))
