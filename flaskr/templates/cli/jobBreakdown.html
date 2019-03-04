@@ -39,11 +39,19 @@
           });
 
           $('#previousStepBttn').on('click', function() {
-            // if ($(this).hasClass('disabled')) {
-            //   alert("disabled");
-            console.log($(this));
-            // currentStage--;
-            // alert(currentStage);
+            currentStage--;
+            var candidateData = {};
+            candidateData["jobID"] = $("#chosenJobID").text();
+            candidateData["stageID"] = currentStage;
+            candidateData["_csrf_token"] = document.getElementById('_csrf_token').value;
+            $.ajax({
+                url: '/cli/stageDetail',
+                type: 'POST',
+                data: candidateData,
+                success: function(response){
+                    console.log(response);
+                }
+            })
           });
 
           // $(document).on('click', '#previousStepBttn:enabled', function(){
