@@ -23,7 +23,36 @@
           var currentStage = 0;
 
           $('#nextStepBttn').on('click', function() {
+            $('#step' + currentStage).empty();
             currentStage++;
+            var stages = {{jobData["stagesType"]|safe}};
+            console.log(stages);
+            var stageToDisplay = stages[currentStage];
+
+            if (stageToDisplay == "Test") {
+              displayVerbalTest(currentStage);
+            }
+            // var candidateData = {};
+            // candidateData["jobID"] = $("#chosenJobID").text();
+            // candidateData["stageID"] = currentStage;
+            // candidateData["_csrf_token"] = document.getElementById('_csrf_token').value;
+            // $.ajax({
+            //     url: '/cli/stageDetail',
+            //     type: 'POST',
+            //     data: candidateData,
+            //     success: function(response){
+            //         console.log(response);
+            //     }
+            // })
+
+          });
+
+          function displayVerbalTest(stageNum){
+            $('#step' + currentStage).append('<div class="tabs is-centered is-boxed" id="tab_header"> <ul> <li class="item is-active" data-option="1"><a><i class="fas fa-check"></i>&nbsp Completed</a></li> <li class="item" data-option="2"><a><i class="fas fa-times"></i>&nbsp Uncompleted</a></li> </ul> </div> <div class="box" id="tab_container"> <div class="container_item is-active" data-item="1"> <table class="table is-fullwidth is-hoverable center-table" id="TestComplete"+stageNum+> <tr> <td><b>#</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="A star indicates that this candidate has selected this as their prefered job"><i class="fas fa-info"></button></td> <td style="width: 80%;"><b class="is-pulled-left">Applicant Name</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" id="scoreButton" data-tooltip="The computed ability of each candidate independent of the job"><b>Score</b></button></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The suitability of the candiate specifically for the job"><b>Job Match</b></button></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The candidate score in the given test"><b>Test Score</b></button></td> <td></td> <td></td> </tr> </table> </div> <div class="container_item" data-item="2"> <table class="table is-fullwidth is-hoverable center-table" id="TestUncomplete"+stageNum+> <tr> <td><b>#</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="A star indicates that this candidate has selected this as their prefered job"><i class="fas fa-info"></button></td> <td style="width: 80%;"><b class="is-pulled-left">Applicant Name</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" id="scoreButton" data-tooltip="The computed ability of each candidate independent of the job"><b>Score</b></button></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The suitability of the candiate specifically for the job"><b>Job Match</b></button></td> <td></td> <td></td> </tr> </table> </div> </div>');
+          }
+
+          $('#previousStepBttn').on('click', function() {
+            currentStage--;
             var candidateData = {};
             candidateData["jobID"] = $("#chosenJobID").text();
             candidateData["stageID"] = currentStage;
@@ -38,20 +67,12 @@
             })
           });
 
-          $('#previousStepBttn').on('click', function() {
-            // if ($(this).hasClass('disabled')) {
-            //   alert("disabled");
-            console.log($(this));
-            // currentStage--;
-            // alert(currentStage);
-          });
-
           // $(document).on('click', '#previousStepBttn:enabled', function(){
           //   currentStage--;
           //   alert(currentStage);
           // });
 
-          $('#tab_header ul li.item').on('click', function() {
+          $('body').on('click', '#tab_header ul li.item', function() {
             var number = $(this).data('option');
             $('#tab_header ul li.item').removeClass('is-active');
             $(this).addClass('is-active');
@@ -299,7 +320,8 @@
               {% endfor %}
 
               <div class="steps-content">
-                <div class="step-content has-text-centered is-active">
+
+                <div class="step-content has-text-centered is-active" id="step0">
                   <div class="box">
                     <table class="table is-fullwidth is-hoverable center-table" id="dynamic_field_aLevels">
                         <tr>
@@ -323,13 +345,19 @@
                             <td><p class="is-pulled-left">{{applicants[i].name}}</p></td>
                             <td><b><div class="scoreValue">{{(applicants[i]["basic scores"]["score"]*100)|int}}</div></b></td>
                             <td><b><div class="scoreValue">{{(applicants[i]["specialized score"]*100)|int}}</div></b></td>
-                            <td><div onclick="advanceCandidate(this)" style='cursor: pointer;' id={{applicants[i]._id}}><i class="fas fa-arrow-right"></i></div></td>
-                            <td><div onclick="rejectCandidate(this)" style='cursor: pointer;' id={{applicants[i]._id}}><i class="fas fa-times"</i></td>
+                            <td><div onclick="advanceCandidate(this)" style='cursor: pointer;' id={{applicants[i]['applicant id']}}><i class="fas fa-arrow-right"></i></div></td>
+                            <td><div onclick="rejectCandidate(this)" style='cursor: pointer;' id={{applicants[i]['applicant id']}}><i class="fas fa-times"</i></td>
                           </tr>
                         {%endfor%}
                      </table>
                   </div>
                 </div>
+
+
+                {% for i in range (0, applicants|length) %}
+                  <div class="step-content has-text-centered is-active" id="step{{i+1}}">
+                  </div>
+                {%endfor%}
 
                 <script>
                   function advanceCandidate(elem){
@@ -355,7 +383,7 @@
                   }
                 </script>
 
-                <div class="step-content has-text-centered">
+                <!-- <div class="step-content has-text-centered">
                     <div class="tabs is-centered is-boxed" id="tab_header">
                       <ul>
                         <li class="item is-active" data-option="1"><a><i class="fas fa-check"></i>&nbsp Completed</a></li>
@@ -389,7 +417,8 @@
                          </table>
                       </div>
                     </div>
-                </div>
+                </div> -->
+
               </div>
 
               <div class="steps-actions">
@@ -415,7 +444,7 @@
             {%endfor%}
             </div> -->
 
-            {#{jobData}#}
+            {{jobData}}
             <!-- <br>
             <br>
             HELLO FRIEND -->
