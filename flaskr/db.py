@@ -124,7 +124,7 @@ class Mongo:
     def getJobs(self, number, division, role, location):
         Jobs = []
         number = int(number)
-        queryMaker = {"positions available": {"$gt": "0"}}
+        queryMaker = {"positions available": {"$gt": 0}}
         if division != "":
             queryMaker['division'] = division
 
@@ -215,12 +215,18 @@ class Mongo:
 
     #Move applicants to the next stage in the steps for the jobs and update completed flag
     def moveToNextStage(self, applicationID, jobID):
-        self.db.application.update_one({"applicant id": ObjectId(applicationID)}, {"$inc": {"current step": 1}}, {"$set": {"completed": False}})
+        stageQuery = self.db.vacancy.find_one({"_id": ObjectId(jobID)}, {"stages": 1, "_id": 0})
+        noOfStages = len(stageQuery['stages'])
+        self.db.application.update_one({"applicant id": ObjectId(applicationID), "vacancy id": ObjectId(jobID)}, {"$inc": {"current step": 1}, "$set": {"completed": False}})
+        stepQuery = self.db.application.find_one({"applicant id": ObjectId(applicationID), "vacancy id": ObjectId(jobID), "current step": noOfStages-1})
+        if stepQuery != None:
+            self.db.vacancy.update_one({"_id": ObjectId(jobID)}, {"$inc": {"positions available": -1}})
+        return True
 
 
     # Return the total number of pages for a specific job sort
     def getPageTotal(self, division, role, location):
-        queryMaker = {"positions available": {"$gt": "0"}}
+        queryMaker = {"positions available": {"$gt": 0}}
         if division != "":
             queryMaker['division'] = division
 
@@ -264,7 +270,7 @@ class Mongo:
 
 
     def updateWeights(self, json):
-        self.db.feedbackWeights.update_one({"$set": json})
+        self.db.feedbackWeights.update_one({}, {"$set": json})
         return True
 
     #Retuns the applicants who have been accepted for the first stage or had a specialized score higher than 0.8
