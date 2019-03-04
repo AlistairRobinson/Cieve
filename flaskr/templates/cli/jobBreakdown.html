@@ -20,6 +20,38 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-steps@2.2.1/dist/css/bulma-steps.min.css">
     <script>
       $(document).ready(function() {
+          var currentStage = 0;
+
+          $('#nextStepBttn').on('click', function() {
+            currentStage++;
+            alert(currentStage);
+            var candidateData = {};
+            candidateData["jobID"] = $(chosenJobID).text();
+            candidateData["stageID"] = currentStage;
+            candidateData["_csrf_token"] = document.getElementById('_csrf_token').value;
+            $.ajax({
+                url: '/cli/moveApplicant',
+                type: 'POST',
+                data: candidateData,
+                success: function(response){
+                    console.log(response);
+                }
+            })
+          });
+
+          $('#previousStepBttn').on('click', function() {
+            // if ($(this).hasClass('disabled')) {
+            //   alert("disabled");
+            console.log($(this));
+            // currentStage--;
+            // alert(currentStage);
+          });
+
+          // $(document).on('click', '#previousStepBttn:enabled', function(){
+          //   currentStage--;
+          //   alert(currentStage);
+          // });
+
           $('#tab_header ul li.item').on('click', function() {
             var number = $(this).data('option');
             $('#tab_header ul li.item').removeClass('is-active');
@@ -363,10 +395,10 @@
 
               <div class="steps-actions">
                 <div class="steps-action">
-                  <a href="#" data-nav="previous" class="button is-light">Previous</a>
+                  <a href="#" data-nav="previous" id="previousStepBttn" class="button is-light">Previous</a>
                 </div>
                 <div class="steps-action">
-                  <a href="#" data-nav="next" class="button is-light">Next</a>
+                  <a href="#" data-nav="next" id="nextStepBttn" class="button is-light">Next</a>
                 </div>
               </div>
 
