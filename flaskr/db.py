@@ -227,11 +227,11 @@ class Mongo:
 
 
     #Move applicants to the next stage in the steps for the jobs and update completed flag
-    def moveToNextStage(self, applicationID, jobID):
+    def moveToNextStage(self, applicantID, jobID):
         stageQuery = self.db.vacancy.find_one({"_id": ObjectId(jobID)}, {"stages": 1, "_id": 0})
         noOfStages = len(stageQuery['stages'])
-        self.db.application.update_one({"applicant id": ObjectId(applicationID), "vacancy id": ObjectId(jobID)}, {"$inc": {"current step": 1}, "$set": {"completed": False}})
-        stepQuery = self.db.application.find_one({"applicant id": ObjectId(applicationID), "vacancy id": ObjectId(jobID), "current step": noOfStages-1})
+        self.db.application.update_one({"applicant id": ObjectId(applicantID), "vacancy id": ObjectId(jobID)}, {"$inc": {"current step": 1}, "$set": {"completed": False}})
+        stepQuery = self.db.application.find_one({"applicant id": ObjectId(applicantID), "vacancy id": ObjectId(jobID), "current step": noOfStages-1})
         if stepQuery != None:
             self.db.vacancy.update_one({"_id": ObjectId(jobID)}, {"$inc": {"positions available": -1}})
         return True
