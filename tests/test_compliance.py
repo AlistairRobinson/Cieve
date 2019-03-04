@@ -10,9 +10,13 @@ from dateutil.relativedelta import relativedelta
 def test_privacy_policy(client):
     assert client.get('/privacy').status_code == 200
 
+# Checks that the database is GDPR compliant (R21)
+
 def test_compliance(client):
     db = get_db()
     assert db.gdprCompliance()
+
+# Checks that the database is no longer GDPR compliant if we insert old data and that old data is deleted (R21)
 
 def test_malcompliance_insertion(client):
     db = get_db()
@@ -24,6 +28,8 @@ def test_malcompliance_insertion(client):
         "specialized score": 1,
         "completed": True})
     assert not db.gdprCompliance()
+
+# Checks that we are not able to access malcompliant data (R21)
 
 def test_malcompliance_access(client):
     db = get_db()
