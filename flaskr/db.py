@@ -369,15 +369,15 @@ class Mongo:
         return True
 
     def deleteClientAccount(self, username):
-        self.db.client.delete_one({"username": username})
+        self.db.client.delete_many({"username": username})
         return True
 
     def deleteApplication(self, username):
-        self.db.application.delete_one({"username": username})
+        self.db.application.delete_many({"applicant id": self.getApplicantAccount(username)['applicant id']})
         return True
 
     def deleteJob(self, title):
-        self.db.vacancy.delete_one({"vacancy title": title})
+        self.db.vacancy.delete_many({"vacancy title": title})
         return True
 
     def addUserEducation(self, userID, alevels, degreeQualification, degreeLevel, universityAttended):
