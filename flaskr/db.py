@@ -372,17 +372,14 @@ class Mongo:
                                             "job id": jobID,
                                             "slots": stageData})
         return True
-    
-    def insertQuestions(self, stageID, questionData):
-        self.db.questionStage.insert_one({"stage id": stageID,
-                                          "questions": questionData})
-        return True
 
-    def assessQuestions(self, question, answer, stageID, applicationID):
-        self.db.assessement.insert_one({"stage id": stageID,
-                                        "application id": applicationID})
-        self.db.questionStage.find_one({"stage id": stageID}, {"questions": 1, "_id": 0})
-        
+    def assessQuestions(self, question, answer, currentStep, applicantID, jobID):
+        self.db.assessement.insert_one({"applicant id": applicantID,
+                                        "job id": jobID,
+                                        "current step": currentStep})
+        #stepStage = self.db.vacancy.find_one({"_id": jobID}, {"stages": 1, "_id": 0})
+        #self.db.questionStage.find_one({"stage id": stageID}, {"questions": 1, "_id": 0})
+
 
     #Given an id will return the title of the stage
     def getStageTitle(self, id):
