@@ -66,7 +66,7 @@ class Mongo:
                            "password_hash": passHash,
                            "salt": salt,
                            "phish": phish,
-                           "message": "<h2 class='title '>Welcome to Cieve</h2><h2 class='subtitle '>This is your dashboard. You'll see messages from us here.</h2><p>You can search for available jobs by clicking Job Search</p><p>You can make an application by clicking Applications</p>"}
+                           "message": "Welcome to Cieve. You can search for available jobs by clicking Job Search. You can make an application by clicking Applications"}
 
         self.db.applicantInfo.insert_one(applicantInfoData)
         self.db.accountInfo.insert_one(accountInfoData)
@@ -80,7 +80,7 @@ class Mongo:
                       "salt": salt,
                       "phish": phish,
                       "vacancies": [],
-                      "message": "<h2 class='title '>Welcome to Cieve</h2><h2 class='subtitle '>This is your dashboard. You'll see messages from us here.</h2><p>You can make a vacancy by clicking New Job</p><p>You can view your vacancies and applicants by clicking Your Jobs</p>"}
+                      "message": "Welcome to Cieve. You can create a job posting by clicking New Job. You can view your vacancies and applications by clicking Your Jobs"}
         clientID = self.db.client.insert_one(clientData).inserted_id
         return clientID
 
@@ -244,9 +244,9 @@ class Mongo:
         jobTitle = self.db.vacancy.find_one({"_id": ObjectId(jobID)})
         if stepQuery != None:
             self.db.vacancy.update_one({"_id": ObjectId(jobID)}, {"$inc": {"positions available": -1}})
-            message = "<h2 class='subtitle '>You have been accepted for " + jobTitle + "!</h2>"
+            message = "You have been accepted for " + jobTitle + "!"
         else:
-            message = "<h2 class='subtitle '>You have been moved onto the next stage for your application for " + jobTitle + "</h2>"
+            message = "You have been moved onto the next stage for your application for " + jobTitle + ""
         self.db.accountInfo.update_one({"applicant id": applicantID}, {"$set": {"message": message}})
         return True
 
@@ -383,7 +383,7 @@ class Mongo:
         self.db.application.update_one({"applicant id": applicantID, "vacancy id": jobID}, {"$push": {"interviews": slot}})
         self.db.interviewStage.update_one({"job id": jobID, "stage id": stageID}, {"$pull": {"slots": slot}})
         jobTitle = self.db.vacancy.find_one({"_id": ObjectId(jobID)})['vacancy title']
-        message = "<h2 class='subtitle '>An interview has been booked for your application to " + jobTitle + " at the time " + slot[1] + ", " + slot[0] + "</h2>"
+        message = "An interview has been booked for your application to " + jobTitle + " at the time " + slot[1] + ", " + slot[0] + ""
         self.db.accountInfo.update_one({"applicant id": applicantID}, {"$set": {"message": message}})
         return True
 
@@ -423,7 +423,7 @@ class Mongo:
         else:
             self.db.application.update_one({"_id": ObjectId(applicationID)}, {"$set": {"current step": -2}})
         jobTitle = self.db.vacancy.find_one({"_id": ObjectId(stepQuery['vacancy id'])})['vacancy title']
-        message = "<h2 class='subtitle '>Your application for " + jobTitle + " has been rejected</h2>"
+        message = "Your application for " + jobTitle + " has been rejected"
         self.db.accountInfo.update_one({"applicant id": stepQuery['applicant id']}, {"$set": {"message": message}})
 
     def getAccepted(self, jobID):
@@ -482,7 +482,7 @@ class Mongo:
     def deleteJob(self, title):
         self.db.vacancy.delete_many({"vacancy title": title})
         clientQuery = self.db.client.find({"vacancies": title})
-        message = "<h2 class='subtitle '>Vacancy " + title + "has been deleted</h2>"
+        message = "Vacancy " + title + "has been deleted"
         for doc in clientQuery:
             self.db.client.update_one({"_id": ObjectId(doc['_id'])}, {"$set": {message}})
         return True
