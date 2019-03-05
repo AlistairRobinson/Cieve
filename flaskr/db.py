@@ -444,10 +444,14 @@ class Mongo:
 
 
     def getApplicantMessage(self, applicantID):
-        return self.db.accountInfo.find_one({"applicant id": ObjectId(applicantID)})['message']
+        if self.db.accountInfo.find_one({"applicant id": ObjectId(applicantID)}) is not None:
+            return self.db.accountInfo.find_one({"applicant id": ObjectId(applicantID)}).get('message', "")
+        return ""
 
     def getClientMessage(self, id):
-        return self.db.client.find_one({"_id": ObjectId(id)})['message']
+        if self.db.client.find_one({"_id": ObjectId(id)}) is not None:
+            return self.db.client.find_one({"_id": ObjectId(id)}).get('message', "")
+        return ""
 
     #Given an id will return the title of the stage
     def getStageTitle(self, id):
