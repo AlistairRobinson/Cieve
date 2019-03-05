@@ -126,7 +126,7 @@ color: green;
                 <input name="_csrf_token" id="_csrf_token" type=hidden value="{{ csrf_token() }}">
                 <input name="applications" value="{{applications}}" type="hidden">
             <h3 class="title is-3">Your Applications</h3>
-          
+
             {%for application in applications%}
             <div class="box">
               <h3 class="title is-4">{{application['vacancy title']}}</h3>
@@ -156,33 +156,33 @@ color: green;
               <span class="tag"><b>Role:&nbsp</b> {{application['role type']}} &nbsp<i class="fas fa-users"></i></span>
               <span class="icon is-pulled-right">
                 {% if application['completed'] == True%}
+
                 <i class="far fa-check-circle fa-3x" ></i>
+
                 {%else%}
                   {% if application["stagesDetail"][application["current step"]] == "Interview" or application["stagesDetail"][application["current step"]] == "Mobile Interview" %}
-                  <span class="control is-inline">
+
                     <form class="" action="compquestions.html" method="post">
                       <input type="hidden" name="applicantId" value={{application["applicant id"]}}>
                       <input type="hidden" name="vacancyId" value={{application["vacancy id"]}}>
-                  <button type="submit" class="button is-link is-pulled-right">Complete stage</button>
+                  <button type="submit" class="button is-link">Complete stage</button>
                     </form>
-                </span>
+
                   {% elif application["stagesDetail"][application["current step"]] == "Verbal Test" or application["stagesDetail"][application["current step"]] == "Logic Test" %}
-                  <span class="control is-inline">
-                  <button class="button is-link is-pulled-right">
-                    <form class="" action="interview.html" method="post">
-                      <input type="hidden" name="applicantId" value={{application["applicant id"]}}>
-                      <input type="hidden" name="vacancyId" value={{application["vacancy id"]}}>
-                  <button type="submit" class="button is-link is-pulled-right">Complete stage</button>
-                    </form>
-                  </button>
-                </span>
+
+                  <form class="" action="interviews.html" method="post">
+                    <input type="hidden" name="applicantId" value={{application["applicant id"]}}>
+                    <input type="hidden" name="vacancyId" value={{application["vacancy id"]}}>
+                <button type="submit" class="button is-link">Complete stage</button>
+                  </form>
+
                   {%else%}
                     <p>Waiting for Confirmation...</p>
                   {%endif%}
 
                 {% endif%}
               </span>
-            </div>
+            </div><br>
             {%endfor%}
             </div>
 
