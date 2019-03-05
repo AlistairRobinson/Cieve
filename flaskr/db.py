@@ -79,7 +79,8 @@ class Mongo:
                       "password_hash": passHash,
                       "salt": salt,
                       "phish": phish,
-                      "vacancies": []}
+                      "vacancies": [],
+                      "message": ""}
         clientID = self.db.client.insert_one(clientData).inserted_id
         return clientID
 
@@ -240,10 +241,12 @@ class Mongo:
         noOfStages = len(stageQuery['stages'])
         self.db.application.update_one({"applicant id": ObjectId(applicantID), "vacancy id": ObjectId(jobID)}, {"$inc": {"current step": 1}, "$set": {"completed": False}})
         stepQuery = self.db.application.find_one({"applicant id": ObjectId(applicantID), "vacancy id": ObjectId(jobID), "current step": noOfStages-1})
+        jobTitle = self.db.vacancy.find_one({"_id": ObjectId(jobID)})
         if stepQuery != None:
             self.db.vacancy.update_one({"_id": ObjectId(jobID)}, {"$inc": {"positions available": -1}})
-        jobTitle = self.db.vacancy.find_one({"_id": ObjectId(jobID)})
-        message = "You have been moved onto the next stage for your application for the job of " + jobTitle
+            message = "You have been accepted for the job " + jobTitle + "!"
+        else:
+            message = "You have been moved onto the next stage for your application for the job of " + jobTitle
         self.db.accountInfo.update_one({"applicant id": applicantID}, {"$set": {"message": message}})
         return True
 
@@ -423,7 +426,6 @@ class Mongo:
         message = "Your application for the " + jobTitle + " has been rejected"
         self.db.accountInfo.update_one({"applicant id": stepQuery['applicant id']}, {"$set": {"message": message}})
 
-
     def getAccepted(self, jobID):
         return list(self.db.application.find({"vacancy id": jobID, "current step": {"$gt": 0}}))
 
@@ -472,6 +474,10 @@ class Mongo:
 
     def deleteJob(self, title):
         self.db.vacancy.delete_many({"vacancy title": title})
+        clientQuery = self.db.client.find({"vacancies": title})
+        message = "The job " + title + "has been deleted"
+        for doc in clientQuery:
+            self.db.client.update_one({"_id": ObjectId(doc['_id'])}, {"$set": {message}})
         return True
 
     def addUserEducation(self, userID, alevels, degreeQualification, degreeLevel, universityAttended):
