@@ -159,7 +159,7 @@ class Mongo:
         if number == 0:
             return Jobs
         else:
-            return Jobs[(number-1)*20:((number-1)*20)+20]
+            return Jobs
 
     #Return the data of a job given the jobID
     def getJob(self, jobID):
