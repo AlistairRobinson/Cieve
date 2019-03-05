@@ -129,7 +129,7 @@ color: green;
               <div class="steps" id="stagessteps">
               {% for i in range(application["stages"]|length) %}
               {% if application['current step'] == i %}
-                <div class="step-item is-success is-active">
+                <div class="step-item is-active is-success">
 
                   <div class="step-marker">{{i+1}}</div>
                   <div class="step-details">
@@ -137,7 +137,7 @@ color: green;
                   </div>
                 </div>
                 {% elif application['current step'] > i %}
-                  <div class="step-item is-active">
+                  <div class="step-item is-completed">
 
                     <div class="step-marker">{{i+1}}</div>
                     <div class="step-details">
@@ -145,7 +145,7 @@ color: green;
                     </div>
                   </div>
               {%else%}
-              <div class="step-item is-success">
+              <div class="step-item">
                 <div class="step-marker">{{i+1}}</div>
                 <div class="step-details">
                   <p class="step-title">{{application["stagesDetail"][i]}}</p>
@@ -183,7 +183,9 @@ color: green;
                   </form>
 
                   {%else%}
-                    <p>Waiting for Confirmation...</p>
+                  <a class="button is-link is-small" style="right: 54px">
+                      Waiting for Confirmation...
+                  </a>
                   {%endif%}
 
                 {% endif%}
