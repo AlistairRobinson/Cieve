@@ -65,8 +65,8 @@ class Mongo:
                            "username": username,
                            "password_hash": passHash,
                            "salt": salt,
-                           "phish": phish
-                           "message": ""}
+                           "phish": phish,
+                           "message": "<h2 class='title '>Welcome to Cieve</h2><h2 class='subtitle '>This is your dashboard. You'll see messages from us here.</h2><p>You can search for available jobs by clicking Job Search</p><p>You can make an application by clicking Applications</p>"}
 
         self.db.applicantInfo.insert_one(applicantInfoData)
         self.db.accountInfo.insert_one(accountInfoData)
@@ -79,7 +79,8 @@ class Mongo:
                       "password_hash": passHash,
                       "salt": salt,
                       "phish": phish,
-                      "vacancies": []}
+                      "vacancies": [],
+                      "message": "<h2 class='title '>Welcome to Cieve</h2><h2 class='subtitle '>This is your dashboard. You'll see messages from us here.</h2><p>You can make a vacancy by clicking New Job</p><p>You can view your vacancies and applicants by clicking Your Jobs</p>"}
         clientID = self.db.client.insert_one(clientData).inserted_id
         return clientID
 
@@ -441,8 +442,11 @@ class Mongo:
         return rejected
 
 
-    def getMessage(self, applicantID):
-        return self.db.accountInfo.find_one({"applicant id": applicantID})['message']
+    def getApplicantMessage(self, applicantID):
+        return self.db.accountInfo.find_one({"applicant id": ObjectId(applicantID)})['message']
+
+    def getClientMessage(self, id):
+        return self.db.client.find_one({"_id": ObjectId(id)})['message']
 
     #Given an id will return the title of the stage
     def getStageTitle(self, id):
