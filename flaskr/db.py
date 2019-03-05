@@ -65,7 +65,8 @@ class Mongo:
                            "username": username,
                            "password_hash": passHash,
                            "salt": salt,
-                           "phish": phish}
+                           "phish": phish
+                           "message": ""}
 
         self.db.applicantInfo.insert_one(applicantInfoData)
         self.db.accountInfo.insert_one(accountInfoData)
@@ -427,7 +428,18 @@ class Mongo:
         return list(self.db.application.find({"vacancy id": jobID, "current step": {"$gt": 0}}))
 
     def getRejected(self, jobID):
-        return list(self.db.application.find({"vacancy id": jobID, "current step": {"$lt": 0}}))       
+        rejectedQuery = self.db.application.find({"vacancy id": jobID, "current step": {"$lt": 0}})
+        rejected = list(rejectedQuery)
+
+        for doc in rejectedQuery:
+            self.db.application.delete_one({"applicant id": doc['applicant id'], "vacancy id": jobID})
+            if len(self.db.applicantInfo.find_one({"applicant id": ObjectId(doc['applicant id'])}, {"vacancy ids": 1, "_id": 0})['vacancy ids']) == 0:        
+                self.db.applicantInfo.delete_one({"applicant id": doc['applicant id']})
+            else:
+                self.db.applicantInfo.update_one({"applicant id": ObjectId(doc['applicant id'])}, {"$pull": {"vacancy ids": jobID}})
+
+        return rejected
+
 
     def getMessage(self, applicantID):
         return self.db.accountInfo.find_one({"applicant id": applicantID})['message']
@@ -494,4 +506,9 @@ class Mongo:
     def addUserScore(self, userID, userScore):
         self.db.applicantInfo.update_one({"applicant id": ObjectId(userID)},
                                          {"$set": {"basic score": userScore}})
+        return True
+
+    def addUserJobs(self, userID, jobIDs):
+        self.db.applicantInfo.update_one({"applicant id": ObjectId(userID)},
+                                         {"$set": {"vacancy ids": jobIDs}})
         return True
