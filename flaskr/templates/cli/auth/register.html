@@ -34,9 +34,6 @@
                     <strong>Home</strong>
                   </a>
 
-                  <a class="navbar-item" href="/about">
-                    About
-                  </a>
                   <a class="navbar-item" href="/privacy">
                     Privacy
                   </a>
@@ -121,7 +118,7 @@
         $('form').submit(function() {
           var regex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
           var password = document.getElementsByName('password')[0].value;
-          return (regex.test(password)) 
+          return (regex.test(password))
         })
       </script>
 
