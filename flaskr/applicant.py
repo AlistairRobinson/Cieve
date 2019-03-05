@@ -228,6 +228,71 @@ def applications():
             filteredData.append(applicationData)
     return render_template('/apl/applications.html', applications = filteredData)
 
+@bp.route('/testing')
+@login_required_A
+def testing():
+    if request.method == "POST":
+        jobID = request.form["vacancyId"]
+        applicantID = request.form["applicantId"]
+        stepNo = request.form["currentStep"]
+        stageID = request.form["stageId"]
+
+        db = get_db()
+        questions = db.getQuestions(stageID)
+
+
+
+        return render_template('/apl/compquestions.html', questions=questions, jobID=jobID, applicantID=applicantID, stepNo=stepNo)
+    return redirect(url_for('applicant.applications'))
+
+@bp.route('/testingCheck')
+@login_required_A
+def testingcCeck():
+    if request.method == "POST":
+        jobID = request.form["vacancyId"]
+        applicantID = request.form["applicantId"]
+        stepNo = request.form["currentStep"]
+        stageID = request.form["stageId"]
+
+        answers = request.fomr["answers[]"]
+
+        db = get_db()
+        
+        #db call
+
+
+        return render_template('/apl/compquestions.html', questions=questions, jobID=jobID, applicantID=applicantID, stepNo=stepNo)
+    return redirect(url_for('applicant.applications'))
+
+@bp.route('/booking')
+@login_required_A
+def booking():
+    if request.method == "POST":
+        jobID = request.form["vacancyId"]
+        applicantID = request.form["applicantId"]
+        stepNo = request.form["currentStep"]
+
+        slots = []
+
+        return render_template('/apl/interview.html', slots=slots, jobID=jobID, applicantID=applicantID, stepNo=stepNo)
+    return redirect(url_for('applicant.applications'))
+
+@bp.route('/bookingSet')
+@login_required_A
+def bookingSet():
+    if request.method == "POST":
+        jobID = request.form["vacancyId"]
+        applicantID = request.form["applicantId"]
+        stepNo = request.form["currentStep"]
+        
+        bookingRequest = request.form["booking[]"]
+
+        #db call
+
+        return redirect(url_for('applicant.applications'))
+    return redirect(url_for('applicant.applications'))
+
+
 @bp.before_app_request
 def load_logged_in_user():
     user_id = session.get('user_id')

@@ -161,17 +161,20 @@ color: green;
                 {%else%}
                   {% if application["stagesDetail"][application["current step"]] == "Interview" or application["stagesDetail"][application["current step"]] == "Mobile Interview" %}
 
-                    <form action="compquestions.html" method="post">
+                    <form action="/apl/testing" method="post">
                       <input type="hidden" name="applicantId" value="{{application["applicant id"]}}">
                       <input type="hidden" name="vacancyId" value="{{application["vacancy id"]}}">
+                      <input type="hidden" name="currentStep" value="{{application["current step"]}}">
+                      <input type="hidden" name="stageId" value="{{application["stages"]}}">
                   <button type="submit" class="button is-link is-small" style="right:26px">Complete stage</button>
                     </form>
 
                   {% elif application["stagesDetail"][application["current step"]] == "Verbal Test" or application["stagesDetail"][application["current step"]] == "Logic Test" %}
 
-                  <form action="interviews.html" method="post">
+                  <form action="/apl/booking" method="post">
                     <input type="hidden" name="applicantId" value="{{application["applicant id"]}}">
                     <input type="hidden" name="vacancyId" value="{{application["vacancy id"]}}">
+                    <input type="hidden" name="currentStep" value="{{application["current step"]}}">
                 <button type="submit" class="button is-link is-small" style="right:26px">Complete stage</button>
                   </form>
 
