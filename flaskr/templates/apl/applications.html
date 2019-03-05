@@ -161,20 +161,22 @@ color: green;
                 {%else%}
                   {% if application["stagesDetail"][application["current step"]] == "Interview" or application["stagesDetail"][application["current step"]] == "Mobile Interview" %}
 
-                    <form action="/apl/testing" method="post">
+                    <form action="/apl/testing" method="POST">
                       <input type="hidden" name="applicantId" value="{{application["applicant id"]}}">
                       <input type="hidden" name="vacancyId" value="{{application["vacancy id"]}}">
                       <input type="hidden" name="currentStep" value="{{application["current step"]}}">
-                      <input type="hidden" name="stageId" value="{{application["stages"]}}">
+                      <input type="hidden" name="stageId" value="{{application["stages"][application["current step"]]}}">
+                      <input name=_csrf_token id="_csrf_token" type=hidden value="{{ csrf_token() }}">
                   <button type="submit" class="button is-link is-small" style="right:26px">Complete stage</button>
                     </form>
 
                   {% elif application["stagesDetail"][application["current step"]] == "Verbal Test" or application["stagesDetail"][application["current step"]] == "Logic Test" %}
 
-                  <form action="/apl/booking" method="post">
+                  <form action="/apl/booking" method="POST">
                     <input type="hidden" name="applicantId" value="{{application["applicant id"]}}">
                     <input type="hidden" name="vacancyId" value="{{application["vacancy id"]}}">
                     <input type="hidden" name="currentStep" value="{{application["current step"]}}">
+                    <input name=_csrf_token id="_csrf_token" type=hidden value="{{ csrf_token() }}">
                 <button type="submit" class="button is-link is-small" style="right:26px">Complete stage</button>
                   </form>
 

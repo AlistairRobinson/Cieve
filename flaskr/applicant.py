@@ -228,7 +228,7 @@ def applications():
             filteredData.append(applicationData)
     return render_template('/apl/applications.html', applications = filteredData)
 
-@bp.route('/testing')
+@bp.route('/testing', methods=('GET', 'POST'))
 @login_required_A
 def testing():
     if request.method == "POST":
@@ -245,7 +245,7 @@ def testing():
         return render_template('/apl/compquestions.html', questions=questions, jobID=jobID, applicantID=applicantID, stepNo=stepNo)
     return redirect(url_for('applicant.applications'))
 
-@bp.route('/testingCheck')
+@bp.route('/testingCheck', methods=('GET', 'POST'))
 @login_required_A
 def testingcCeck():
     if request.method == "POST":
@@ -257,14 +257,12 @@ def testingcCeck():
         answers = request.fomr["answers[]"]
 
         db = get_db()
-        
-        #db call
+        db.assessQuestions(answers, stepNo, applicantID, jobID)
 
-
-        return render_template('/apl/compquestions.html', questions=questions, jobID=jobID, applicantID=applicantID, stepNo=stepNo)
+        redirect(url_for('applicant.applications'))
     return redirect(url_for('applicant.applications'))
 
-@bp.route('/booking')
+@bp.route('/booking', methods=('GET', 'POST'))
 @login_required_A
 def booking():
     if request.method == "POST":
@@ -277,7 +275,7 @@ def booking():
         return render_template('/apl/interview.html', slots=slots, jobID=jobID, applicantID=applicantID, stepNo=stepNo)
     return redirect(url_for('applicant.applications'))
 
-@bp.route('/bookingSet')
+@bp.route('/bookingSet', methods=('GET', 'POST'))
 @login_required_A
 def bookingSet():
     if request.method == "POST":
