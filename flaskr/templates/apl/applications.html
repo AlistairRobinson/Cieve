@@ -157,22 +157,22 @@ color: green;
                 {% if application['completed'] == True%}
 
                 <i class="far fa-check-circle fa-3x" ></i>
-
+                  </span>
                 {%else%}
                   {% if application["stagesDetail"][application["current step"]] == "Interview" or application["stagesDetail"][application["current step"]] == "Mobile Interview" %}
 
-                    <form class="" action="compquestions.html" method="post">
-                      <input type="hidden" name="applicantId" value={{application["applicant id"]}}>
-                      <input type="hidden" name="vacancyId" value={{application["vacancy id"]}}>
-                  <button type="submit" class="button is-link">Complete stage</button>
+                    <form action="compquestions.html" method="post">
+                      <input type="hidden" name="applicantId" value="{{application["applicant id"]}}">
+                      <input type="hidden" name="vacancyId" value="{{application["vacancy id"]}}">
+                  <button type="submit" class="button is-link is-small" style="right:26px">Complete stage</button>
                     </form>
 
                   {% elif application["stagesDetail"][application["current step"]] == "Verbal Test" or application["stagesDetail"][application["current step"]] == "Logic Test" %}
 
-                  <form class="" action="interviews.html" method="post">
-                    <input type="hidden" name="applicantId" value={{application["applicant id"]}}>
-                    <input type="hidden" name="vacancyId" value={{application["vacancy id"]}}>
-                <button type="submit" class="button is-link">Complete stage</button>
+                  <form action="interviews.html" method="post">
+                    <input type="hidden" name="applicantId" value="{{application["applicant id"]}}">
+                    <input type="hidden" name="vacancyId" value="{{application["vacancy id"]}}">
+                <button type="submit" class="button is-link is-small" style="right:26px">Complete stage</button>
                   </form>
 
                   {%else%}
@@ -180,7 +180,7 @@ color: green;
                   {%endif%}
 
                 {% endif%}
-              </span>
+
             </div><br>
             {%endfor%}
             </div>
