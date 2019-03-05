@@ -377,7 +377,7 @@ class Mongo:
 
     def bookInterviewSlots(self, applicantID, jobID, stageID, slot):
         self.db.application.update_one({"applicant id": applicantID, "vacancy id": jobID}, {"$push": {"interviews": slot}})
-        self.db.interviewStage.update_one({"job id": jobID, "stage id": stageID}, {"$pull": {"interviews": slot}})
+        self.db.interviewStage.update_one({"job id": jobID, "stage id": stageID}, {"$pull": {"slots": slot}})
         jobTitle = self.db.vacancy.find_one({"_id": ObjectId(jobID)})['vacancy title']
         message = "An interview has been booked for your " + jobTitle + " application at the time " + slot[1] + ", " + slot[0]
         self.db.accountInfo.update_one({"applicant id": applicantID}, {"$set": {"message": message}})
@@ -407,11 +407,17 @@ class Mongo:
                 self.db.assessement.update_one({"applicant id": applicantID, "job id": jobID}, {"$inc": {"score"}})
     
 
+    def getStageResults(self, currentStep, applicantID, jobID):
+        return self.db.assessment.find_one({"applicant id": applicantID, "job id": jobID, "current step": currentStep})['score']
+
+
     #If applicant is rejected on step 0, set step to -1. Otherwise if rejected the set is set to -2
     def rejectApplication(self, applicationID):
         stepQuery = self.db.application.find_one({"_id": ObjectId(applicationID)}, {"current step": 1, "applicant id": 1, "vacancy id": 1, "_id": 0})
-        if stepQuery['current step'] != 0:
+        if stepQuery['current step'] == 0:
             self.db.application.update_one({"_id": ObjectId(applicationID)}, {"$set": {"current step": -1}})
+        else:
+            self.db.application.update_one({"_id": ObjectId(applicationID)}, {"$set": {"current step": -2}})
         jobTitle = self.db.vacancy.find_one({"_id": ObjectId(stepQuery['vacancy id'])})['vacancy title']
         message = "Your application for the " + jobTitle + " has been rejected"
         self.db.accountInfo.update_one({"applicant id": stepQuery['applicant id']}, {"$set": {"message": message}})
@@ -421,8 +427,10 @@ class Mongo:
         return list(self.db.application.find({"vacancy id": jobID, "current step": {"$gt": 0}}))
 
     def getRejected(self, jobID):
-        return list(self.db.application.find({"vacancy id": jobID, "current step": {"$lt": 1}}))       
+        return list(self.db.application.find({"vacancy id": jobID, "current step": {"$lt": 0}}))       
 
+    def getMessage(self, applicantID):
+        return self.db.accountInfo.find_one({"applicant id": applicantID})['message']
 
     #Given an id will return the title of the stage
     def getStageTitle(self, id):
@@ -447,6 +455,7 @@ class Mongo:
 
     def deleteApplication(self, username):
         self.db.application.delete_many({"applicant id": self.getApplicantAccount(username)['applicant id']})
+        self.db.applicantInfo.delete_many({"applicant id": self.getApplicantAccount(username)['applicant id']})
         return True
 
     def deleteJob(self, title):
