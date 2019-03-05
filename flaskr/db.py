@@ -244,9 +244,9 @@ class Mongo:
         jobTitle = self.db.vacancy.find_one({"_id": ObjectId(jobID)})
         if stepQuery != None:
             self.db.vacancy.update_one({"_id": ObjectId(jobID)}, {"$inc": {"positions available": -1}})
-            message = "You have been accepted for the job " + jobTitle + "!"
+            message = "<h2 class='subtitle '>You have been accepted for " + jobTitle + "!</h2>"
         else:
-            message = "You have been moved onto the next stage for your application for the job of " + jobTitle
+            message = "<h2 class='subtitle '>You have been moved onto the next stage for your application for " + jobTitle + "</h2>"
         self.db.accountInfo.update_one({"applicant id": applicantID}, {"$set": {"message": message}})
         return True
 
@@ -383,7 +383,7 @@ class Mongo:
         self.db.application.update_one({"applicant id": applicantID, "vacancy id": jobID}, {"$push": {"interviews": slot}})
         self.db.interviewStage.update_one({"job id": jobID, "stage id": stageID}, {"$pull": {"slots": slot}})
         jobTitle = self.db.vacancy.find_one({"_id": ObjectId(jobID)})['vacancy title']
-        message = "An interview has been booked for your " + jobTitle + " application at the time " + slot[1] + ", " + slot[0]
+        message = "<h2 class='subtitle '>An interview has been booked for your application to " + jobTitle + " at the time " + slot[1] + ", " + slot[0] + "</h2>"
         self.db.accountInfo.update_one({"applicant id": applicantID}, {"$set": {"message": message}})
         return True
 
@@ -423,7 +423,7 @@ class Mongo:
         else:
             self.db.application.update_one({"_id": ObjectId(applicationID)}, {"$set": {"current step": -2}})
         jobTitle = self.db.vacancy.find_one({"_id": ObjectId(stepQuery['vacancy id'])})['vacancy title']
-        message = "Your application for the " + jobTitle + " has been rejected"
+        message = "<h2 class='subtitle '>Your application for " + jobTitle + " has been rejected</h2>"
         self.db.accountInfo.update_one({"applicant id": stepQuery['applicant id']}, {"$set": {"message": message}})
 
     def getAccepted(self, jobID):
@@ -482,7 +482,7 @@ class Mongo:
     def deleteJob(self, title):
         self.db.vacancy.delete_many({"vacancy title": title})
         clientQuery = self.db.client.find({"vacancies": title})
-        message = "The job " + title + "has been deleted"
+        message = "<h2 class='subtitle '>Vacancy " + title + "has been deleted</h2>"
         for doc in clientQuery:
             self.db.client.update_one({"_id": ObjectId(doc['_id'])}, {"$set": {message}})
         return True
