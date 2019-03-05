@@ -126,10 +126,6 @@ color: green;
                 <input name="_csrf_token" id="_csrf_token" type=hidden value="{{ csrf_token() }}">
                 <input name="applications" value="{{applications}}" type="hidden">
             <h3 class="title is-3">Your Applications</h3>
-<<<<<<< HEAD
-=======
-          
->>>>>>> 8f249edcc709cd8e67fcb4a61b638305b918dbed
             {%for application in applications%}
             <div class="box">
               <h3 class="title is-4">{{application['vacancy title']}}</h3>
