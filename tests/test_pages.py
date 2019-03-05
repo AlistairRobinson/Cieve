@@ -43,9 +43,6 @@ def test_page_cli_registration(client, page):
 def test_page_apl_registration(client, page):
     assert page._client.get('/apl/auth/register').status_code == 200
 
-def test_page_about(client, page):
-    assert page._client.get('/about').status_code == 200
-
 def test_page_privacy(client, page):
     assert page._client.get('/privacy').status_code == 200
 
