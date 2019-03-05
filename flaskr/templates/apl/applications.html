@@ -50,7 +50,7 @@ color: green;
                       {{name()}}
                     </a>
                     <div class="navbar-dropdown">
-                        
+
                         <a class="navbar-item is-leveled " href="/logout">
                             <span class="icon ">
                                     <i class="fa fa-sign-out-alt"></i>
@@ -112,6 +112,16 @@ color: green;
                 <input name="_csrf_token" id="_csrf_token" type=hidden value="{{ csrf_token() }}">
                 <input name="applications" value="{{applications}}" type="hidden">
             <h3 class="title is-3">Your Applications</h3>
+
+            {%if applications|length == 0 %}
+            <p>You have no applications, click below to start an application.</p>
+            <div class="box has-text-centered is-shadowless">
+
+                <a class="button is-link is-medium" href="/apl/newapplication">
+                    Apply now
+                </a>
+            </div>
+            {%else%}
             {%for application in applications%}
             <div class="box">
               <h3 class="title is-4">{{application['vacancy title']}}</h3>
@@ -126,6 +136,14 @@ color: green;
                     <p class="step-title">{{application["stagesDetail"][i]}}</p>
                   </div>
                 </div>
+                {% elif application['current step'] > i %}
+                  <div class="step-item is-active">
+
+                    <div class="step-marker">{{i+1}}</div>
+                    <div class="step-details">
+                      <p class="step-title">{{application["stagesDetail"][i]}}</p>
+                    </div>
+                  </div>
               {%else%}
               <div class="step-item is-success">
                 <div class="step-marker">{{i+1}}</div>
@@ -172,6 +190,7 @@ color: green;
 
             </div><br>
             {%endfor%}
+            {%endif%}
             </div>
 
       </section>
