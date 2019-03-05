@@ -65,7 +65,8 @@ class Mongo:
                            "username": username,
                            "password_hash": passHash,
                            "salt": salt,
-                           "phish": phish}
+                           "phish": phish,
+                           "message": "Welcome to Cieve. You can search for available jobs by clicking Job Search. You can make an application by clicking Applications"}
 
         self.db.applicantInfo.insert_one(applicantInfoData)
         self.db.accountInfo.insert_one(accountInfoData)
@@ -78,7 +79,8 @@ class Mongo:
                       "password_hash": passHash,
                       "salt": salt,
                       "phish": phish,
-                      "vacancies": []}
+                      "vacancies": [],
+                      "message": "Welcome to Cieve. You can create a job posting by clicking New Job. You can view your vacancies and applications by clicking Your Jobs"}
         clientID = self.db.client.insert_one(clientData).inserted_id
         return clientID
 
@@ -239,10 +241,12 @@ class Mongo:
         noOfStages = len(stageQuery['stages'])
         self.db.application.update_one({"applicant id": ObjectId(applicantID), "vacancy id": ObjectId(jobID)}, {"$inc": {"current step": 1}, "$set": {"completed": False}})
         stepQuery = self.db.application.find_one({"applicant id": ObjectId(applicantID), "vacancy id": ObjectId(jobID), "current step": noOfStages-1})
+        jobTitle = self.db.vacancy.find_one({"_id": ObjectId(jobID)})
         if stepQuery != None:
             self.db.vacancy.update_one({"_id": ObjectId(jobID)}, {"$inc": {"positions available": -1}})
-        jobTitle = self.db.vacancy.find_one({"_id": ObjectId(jobID)})
-        message = "You have been moved onto the next stage for your application for the job of " + jobTitle
+            message = "You have been accepted for " + jobTitle + "!"
+        else:
+            message = "You have been moved onto the next stage for your application for " + jobTitle + ""
         self.db.accountInfo.update_one({"applicant id": applicantID}, {"$set": {"message": message}})
         return True
 
@@ -379,7 +383,7 @@ class Mongo:
         self.db.application.update_one({"applicant id": applicantID, "vacancy id": jobID}, {"$push": {"interviews": slot}})
         self.db.interviewStage.update_one({"job id": jobID, "stage id": stageID}, {"$pull": {"slots": slot}})
         jobTitle = self.db.vacancy.find_one({"_id": ObjectId(jobID)})['vacancy title']
-        message = "An interview has been booked for your " + jobTitle + " application at the time " + slot[1] + ", " + slot[0]
+        message = "An interview has been booked for your application to " + jobTitle + " at the time " + slot[1] + ", " + slot[0] + ""
         self.db.accountInfo.update_one({"applicant id": applicantID}, {"$set": {"message": message}})
         return True
 
@@ -419,18 +423,35 @@ class Mongo:
         else:
             self.db.application.update_one({"_id": ObjectId(applicationID)}, {"$set": {"current step": -2}})
         jobTitle = self.db.vacancy.find_one({"_id": ObjectId(stepQuery['vacancy id'])})['vacancy title']
-        message = "Your application for the " + jobTitle + " has been rejected"
+        message = "Your application for " + jobTitle + " has been rejected"
         self.db.accountInfo.update_one({"applicant id": stepQuery['applicant id']}, {"$set": {"message": message}})
-
 
     def getAccepted(self, jobID):
         return list(self.db.application.find({"vacancy id": jobID, "current step": {"$gt": 0}}))
 
     def getRejected(self, jobID):
-        return list(self.db.application.find({"vacancy id": jobID, "current step": {"$lt": 0}}))       
+        rejectedQuery = self.db.application.find({"vacancy id": jobID, "current step": {"$lt": 0}})
+        rejected = list(rejectedQuery)
 
-    def getMessage(self, applicantID):
-        return self.db.accountInfo.find_one({"applicant id": applicantID})['message']
+        for doc in rejectedQuery:
+            self.db.application.delete_one({"applicant id": doc['applicant id'], "vacancy id": jobID})
+            if len(self.db.applicantInfo.find_one({"applicant id": ObjectId(doc['applicant id'])}, {"vacancy ids": 1, "_id": 0})['vacancy ids']) == 0:        
+                self.db.applicantInfo.delete_one({"applicant id": doc['applicant id']})
+            else:
+                self.db.applicantInfo.update_one({"applicant id": ObjectId(doc['applicant id'])}, {"$pull": {"vacancy ids": jobID}})
+
+        return rejected
+
+
+    def getApplicantMessage(self, applicantID):
+        if self.db.accountInfo.find_one({"applicant id": ObjectId(applicantID)}) is not None:
+            return self.db.accountInfo.find_one({"applicant id": ObjectId(applicantID)}).get('message', "")
+        return ""
+
+    def getClientMessage(self, id):
+        if self.db.client.find_one({"_id": ObjectId(id)}) is not None:
+            return self.db.client.find_one({"_id": ObjectId(id)}).get('message', "")
+        return ""
 
     #Given an id will return the title of the stage
     def getStageTitle(self, id):
@@ -460,6 +481,10 @@ class Mongo:
 
     def deleteJob(self, title):
         self.db.vacancy.delete_many({"vacancy title": title})
+        clientQuery = self.db.client.find({"vacancies": title})
+        message = "Vacancy " + title + "has been deleted"
+        for doc in clientQuery:
+            self.db.client.update_one({"_id": ObjectId(doc['_id'])}, {"$set": {message}})
         return True
 
     def addUserEducation(self, userID, alevels, degreeQualification, degreeLevel, universityAttended):
@@ -495,4 +520,9 @@ class Mongo:
     def addUserScore(self, userID, userScore):
         self.db.applicantInfo.update_one({"applicant id": ObjectId(userID)},
                                          {"$set": {"basic score": userScore}})
+        return True
+
+    def addUserJobs(self, userID, jobIDs):
+        self.db.applicantInfo.update_one({"applicant id": ObjectId(userID)},
+                                         {"$set": {"vacancy ids": jobIDs}})
         return True
