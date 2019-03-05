@@ -478,7 +478,7 @@
                             var selectedLocation = $('#countryDropDown').val();
                             if ((selectedDivision == "Please Select")||(selectedRole == "Please Select")||(selectedLocation == "Please Select")) {
                               $('#nextStepBttn').prop('disabled', true);
-                              alert("test");
+                             // alert("test");
                             } else {
                               $('#nextStepBttn').prop('disabled', false);
                             }
@@ -879,7 +879,7 @@
                                       }
                                   },
                                   error: function(error) {
-                                      alert("error")
+                                      //alert("error")
                                       console.log(error);
                                   }
                               });

@@ -171,7 +171,7 @@ def newJobSummary():
         jsonData = json.loads(jsonData)
         if 'stagesDetail' in jsonData:
             del jsonData['stagesDetail']
-
+        jsonData['positions available'] = int(jsonData['positions available'])
         userID = session.get('user_id')[1:]
         jobID =  db.addNewJob(jsonData, userID)
         interviewsData = json.loads(data["interviews"][0].replace("'",'"').replace('u"','"'))

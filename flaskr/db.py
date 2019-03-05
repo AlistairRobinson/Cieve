@@ -46,6 +46,13 @@ class Mongo:
             return query.get('phish', [""])[0]
         return ""
 
+    def getInterviewStages(self):
+        interviewStages = []
+        query = self.db.stage.find({"type": "Interview"}, {"_id": 1})
+        for doc in query:
+            interviewStages.append(str(doc["_id"]))
+        return interviewStages
+
     # Insert to user account, return userID if completed (None if not)
     def insertApplicantUser(self, name, username, passHash, salt, phish):
         applicantData = {"setup": True}
@@ -152,7 +159,7 @@ class Mongo:
         if number == 0:
             return Jobs
         else:
-            return Jobs[(number-1)*20:((number-1)*20)+20]
+            return Jobs
 
     #Return the data of a job given the jobID
     def getJob(self, jobID):
@@ -378,7 +385,6 @@ class Mongo:
 
     def getBookedInterviews(self, applicantID):
         return list(self.db.application.find({"applicant id": applicantID}, {"interviews": 1, "_id": 0}))        
-
 
     def insertStageAvailability(self, stageID, jobID, stageData):
         self.db.interviewStage.insert_one({"stage id": stageID,

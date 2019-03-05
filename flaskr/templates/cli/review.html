@@ -183,7 +183,6 @@
                 <th>Date</th>
                 <th>Start Time</th>
                 <th>End Time</th>
-                <th>Number of Slots</th>
                 <th>---</th>
               </tr>
             </thead>
@@ -192,7 +191,6 @@
                 <td class="stageid">  <input class="input" type="date" name="Date[]{{i+1}}" placeholder="Enter the Interview date"> </td>
                 <td>  <input class="input" type="time" name="startTime[]{{i+1}}" placeholder="Enter your start time"></td>
                 <td>  <input class="input" type="time" name="endTime[]{{i+1}}" placeholder="Enter your end time"></td>
-                <td>  <input class="input" type="number" name="vacancies[]{{i+1}}" placeholder="#"></td>
                 <td><a class="button is-primary" id="add-interview">
             New Date
           </a></td>
@@ -246,7 +244,6 @@
             <td> <input class="input" type="date" name="Date[]`+(stage_counter+1)+`" placeholder="Enter the Interview date"> </td>
             <td>  <input class="input" type="time" name="startTime[]`+(stage_counter+1)+`" placeholder="Enter your start time"></td>
             <td>  <input class="input" type="time" name="endTime[]`+(stage_counter+1)+`" placeholder="Enter your end time"></td>
-            <td>  <input class="input" type="number" name="vacancies[]`+(stage_counter+1)+`" placeholder="#"></td>
             <td><a class="button is-secondary" id="delete-interview">
          Remove
       </a></td>

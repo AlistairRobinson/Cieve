@@ -172,7 +172,6 @@ def newApplication():
             db.applyJob(userID, job, 1, jobScore)
 
         for job in unselectedJobs:
-            print job
             data = db.getJob(job)
             jobData = {}
             jobData["Degree Qualification"] = [] #CHANGE
