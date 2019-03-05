@@ -467,6 +467,7 @@ class Mongo:
 
     def deleteApplication(self, username):
         self.db.application.delete_many({"applicant id": self.getApplicantAccount(username)['applicant id']})
+        self.db.applicantInfo.delete_many({"applicant id": self.getApplicantAccount(username)['applicant id']})
         return True
 
     def deleteJob(self, title):
