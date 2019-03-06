@@ -2,9 +2,9 @@
 
 Cieve, a machine learning recruitment system
 
-Master build status: [![Build Status](https://travis-ci.com/AlistairRobinson/Cieve.svg?token=yo6eYpNXTG4DQuQTZxZz&branch=master)](https://travis-ci.com/AlistairRobinson/Cieve)
+### Master build status | [![Build Status](https://travis-ci.com/AlistairRobinson/Cieve.svg?token=yo6eYpNXTG4DQuQTZxZz&branch=master)](https://travis-ci.com/AlistairRobinson/Cieve)
 
-Develop build status: [![Build Status](https://travis-ci.com/AlistairRobinson/Cieve.svg?token=yo6eYpNXTG4DQuQTZxZz&branch=develop)](https://travis-ci.com/AlistairRobinson/Cieve)
+### Develop build status | [![Build Status](https://travis-ci.com/AlistairRobinson/Cieve.svg?token=yo6eYpNXTG4DQuQTZxZz&branch=develop)](https://travis-ci.com/AlistairRobinson/Cieve)
 
 ## Overview
 
