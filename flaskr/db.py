@@ -297,7 +297,7 @@ class Mongo:
         self.db.application.delete_many({"vacancy id": ObjectId(jobID)})
         droppedApplicantInfo = []
         for doc in self.db.applicantInfo.find({"vacancy ids": ObjectId(jobID)}):
-            query = self.db.application.find_one({"applicant id": ObjectId(doc['applicant id'])})
+            query = self.db.application.find_one({"applicant id": ObjectId(doc['applicant id']), "vacancy id": ObjectId(jobID)})
             if query['current step'] > 0:
                 droppedApplicantInfo.append([doc, 1, query['specialized score']])
             else:
@@ -320,7 +320,7 @@ class Mongo:
         self.db.vacancies.delete_one({"_id": ObjectId(jobID)})
         droppedApplicantInfo = []
         for doc in self.db.applicantInfo.find({"vacancy ids": ObjectId(jobID)}):
-            query = self.db.application.find_one({"applicant id": ObjectId(doc['applicant id'])})
+            query = self.db.application.find_one({"applicant id": ObjectId(doc['applicant id']), "vacancy id": ObjectId(jobID)})
             if query['current step'] > 0:
                 droppedApplicantInfo.append([doc, 1, query['specialized score']])
             else:
@@ -432,6 +432,8 @@ class Mongo:
         query = self.db.vacancy.find_one({"_id": ObjectId(jobID)})
         if query is not None:
             stageID = query['stages'][int(stepNo)]
+        print(stageID)
+        print(jobID)
         timeSlotQuery = self.db.interviewStage.find({"stage id": stageID, "job id": ObjectId(jobID)})
         slot = []
         for doc in timeSlotQuery:
@@ -445,9 +447,9 @@ class Mongo:
         query = self.db.vacancy.find_one({"_id": ObjectId(jobID)})
         if query is not None:
             jobTitle = query.get("vacancy title", "")
-            message = "An interview has been booked for your " + jobTitle + " application at the time " + slot
+            message = "An interview has been booked for your " + jobTitle + " application with the start and ending times of " + slot
         if message != "":
-            self.db.accountInfo.update_one({"applicant id": applicantID}, {"$set": {"message": message}})
+            self.db.accountInfo.update_one({"applicant id": ObjectId(applicantID)}, {"$set": {"message": message}})
         return True
 
     def getBookedInterviews(self, applicantID):
@@ -596,4 +598,4 @@ class Mongo:
 
     def setCompletedTrue(self, applicantId, jobId):
         self.db.application.update_one({"applicant id": ObjectId(applicantId), "vacancy id" : ObjectId(jobId)},{"$set": {"completed": True }})
-print(get_db().insertStageAvailability('5c74389bad9bb61fbcc01a3a', '5c80028b8c5b5b2064c32fd7', ["2019-01-01", "13:00", "13:30"]))
+print(get_db().getInterviewSlots('5c7fd47ead9bb6a3c16e3cbe', 1))
