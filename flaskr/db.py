@@ -282,11 +282,13 @@ class Mongo:
 
     #Return list of applications older than 6 months, delete the applications and relevent info
     def gdprCompliance(self):
-        query = self.db.application.find({"date inputted": {"$lt": datetime.today() - relativedelta(months=6)}}, {"applicant id": 1, "vacancy id": 1})
+        query = list(self.db.application.find({"date inputted": {"$lt": datetime.today() - relativedelta(months=6)}}, {"applicant id": 1, "vacancy id": 1}))
         for doc in query:
             self.db.applicantInfo.delete_one({"applicant id": ObjectId(doc['applicant id'])})
         self.db.application.delete_many({"date inputted": {"$lt": datetime.today() - relativedelta(months=6)}})
-        return True
+        if query == []:
+            return True
+        return False
 
 
     def deleteJobByID(self, jobID):
@@ -507,8 +509,8 @@ class Mongo:
         return True
 
     def deleteJob(self, title):
-        self.db.vacancy.delete_many({"vacancy title": title})
         jobID = self.db.vacancy.find_one({"vacancy title": title})['_id']
+        self.db.vacancy.delete_many({"vacancy title": title})
         self.db.application.delete_many({"vacancy id": ObjectId(jobID)})
         droppedApplicantInfo = []
         for doc in self.db.applicantInfo.find({"vacancy ids": ObjectId(jobID)}):
@@ -524,9 +526,9 @@ class Mongo:
                 self.db.applicantInfo.update_many({"vacancy ids": ObjectId(jobID)}, {"$pull": {"vacancy ids": ObjectId(jobID)}})
 
         clientQuery = self.db.client.find({"vacancies": jobID})
-        message = "The job " + title + "has been deleted"
+        message = "The job " + title + " has been deleted"
         for doc in clientQuery:
-            self.db.client.update_one({"_id": ObjectId(doc['_id'])}, {"$set": {message}})
+            self.db.client.update_one({"_id": ObjectId(doc['_id'])}, {"$set": {'message': message}})
         return droppedApplicantInfo
 
     def addUserEducation(self, userID, alevels, degreeQualification, degreeLevel, universityAttended):
