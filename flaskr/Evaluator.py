@@ -2,7 +2,7 @@ import json
 import random
 import math
 import pprint
-from db import get_db
+from flaskr.db import get_db
 # Skeleto for evaluation class
 
 class Evaluator:

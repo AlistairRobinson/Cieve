@@ -292,8 +292,8 @@ class Mongo:
 
 
     def deleteJob(self, title):
-        self.db.vacancy.delete_many({"vacancy title": title})
         jobID = self.db.vacancy.find_one({"vacancy title": title})['_id']
+        self.db.vacancy.delete_many({"vacancy title": title})
         self.db.application.delete_many({"vacancy id": ObjectId(jobID)})
         droppedApplicantInfo = []
         for doc in self.db.applicantInfo.find({"vacancy ids": ObjectId(jobID)}):
