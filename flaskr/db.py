@@ -179,7 +179,7 @@ class Mongo:
 
     # Given an ID return all vacancies an applicant has applied too (including non-preferenced ones)
     def getApplications(self, applicantID):
-        applicationQuery = list(self.db.application.find({"applicant id": ObjectId(applicantID)}, {"date inputted": 0, "specialized score": 0}))
+        applicationQuery = list(self.db.application.find({"applicant id": ObjectId(applicantID), "current step" : {"$gt" : 0 }}, {"date inputted": 0, "specialized score": 0}))
         for application in applicationQuery:
             vacancyID = application['vacancy id']
             vacancy = list(self.db.vacancy.find({"_id": ObjectId(vacancyID)}, {"positions available": 0, "skills": 0, "_id": 0}))[0]
@@ -256,8 +256,6 @@ class Mongo:
             self.db.vacancy.update_one({"_id": ObjectId(jobID)}, {"$inc": {"positions available": -1}})
 
             message = "You have been accepted for " + jobTitle['vacancy title'] + "!"
-
-            self.db.application.delete_one({"applicant id": ObjectId(applicantID)})
         else:
             message = "You have been moved onto the next stage for your application for " + jobTitle['vacancy title'] + ""
         self.db.accountInfo.update_one({"applicant id": ObjectId(applicantID)}, {"$set": {"message": message}})
