@@ -24,6 +24,10 @@
           $('.increment').on('click', function() {
             console.log($(this).parent().parent().children(':first-child').children().val());
           });
+
+          $('.decrement').on('click', function() {
+            console.log($(this).parent().parent().children(':first-child').children().val());
+          });
       });
     </script>
 
@@ -56,21 +60,13 @@
             </div>
 
             <div class="navbar-end">
-
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link" href="#">
-                        {{name()}}
-                    </a>
-                    <div class="navbar-dropdown">
-
                         <a class="navbar-item is-leveled " href="/logout">
                             <span class="icon ">
                                     <i class="fa fa-sign-out-alt"></i>
                                 </span>
                             Sign Out
                         </a>
-                    </div>
-                </div>
+
             </div>
         </div>
         </div>
@@ -153,7 +149,7 @@
                     <div class="field has-addons">
 
                         <div class="control is-expanded">
-                          <input class="input" id="educationWeight" type="text" placeholder="Education Weight" value=1>
+                          <input class="input" id="educationWeight" type="text" placeholder="Education Weight" value=1 readonly="readonly">
                         </div>
                         <div class="control">
                           <button class="button is-primary increment">+</button>
@@ -167,7 +163,7 @@
                     <div class="field has-addons">
 
                         <div class="control is-expanded">
-                          <input class="input" id="skillWeight" type="text" placeholder="Skills Weight">
+                          <input class="input" id="skillWeight" type="text" placeholder="Skills Weight" readonly="readonly">
                         </div>
                         <div class="control">
                           <button class="button is-primary increment">+</button>
@@ -181,7 +177,7 @@
                     <div class="field has-addons">
 
                         <div class="control is-expanded">
-                          <input class="input" id="experienceWeight" type="text" placeholder="Experience Weight">
+                          <input class="input" id="experienceWeight" type="text" placeholder="Experience Weight" readonly="readonly">
                         </div>
                         <div class="control">
                           <button class="button is-primary increment">+</button>
@@ -199,7 +195,7 @@
                     <div class="field has-addons">
 
                         <div class="control is-expanded">
-                          <input class="input" id="aLevelsWeight" type="text" placeholder="A-Levels Weight">
+                          <input class="input" id="aLevelsWeight" type="text" placeholder="A-Levels Weight" readonly="readonly">
                         </div>
                         <div class="control">
                           <button class="button is-primary increment">+</button>
@@ -213,7 +209,7 @@
                     <div class="field has-addons">
 
                         <div class="control is-expanded">
-                          <input class="input" id="universityWeight" type="text" placeholder="University Weight">
+                          <input class="input" id="universityWeight" type="text" placeholder="University Weight" readonly="readonly">
                         </div>
                         <div class="control">
                           <button class="button is-primary increment">+</button>
@@ -227,7 +223,7 @@
                     <div class="field has-addons">
 
                         <div class="control is-expanded">
-                          <input class="input" id="languagesWeight" type="text" placeholder="Languages Weight">
+                          <input class="input" id="languagesWeight" type="text" placeholder="Languages Weight" readonly="readonly">
                         </div>
                         <div class="control">
                           <button class="button is-primary increment">+</button>
@@ -241,7 +237,7 @@
                     <div class="field has-addons">
 
                         <div class="control is-expanded">
-                          <input class="input" id="skillSetWeight" type="text" placeholder="Skill Set Weight">
+                          <input class="input" id="skillSetWeight" type="text" placeholder="Skill Set Weight" readonly="readonly">
                         </div>
                         <div class="control">
                           <button class="button is-primary increment">+</button>

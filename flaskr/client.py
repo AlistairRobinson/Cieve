@@ -218,7 +218,7 @@ def jobBreakdown():
         db = get_db()
         jobID = request.form['jobID']
         jobData = db.getJob(jobID)
-
+        print(jobData)
         jobData["stagesDetail"] = []
         jobData['stagesType'] = []
         for stage in jobData["stages"]:

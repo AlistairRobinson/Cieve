@@ -1,0 +1,6 @@
+{
+  "tests/test_compliance.py::test_compliance": true,
+  "tests/test_compliance.py::test_malcompliance_access": true,
+  "tests/test_compliance.py::test_malcompliance_insertion": true,
+  "tests/test_requirements.py::test_cleanup_job": true
+}
