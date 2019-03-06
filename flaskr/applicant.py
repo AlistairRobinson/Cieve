@@ -282,9 +282,10 @@ def booking():
         applicantID = request.form["applicantId"]
         stepNo = request.form["currentStep"]
 
-        slots = get_db().getInterviewSlots(jobID, applicantID)
-        return slots
-        #return render_template('/apl/interview.html', slots=slots, jobID=jobID, applicantID=applicantID, stepNo=stepNo)
+        slots = get_db().getInterviewSlots(jobID, stepNo)
+        print slots
+
+        return render_template('/apl/interview.html', slots=slots, jobID=jobID, applicantID=applicantID, stepNo=stepNo)
     return redirect(url_for('applicant.applications'))
 
 @bp.route('/bookingSet', methods=('GET', 'POST'))

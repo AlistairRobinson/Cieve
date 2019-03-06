@@ -242,12 +242,14 @@ class Mongo:
             applicantList.append(doc)
         return applicantList
 
-
     #Move applicants to the next stage in the steps for the jobs and update completed flag
     def moveToNextStage(self, applicantID, jobID):
         stageQuery = self.db.vacancy.find_one({"_id": ObjectId(jobID)}, {"stages": 1, "_id": 0})
         noOfStages = len(stageQuery['stages'])
-        self.db.application.update_one({"applicant id": ObjectId(applicantID), "vacancy id": ObjectId(jobID)}, {"$inc": {"current step": 1}, "$set": {"completed": False}})
+        
+        self.db.application.update({"applicant id": ObjectId(applicantID), "vacancy id": ObjectId(jobID)}, {"$inc": {"current step": 1}, "$set": {"completed": False}})
+        
+        
         stepQuery = self.db.application.find_one({"applicant id": ObjectId(applicantID), "vacancy id": ObjectId(jobID), "current step": noOfStages-1})
         jobTitle = self.db.vacancy.find_one({"_id": ObjectId(jobID)})
         if stepQuery != None:
@@ -294,7 +296,7 @@ class Mongo:
         self.db.vacancies.delete_one({"_id": ObjectId(jobID)})
         for doc in self.db.applicantInfo.find({"vacancy ids": ObjectId(jobID)}):
             if len(doc['vacancy ids']) == 1:
-                self.db.applicantInfo.delete_one({"_id": ObjectID(doc['_id'])})
+                self.db.applicantInfo.delete_one({"_id": ObjectId(doc['_id'])})
             else:
                 self.db.applicantInfo.update_one({"vacancy ids": ObjectId(jobID)}, {"$pull": {"vacancy ids": ObjectId(jobID)}})
 
@@ -399,17 +401,10 @@ class Mongo:
     def getInterviewSlots(self, jobID, stepNo):
         query = self.db.vacancy.find_one({"_id": ObjectId(jobID)})
         if query is not None:
-            stageID = query['stages'][stepNo]
-        timeSlotQuery = self.db.interviewStage.find_one({"stage id": ObjectId(stageID), "vacancy id": ObjectId(jobID)})
-        if timeSlotQuery is not None:
-            return timeSlots.get("slots", [])
-        return None
-# =======
-#     def getInterviewSlots(self, stageID, jobID):
-#         timeSlots = self.db.interviewStage.find_one({"stage id": stageID, "vacancy id": jobID})
-#         return timeSlots['slots']
-# >>>>>>> 17914f1e7f2a8774eb385b0fc97b08db09c2a9b6
+            stageID = query['stages'][int(stepNo)]
+        timeSlotQuery = self.db.interviewStage.find_one({"stage id": stageID, "job id": ObjectId(jobID)})
 
+        return timeSlotQuery
 
     def bookInterviewSlots(self, applicantID, jobID, stageID, slot):
         message = ""
