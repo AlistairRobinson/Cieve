@@ -18,7 +18,8 @@ bp = Blueprint('client', __name__, url_prefix='/cli')
 @login_required_C
 def dashboard():
     # Generate post data and pass to front end
-    return render_template('/cli/Dashboard.html')
+    weights = [0,0,0,0,0,0,1]
+    return render_template('/cli/Dashboard.html', weights=weights)
 
 #Definition for the client job creation
 @bp.route('/newjob', methods=('GET', 'POST'))

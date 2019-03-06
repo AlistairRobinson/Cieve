@@ -21,6 +21,27 @@
       $(document).ready(function() {
           var currentStage = 0;
 
+          // $.ajax({
+          //     url: '/cli/stageDetail',
+          //     type: 'POST',
+          //     data: candidateData,
+          //     success: function(response){
+          //         console.log(response);
+          //         obj = jQuery.parseJSON(JSON.stringify(response));
+          //         completed = obj[0];
+          //         uncompleted = obj[1];
+          //         if (stageToDisplay == "Test") {
+          //           addToTestStep(completed, uncompleted);
+          //         } else if (stageToDisplay == "Interview") {
+          //           addToInterviewStep(completed, uncompleted);
+          //         } else {
+          //           addToAcceptStep(uncompleted);
+          //         }
+          //         // add colours to scores
+          //         addColourToScores();
+          //     }
+          // })
+
           $('.increment').on('click', function() {
             var currentVal = $(this).parent().parent().children(':first-child').children().val();
             var newVal = parseFloat(currentVal) + 0.01;
@@ -32,6 +53,8 @@
             var newVal = parseFloat(currentVal) - 0.01;
             $(this).parent().parent().children(':first-child').children().val(newVal);
           });
+
+
       });
     </script>
 
@@ -149,108 +172,118 @@
                 <div class = columns>
                   <div class = column>
 
-                    <label class="label">(1) Education</label>
-                    <div class="field has-addons">
+                    <form class = "box" action="{{url_for('client.weightUpdate')}}" method="POST">
 
-                        <div class="control is-expanded">
-                          <input class="input" id="educationWeight" type="number" min="0" max="100" placeholder="Education Weight" value=1 readonly="readonly">
-                        </div>
-                        <div class="control">
-                          <button class="button is-primary increment">+</button>
-                        </div>
-                        <div class="control">
-                          <button class="button is-danger decrement">-</button>
-                        </div>
-                      </div>
+                      <input name="_csrf_token" id="_csrf_token" type=hidden value="{{ csrf_token() }}">
 
-                    <label class="label">(2) Skills</label>
-                    <div class="field has-addons">
+                          <label class="label">(1) Education</label>
+                          <div class="field has-addons">
 
-                        <div class="control is-expanded">
-                          <input class="input" id="skillWeight" type="text" placeholder="Skills Weight" readonly="readonly" value=1 >
-                        </div>
-                        <div class="control">
-                          <button class="button is-primary increment">+</button>
-                        </div>
-                        <div class="control">
-                          <button class="button is-danger decrement">-</button>
-                        </div>
-                      </div>
+                              <div class="control is-expanded">
+                                <input class="input" id="educationWeight" name="weight" type="number" min="0" max="100" placeholder="Education Weight" value={{weights[0]}} readonly="readonly">
+                              </div>
+                              <div class="control">
+                                <button class="button is-primary increment">+</button>
+                              </div>
+                              <div class="control">
+                                <button class="button is-danger decrement">-</button>
+                              </div>
+                            </div>
 
-                    <label class="label">(3) Experience</label>
-                    <div class="field has-addons">
+                          <label class="label">(2) Skills</label>
+                          <div class="field has-addons">
 
-                        <div class="control is-expanded">
-                          <input class="input" id="experienceWeight" type="text" placeholder="Experience Weight" readonly="readonly" value=1 >
-                        </div>
-                        <div class="control">
-                          <button class="button is-primary increment">+</button>
-                        </div>
-                        <div class="control">
-                          <button class="button is-danger decrement">-</button>
-                        </div>
-                      </div>
+                              <div class="control is-expanded">
+                                <input class="input" id="skillWeight" type="text" name="weight" placeholder="Skills Weight" readonly="readonly" value={{weights[1]}} >
+                              </div>
+                              <div class="control">
+                                <button class="button is-primary increment">+</button>
+                              </div>
+                              <div class="control">
+                                <button class="button is-danger decrement">-</button>
+                              </div>
+                            </div>
 
-                  </div>
+                          <label class="label">(3) Experience</label>
+                          <div class="field has-addons">
 
-                  <div class = column>
+                              <div class="control is-expanded">
+                                <input class="input" id="experienceWeight" type="text" name="weight" placeholder="Experience Weight" readonly="readonly" value={{weights[2]}} >
+                              </div>
+                              <div class="control">
+                                <button class="button is-primary increment">+</button>
+                              </div>
+                              <div class="control">
+                                <button class="button is-danger decrement">-</button>
+                              </div>
+                            </div>
 
-                    <label class="label">(4) A-Levels</label>
-                    <div class="field has-addons">
 
-                        <div class="control is-expanded">
-                          <input class="input" id="aLevelsWeight" type="text" placeholder="A-Levels Weight" readonly="readonly" value=1 >
-                        </div>
-                        <div class="control">
-                          <button class="button is-primary increment">+</button>
-                        </div>
-                        <div class="control">
-                          <button class="button is-danger decrement">-</button>
-                        </div>
-                      </div>
 
-                    <label class="label">(5) University</label>
-                    <div class="field has-addons">
+                        </div>
 
-                        <div class="control is-expanded">
-                          <input class="input" id="universityWeight" type="text" placeholder="University Weight" readonly="readonly" value=1 >
-                        </div>
-                        <div class="control">
-                          <button class="button is-primary increment">+</button>
-                        </div>
-                        <div class="control">
-                          <button class="button is-danger decrement">-</button>
-                        </div>
-                      </div>
+                        <div class = column>
 
-                    <label class="label">(6) Languages</label>
-                    <div class="field has-addons">
+                          <label class="label">(4) A-Levels</label>
+                          <div class="field has-addons">
 
-                        <div class="control is-expanded">
-                          <input class="input" id="languagesWeight" type="text" placeholder="Languages Weight" readonly="readonly" value=1 >
-                        </div>
-                        <div class="control">
-                          <button class="button is-primary increment">+</button>
-                        </div>
-                        <div class="control">
-                          <button class="button is-danger decrement">-</button>
-                        </div>
-                      </div>
+                              <div class="control is-expanded">
+                                <input class="input" id="aLevelsWeight" type="text" name="weight" placeholder="A-Levels Weight" readonly="readonly" value={{weights[3]}} >
+                              </div>
+                              <div class="control">
+                                <button class="button is-primary increment">+</button>
+                              </div>
+                              <div class="control">
+                                <button class="button is-danger decrement">-</button>
+                              </div>
+                            </div>
 
-                    <label class="label">(7) Skill Set</label>
-                    <div class="field has-addons">
+                          <label class="label">(5) University</label>
+                          <div class="field has-addons">
 
-                        <div class="control is-expanded">
-                          <input class="input" id="skillSetWeight" type="text" placeholder="Skill Set Weight" readonly="readonly" value=1 >
-                        </div>
-                        <div class="control">
-                          <button class="button is-primary increment">+</button>
-                        </div>
-                        <div class="control">
-                          <button class="button is-danger decrement">-</button>
-                        </div>
-                      </div>
+                              <div class="control is-expanded">
+                                <input class="input" id="universityWeight" type="text" name="weight" placeholder="University Weight" readonly="readonly" value={{weights[4]}} >
+                              </div>
+                              <div class="control">
+                                <button class="button is-primary increment">+</button>
+                              </div>
+                              <div class="control">
+                                <button class="button is-danger decrement">-</button>
+                              </div>
+                            </div>
 
+                          <label class="label">(6) Languages</label>
+                          <div class="field has-addons">
+
+                              <div class="control is-expanded">
+                                <input class="input" id="languagesWeight" type="text" name="weight" placeholder="Languages Weight" readonly="readonly" value={{weights[5]}} >
+                              </div>
+                              <div class="control">
+                                <button class="button is-primary increment">+</button>
+                              </div>
+                              <div class="control">
+                                <button class="button is-danger decrement">-</button>
+                              </div>
+                            </div>
+
+                          <label class="label">(7) Skill Set</label>
+                          <div class="field has-addons">
+
+                              <div class="control is-expanded">
+                                <input class="input" id="skillSetWeight" type="text" name="weight" placeholder="Skill Set Weight" readonly="readonly" value={{weights[6]}} >
+                              </div>
+                              <div class="control">
+                                <button class="button is-primary increment">+</button>
+                              </div>
+                              <div class="control">
+                                <button class="button is-danger decrement">-</button>
+                              </div>
+                            </div>
+
+
+                        <button class="button is-link" type="submit" id="updateWeights">Update Weights</button>
+
+                      </form>
                   </div>
                 </div>
 
