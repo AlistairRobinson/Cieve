@@ -194,7 +194,7 @@ def newJobSummary():
             stagesData = []
             for i in range(len(dates)):
                 stagesData.append([dates[i], startTimes[i], endTimes[i], vacancies[i]])
-            print(stagesDate)
+                
             for stageData in stagesData:
                 db.insertStageAvailability(stageID, jobID, stageData)
 
@@ -218,7 +218,6 @@ def jobBreakdown():
         db = get_db()
         jobID = request.form['jobID']
         jobData = db.getJob(jobID)
-        print(jobData)
         jobData["stagesDetail"] = []
         jobData['stagesType'] = []
         for stage in jobData["stages"]:
@@ -254,8 +253,6 @@ def stageDetail():
         stepNumber = int(request.form["stageID"])
 
         applicants = db.getApplicantsJob(jobID, stepNumber)
-        print(jobID, stepNumber)
-        print(applicants)
 
         applicantsData = {}
         for applicant in applicants:
@@ -320,7 +317,12 @@ def weightUpdate():
 @login_required_C
 def applicantReview():
     if request.method == "POST":
-        weight = jsonify(request.form)
-        return weight
-    return "Fail"
+        appID = request.method["applicant id"]
+
+        name = request.method["name"]
+
+        data = get_db().getApplicantUserID(appID)
+        data["name"] = name
+        return render_template('/cli/jobBreakdown.html', appID = appID, appData = data)
+    return redirect(url_for('client.dashboard'))
 
