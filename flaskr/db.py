@@ -166,10 +166,8 @@ class Mongo:
     #Return the data of a job given the jobID
     def getJob(self, jobID):
             query = (self.db.vacancy.find_one({"_id": ObjectId(jobID)}))
-            print (query)
-            print (list(query))
             if query is not None:
-                return list(query)[0]
+                return query
             else:
                 return None
 
