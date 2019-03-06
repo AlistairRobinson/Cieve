@@ -291,10 +291,41 @@ class Mongo:
         return False
 
 
+    def deleteJob(self, title):
+        self.db.vacancy.delete_many({"vacancy title": title})
+        jobID = self.db.vacancy.find_one({"vacancy title": title})['_id']
+        self.db.application.delete_many({"vacancy id": ObjectId(jobID)})
+        droppedApplicantInfo = []
+        for doc in self.db.applicantInfo.find({"vacancy ids": ObjectId(jobID)}):
+            query = self.db.application.find_one({"applicant id": ObjectId(doc['applicant id'])})
+            if query['current step'] > 0:
+                droppedApplicantInfo.append([doc, 1, query['specialized score']])
+            else:
+                droppedApplicantInfo.append([doc, 0, query['specialized score']])
+
+            if len(doc['vacancy ids']) == 1:
+                self.db.applicantInfo.delete_one({"_id": ObjectId(doc['_id'])})
+            else:
+                self.db.applicantInfo.update_many({"vacancy ids": ObjectId(jobID)}, {"$pull": {"vacancy ids": ObjectId(jobID)}})
+
+        clientQuery = self.db.client.find({"vacancies": jobID})
+        message = "The job " + title + "has been deleted"
+        for doc in clientQuery:
+            self.db.client.update_one({"_id": ObjectId(doc['_id'])}, {"$set": {"message": message}})
+        return droppedApplicantInfo
+
+
     def deleteJobByID(self, jobID):
         self.db.application.delete_one({"vacancy id": ObjectId(jobID)})
         self.db.vacancies.delete_one({"_id": ObjectId(jobID)})
+        droppedApplicantInfo = []
         for doc in self.db.applicantInfo.find({"vacancy ids": ObjectId(jobID)}):
+            query = self.db.application.find_one({"applicant id": ObjectId(doc['applicant id'])})
+            if query['current step'] > 0:
+                droppedApplicantInfo.append([doc, 1, query['specialized score']])
+            else:
+                droppedApplicantInfo.append([doc, 0, query['specialized score']])
+
             if len(doc['vacancy ids']) == 1:
                 self.db.applicantInfo.delete_one({"_id": ObjectId(doc['_id'])})
             else:
@@ -306,8 +337,7 @@ class Mongo:
             message = "The job " + jobTitleQuery['vacancy title'] + "has been deleted"
         for doc in clientQuery:
             self.db.client.update_one({"_id": ObjectId(doc['_id'])}, {"$set": {"message": message}})
-        return True
-
+        return droppedApplicantInfo
 
     #Returns the weights stored
     def getWeights(self):
@@ -508,28 +538,6 @@ class Mongo:
         self.db.applicantInfo.delete_many({"applicant id": self.getApplicantAccount(username)['applicant id']})
         return True
 
-    def deleteJob(self, title):
-        jobID = self.db.vacancy.find_one({"vacancy title": title})['_id']
-        self.db.vacancy.delete_many({"vacancy title": title})
-        self.db.application.delete_many({"vacancy id": ObjectId(jobID)})
-        droppedApplicantInfo = []
-        for doc in self.db.applicantInfo.find({"vacancy ids": ObjectId(jobID)}):
-            query = self.db.application.find_one({"applicant id": ObjectId(doc['applicant id'])})
-            if query['current step'] > 0:
-                droppedApplicantInfo.append([doc, 1, query['specialized score']])
-            else:
-                droppedApplicantInfo.append([doc, 0, query['specialized score']])
-
-            if len(doc['vacancy ids']) == 1:
-                self.db.applicantInfo.delete_one({"_id": ObjectId(doc['_id'])})
-            else:
-                self.db.applicantInfo.update_many({"vacancy ids": ObjectId(jobID)}, {"$pull": {"vacancy ids": ObjectId(jobID)}})
-
-        clientQuery = self.db.client.find({"vacancies": jobID})
-        message = "The job " + title + " has been deleted"
-        for doc in clientQuery:
-            self.db.client.update_one({"_id": ObjectId(doc['_id'])}, {"$set": {'message': message}})
-        return droppedApplicantInfo
 
     def addUserEducation(self, userID, alevels, degreeQualification, degreeLevel, universityAttended):
         self.db.applicantInfo.update_one({"applicant id": ObjectId(userID)},
