@@ -366,7 +366,7 @@ class Mongo:
         return True
 
     def getQuestions(self, stageID):
-        query = self.db.questionStage.find_one({"stage id": stageID})
+        query = self.db.questionStage.find_one({"stage id": ObjectId(stageID)})
         return query['questions']
 
     def insertQuestions(self, stageID, questions):
@@ -398,21 +398,23 @@ class Mongo:
 
 
     #Generate the assessment details for the stage
-    def assessQuestions(self, answers, currentStep, applicantID, jobID):
-        self.db.assessement.insert_one({"applicant id": applicantID,
-                                        "job id": jobID,
+    def assessQuestions(self, answers, currentStep, applicantID, jobID, stepStageID):
+        self.db.assessement.insert_one({"applicant id": ObjectId(applicantID),
+                                        "job id": ObjectId(jobID),
                                         "current step": currentStep,
                                         "score": 0})
-        stepStage = self.db.vacancy.find_one({"_id": ObjectId(jobID)}, {"stages": 1, "_id": 0})
-        stepStageID = stepStage['stages'][currentStep]
-        stepQuestions = self.db.questionStage.find_one({"stage id": stepStageID}, {"questions": 1, "_id": 0})
+        print answers
+        print currentStep
+        print applicantID
+        print jobID
+        print stepStageID
+        stepQuestions = self.db.questionStage.find_one({"stage id": ObjectId(stepStageID)}, {"questions": 1, "_id": 0})
         for i in range(len(answers)):
-            if answers[i] == stepQuestions['questions'][i][0]:
-                self.db.assessement.update_one({"applicant id": applicantID, "job id": jobID}, {"$inc": {"score"}})
-    
+            if answers[i] == stepQuestions['questions'][i].values()[0][0]:
+                self.db.assessement.update_one({"applicant id": ObjectId(applicantID), "job id": ObjectId(jobID), "current step": currentStep}, {"$inc": {"score"}})
 
     def getStageResults(self, currentStep, applicantID, jobID):
-        return self.db.assessment.find_one({"applicant id": applicantID, "job id": jobID, "current step": currentStep})['score']
+        return self.db.assessment.find_one({"applicant id": ObjectId(applicantID), "job id": ObjectId(jobID), "current step": currentStep})['score']
 
 
     #If applicant is rejected on step 0, set step to -1. Otherwise if rejected the set is set to -2
