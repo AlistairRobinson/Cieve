@@ -438,7 +438,7 @@ class Mongo:
         slot = []
         for doc in timeSlotQuery:
             print doc
-            slot[int(doc["_id"])] = str(doc["slots"][0]) + ", " + str(doc["slots"][1]) + " to " + str(doc["slots"][2])
+            slot.append([(doc["_id"]),str(doc["slots"][0]) + ", " + str(doc["slots"][1]) + " to " + str(doc["slots"][2])])
         return slot
 
     def bookInterviewSlots(self, applicantID, jobID, stageID, slot, interviewStageID):
