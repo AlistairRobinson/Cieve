@@ -434,7 +434,7 @@ class Mongo:
             stageID = query['stages'][int(stepNo)]
         timeSlotQuery = self.db.interviewStage.find_one({"stage id": stageID, "job id": ObjectId(jobID)})
 
-        return timeSlotQuery
+        return list(timeSlotQuery["slots"])
 
     def bookInterviewSlots(self, applicantID, jobID, stageID, slot):
         message = ""
