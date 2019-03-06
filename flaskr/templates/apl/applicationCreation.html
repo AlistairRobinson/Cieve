@@ -41,9 +41,6 @@
                 <strong>Home</strong>
               </a>
 
-              <a class="navbar-item" href="/about">
-                About
-              </a>
               <a class="navbar-item" href="/privacy">
                 Privacy
               </a>
@@ -56,18 +53,7 @@
                       {{name()}}
                     </a>
                     <div class="navbar-dropdown">
-                        <a class="navbar-item is-leveled " href="#">
-                            <span class="icon ">
-                                    <i class="fa fa-user-circle "></i>
-                                </span>
-                            Edit Details
-                        </a>
-                        <a class="navbar-item is-leveled " href="# ">
-                            <span class="icon ">
-                                    <i class="fa fa-key "></i>
-                                </span>
-                            Change Password
-                        </a>
+                        
                         <a class="navbar-item is-leveled " href="/logout">
                             <span class="icon ">
                                     <i class="fa fa-sign-out-alt"></i>
@@ -478,7 +464,7 @@
                             var selectedLocation = $('#countryDropDown').val();
                             if ((selectedDivision == "Please Select")||(selectedRole == "Please Select")||(selectedLocation == "Please Select")) {
                               $('#nextStepBttn').prop('disabled', true);
-                              alert("test");
+                             // alert("test");
                             } else {
                               $('#nextStepBttn').prop('disabled', false);
                             }
@@ -879,7 +865,7 @@
                                       }
                                   },
                                   error: function(error) {
-                                      alert("error")
+                                      //alert("error")
                                       console.log(error);
                                   }
                               });

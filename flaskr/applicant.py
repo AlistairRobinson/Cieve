@@ -3,6 +3,7 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 from datetime import datetime
+from random import shuffle
 
 from flaskr.Evaluator import Evaluator
 from flaskr.auth import login_required_A
@@ -101,7 +102,7 @@ def newApplication():
         unselectedJobs = []
         if request.form['Consider_for_other_roles'] == "1":
             try:
-                unselected_Jobs = request.form.to_dict(flat=False)["Unselected_Jobs[]"]
+                unselectedJobs = request.form.to_dict(flat=False)["Unselected_Jobs[]"]
             except:
                 pass
 
@@ -227,6 +228,78 @@ def applications():
 
             filteredData.append(applicationData)
     return render_template('/apl/applications.html', applications = filteredData)
+
+@bp.route('/testing', methods=('GET', 'POST'))
+@login_required_A
+def testing():
+    if request.method == "POST":
+        jobID = request.form["vacancyId"]
+        applicantID = request.form["applicantId"]
+        stepNo = request.form["currentStep"]
+        stageID = request.form["stageId"]
+
+        db = get_db()
+        questions = db.getQuestions(stageID)
+
+        for q in questions:
+            q[0] = shuffle(q.values()[0])
+
+
+        return render_template('/apl/compquestions.html', questions=questions, jobID=jobID, applicantID=applicantID, stepNo=stepNo, stageId=stageID)
+    return redirect(url_for('applicant.applications'))
+
+@bp.route('/testingCheck', methods=('GET', 'POST'))
+@login_required_A
+def testingCheck():
+    if request.method == "POST":
+        jobID = request.form["vacancyId"]
+        applicantID = request.form["applicantId"]
+        stepNo = request.form["stepNo"]
+        stepStageID = request.form["stageId"]
+
+        answers = []
+        try:
+            i = 1
+            while 1==1:
+                answers.append(request.form["answer[]"+str(i)])
+                i += 1
+        except:
+            pass
+        db = get_db()
+        db.assessQuestions(answers, stepNo, applicantID, jobID, stepStageID)
+        db.setCompletedTrue(applicantID, jobID)
+
+        redirect(url_for('applicant.applications'))
+    return redirect(url_for('applicant.applications'))
+
+@bp.route('/booking', methods=('GET', 'POST'))
+@login_required_A
+def booking():
+    if request.method == "POST":
+        jobID = request.form["vacancyId"]
+        applicantID = request.form["applicantId"]
+        stepNo = request.form["currentStep"]
+
+        slots = get_db().getInterviewSlots(jobID, applicantID)
+        return slots
+        #return render_template('/apl/interview.html', slots=slots, jobID=jobID, applicantID=applicantID, stepNo=stepNo)
+    return redirect(url_for('applicant.applications'))
+
+@bp.route('/bookingSet', methods=('GET', 'POST'))
+@login_required_A
+def bookingSet():
+    if request.method == "POST":
+        jobID = request.form["vacancyId"]
+        applicantID = request.form["applicantId"]
+        stepNo = request.form["currentStep"]
+        
+        bookingRequest = request.form["booking[]"]
+
+        #db call
+
+        return redirect(url_for('applicant.applications'))
+    return redirect(url_for('applicant.applications'))
+
 
 @bp.before_app_request
 def load_logged_in_user():

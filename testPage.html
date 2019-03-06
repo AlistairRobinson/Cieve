@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Page Title</title>
+
+<script>
+$(document).ready(function() {
+  $('#tab_header ul li.item').on('click', function() {
+    var number = $(this).data('option');
+    $('#tab_header ul li.item').removeClass('is-active');
+    $(this).addClass('is-active');
+    $('#tab_container .container_item').removeClass('is-active');
+    $('div[data-item="' + number + '"]').addClass('is-active');
+  });
+});
+</script>
+
+
+</head>
+<body>
+
+<div class="tabs is-centered" id="tab_header">
+  <ul>
+    <li class="item is-active" data-option="1"><a>Pictures</a></li>
+    <li class="item" data-option="2"><a>Music</a></li>
+    <li class="item" data-option="3"><a>Videos</a></li>
+  </ul>
+</div>
+<div class="box" id="tab_container">
+  <div class="container_item is-active" data-item="1">
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam perferendis, consequuntur facere molestiae explicabo reprehenderit vitae. Deleniti neque dolore nobis cum eius nulla porro quos sint delectus sed amet adipisci quaerat laudantium est distinctio dolor, at repudiandae similique doloribus rem. Obcaecati recusandae fugiat itaque nihil vel, mollitia modi, repellat, voluptatibus, repellendus nostrum nisi veritatis. Odit magnam quia magni quibusdam molestiae ut.
+  </div>
+  <div class="container_item" data-item="2">
+    Nobis quibusdam veritatis voluptatum, quasi. Unde eaque reprehenderit expedita at earum, accusantium laudantium vitae minima, veritatis in dolorem, illo itaque nihil cum iusto tenetur saepe repellendus nam eum culpa magnam quae! Nam, deleniti? Hic quibusdam sed perferendis quasi mollitia! Obcaecati recusandae fugiat itaque nihil vel, mollitia modi, repellat, voluptatibus, repellendus nostrum nisi veritatis. Odit magnam quia magni quibusdam molestiae ut.
+  </div>
+  <div class="container_item" data-item="3">
+    Beatae neque magni recusandae tempore ad nobis magnam. Explicabo, a! Molestiae aperiam necessitatibus suscipit mollitia dolorum quas possimus ipsa, nemo quod ipsam veniam, incidunt maxime quos iusto reiciendis. Eligendi cupiditate asperiores fuga dolore. Reiciendis eligendi eaque autem, aperiam delectus nesciunt enim similique ut laborum blanditiis tempora quidem, nobis unde incidunt alias atque dignissimos recusandae quibusdam cum dolor voluptas corrupti!
+  </div>
+</div>
+
+<h1>This is a Heading</h1>
+<p>This is a paragraph.</p>
+
+</body>
+</html>

@@ -32,9 +32,6 @@
                 <strong>Home</strong>
               </a>
 
-              <a class="navbar-item" href="/about">
-                About
-              </a>
               <a class="navbar-item" href="/privacy">
                 Privacy
               </a>
@@ -47,18 +44,7 @@
                       {{name()}}
                     </a>
                     <div class="navbar-dropdown">
-                        <a class="navbar-item is-leveled " href="#">
-                            <span class="icon ">
-                                    <i class="fa fa-user-circle "></i>
-                                </span>
-                            Edit Details
-                        </a>
-                        <a class="navbar-item is-leveled " href="# ">
-                            <span class="icon ">
-                                    <i class="fa fa-key "></i>
-                                </span>
-                            Change Password
-                        </a>
+
                         <a class="navbar-item is-leveled " href="/logout">
                             <span class="icon ">
                                     <i class="fa fa-sign-out-alt"></i>
@@ -117,7 +103,8 @@
             </div>
             <div class="column">
             <h3 class="title is-3">Job Listings</h3>
-                You can <a href="#jobNarrow">view all the open positions below</a> or use the following form to narrow down your options.
+                <p>You can <a href="#jobNarrow">view all the open positions below</a> or use the following form to narrow down your options.</p>
+                <p>To apply to the available jobs please go to the <a  href="/apl/newapplication">Apply now</a> page</p>
                 <br><br>
 
                 <input name=_csrf_token id="_csrf_token" type=hidden value="{{ csrf_token() }}">
@@ -176,20 +163,9 @@
 
             <div class="columns" id="jobNarrow">
                 <div class="column">
-                  <b>Search Results Page 1 of x</b></b>
                 </div>
                 <div class="column">
-                  <span class="select is-pulled-right">
-                    <select>
-                      <option selected>Sort by...</option>
-                      <option>Job Title ASC</option>
-                      <option>Job Title DESC</option>
-                      <option>Division ASC</option>
-                      <option>Division DESC</option>
-                      <option>Role ASC</option>
-                      <option>Role DESC</option>
-                    </select>
-                  </span>
+
                 </div>
             </div>
 
@@ -203,21 +179,7 @@
             </div>
             <br>
 
-            <nav class="pagination" role="navigation" aria-label="pagination">
-              <a class="pagination-previous" title="This is the first page" disabled>Previous</a>
-              <a class="pagination-next" id="nextPage">Next page</a>
-              <ul class="pagination-list">
-                <li>
-                  <a class="pagination-link is-current" aria-label="Page 1" aria-current="page">1</a>
-                </li>
-                <li>
-                  <a class="pagination-link" aria-label="Goto page 2">2</a>
-                </li>
-                <li>
-                  <a class="pagination-link" aria-label="Goto page 3">3</a>
-                </li>
-              </ul>
-            </nav>
+
 
 
 
