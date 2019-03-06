@@ -185,8 +185,8 @@ def newJobSummary():
 
             stagesData = []
             for i in range(len(dates)):
-                stagesData.append([dates[i], startTimes[i], endTimes[i], vacancies[i]])
-                
+                stagesData.append([dates[i], startTimes[i], endTimes[i]])
+
             for stageData in stagesData:
                 db.insertStageAvailability(stageID, jobID, stageData)
 
@@ -307,12 +307,11 @@ def weightUpdate():
 @login_required_C
 def applicantReview():
     if request.method == "POST":
-        appID = request.method["applicant id"]
+        appID = request.form["applicant id"]
 
-        name = request.method["name"]
+        name = request.form["name"]
 
         data = get_db().getApplicantUserID(appID)
         data["name"] = name
-        return render_template('/cli/jobBreakdown.html', name = name, appData = data)
+        return render_template('/cli/appreview.html', name = name, application = data)
     return redirect(url_for('client.dashboard'))
-
