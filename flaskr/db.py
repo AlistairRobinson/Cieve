@@ -244,10 +244,10 @@ class Mongo:
         jobTitle = self.db.vacancy.find_one({"_id": ObjectId(jobID)})
         if stepQuery != None:
             self.db.vacancy.update_one({"_id": ObjectId(jobID)}, {"$inc": {"positions available": -1}})
-            message = "You have been accepted for " + jobTitle + "!"
+            message = "You have been accepted for " + jobTitle['vacancy title'] + "!"
         else:
-            message = "You have been moved onto the next stage for your application for " + jobTitle + ""
-        self.db.accountInfo.update_one({"applicant id": applicantID}, {"$set": {"message": message}})
+            message = "You have been moved onto the next stage for your application for " + jobTitle['vacancy title'] + ""
+        self.db.accountInfo.update_one({"applicant id": ObjectId(applicantID)}, {"$set": {"message": message}})
         return True
 
 
@@ -376,7 +376,6 @@ class Mongo:
 
     def getInterviewSlots(self, stageID, jobID):
         timeSlots = self.db.interviewStage.find_one({"stage id": stageID, "vacancy id": jobID})
-        print(timeSlots)
         return timeSlots['slots']
 
 
@@ -527,4 +526,4 @@ class Mongo:
         return True
 
     def setCompletedTrue(self, applicantId, jobId):
-        self.db.application.update_one({"applicant id": ObjectId(applicantId), "vacancy id" : ObjectId(applicantId)},{"$set": {"completed": True }})
+        self.db.application.update_one({"applicant id": ObjectId(applicantId), "vacancy id" : ObjectId(jobId)},{"$set": {"completed": True }})

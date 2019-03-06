@@ -123,6 +123,7 @@ color: green;
                 </a>
             </div>
             {%else%}
+
             {%for application in applications%}
             <div class="box">
               <h3 class="title is-4">{{application['vacancy title']}}</h3>
@@ -160,7 +161,6 @@ color: green;
               <span class="tag"><b>Role:&nbsp</b> {{application['role type']}} &nbsp<i class="fas fa-users"></i></span>
               <span class="icon is-pulled-right">
                 <form></form>
-                
                 {% if application['completed'] == True%}
 
                 <i class="far fa-check-circle fa-3x" ></i>
