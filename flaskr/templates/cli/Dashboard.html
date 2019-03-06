@@ -43,6 +43,7 @@
           // })
 
           $('.increment').on('click', function() {
+
             var currentVal = $(this).parent().parent().children(':first-child').children().val();
             var newVal = parseFloat(currentVal) + 0.01;
             $(this).parent().parent().children(':first-child').children().val(newVal);
@@ -180,7 +181,7 @@
                           <div class="field has-addons">
 
                               <div class="control is-expanded">
-                                <input class="input" id="educationWeight" name="weight" type="number" min="0" max="100" placeholder="Education Weight" value={{weights[0]}} readonly="readonly">
+                                <input class="input" type="button" id="educationWeight" name="weight" type="number" min="0" max="100" placeholder="Education Weight" value={{weights[0]}} readonly="readonly">
                               </div>
                               <div class="control">
                                 <button class="button is-primary increment">+</button>
@@ -194,7 +195,7 @@
                           <div class="field has-addons">
 
                               <div class="control is-expanded">
-                                <input class="input" id="skillWeight" type="text" name="weight" placeholder="Skills Weight" readonly="readonly" value={{weights[1]}} >
+                                <input class="input" type="button" id="skillWeight" type="text" name="weight" placeholder="Skills Weight" readonly="readonly" value={{weights[1]}} >
                               </div>
                               <div class="control">
                                 <button class="button is-primary increment">+</button>
@@ -208,7 +209,7 @@
                           <div class="field has-addons">
 
                               <div class="control is-expanded">
-                                <input class="input" id="experienceWeight" type="text" name="weight" placeholder="Experience Weight" readonly="readonly" value={{weights[2]}} >
+                                <input class="input" type="button" id="experienceWeight" type="text" name="weight" placeholder="Experience Weight" readonly="readonly" value={{weights[2]}} >
                               </div>
                               <div class="control">
                                 <button class="button is-primary increment">+</button>
@@ -228,7 +229,7 @@
                           <div class="field has-addons">
 
                               <div class="control is-expanded">
-                                <input class="input" id="aLevelsWeight" type="text" name="weight" placeholder="A-Levels Weight" readonly="readonly" value={{weights[3]}} >
+                                <input class="input" type="button" id="aLevelsWeight" type="text" name="weight" placeholder="A-Levels Weight" readonly="readonly" value={{weights[3]}} >
                               </div>
                               <div class="control">
                                 <button class="button is-primary increment">+</button>
@@ -242,7 +243,7 @@
                           <div class="field has-addons">
 
                               <div class="control is-expanded">
-                                <input class="input" id="universityWeight" type="text" name="weight" placeholder="University Weight" readonly="readonly" value={{weights[4]}} >
+                                <input class="input" type="button" id="universityWeight" type="text" name="weight" placeholder="University Weight" readonly="readonly" value={{weights[4]}} >
                               </div>
                               <div class="control">
                                 <button class="button is-primary increment">+</button>
@@ -256,7 +257,7 @@
                           <div class="field has-addons">
 
                               <div class="control is-expanded">
-                                <input class="input" id="languagesWeight" type="text" name="weight" placeholder="Languages Weight" readonly="readonly" value={{weights[5]}} >
+                                <input class="input" type="button" id="languagesWeight" type="text" name="weight" placeholder="Languages Weight" readonly="readonly" value={{weights[5]}} >
                               </div>
                               <div class="control">
                                 <button class="button is-primary increment">+</button>
@@ -270,7 +271,7 @@
                           <div class="field has-addons">
 
                               <div class="control is-expanded">
-                                <input class="input" id="skillSetWeight" type="text" name="weight" placeholder="Skill Set Weight" readonly="readonly" value={{weights[6]}} >
+                                <input class="input" type="button" id="skillSetWeight" type="text" name="weight" placeholder="Skill Set Weight" readonly="readonly" value={{weights[6]}} >
                               </div>
                               <div class="control">
                                 <button class="button is-primary increment">+</button>
