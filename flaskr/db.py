@@ -445,7 +445,7 @@ class Mongo:
         query = self.db.vacancy.find_one({"_id": ObjectId(jobID)})
         if query is not None:
             jobTitle = query.get("vacancy title", "")
-            message = "An interview has been booked for your " + jobTitle + " application at the time " + slot[1] + ", " + slot[0]
+            message = "An interview has been booked for your " + jobTitle + " application at the time " + slot
         if message != "":
             self.db.accountInfo.update_one({"applicant id": applicantID}, {"$set": {"message": message}})
         return True
@@ -469,7 +469,12 @@ class Mongo:
 
         stepQuestions = self.db.questionStage.find_one({"stage id": ObjectId(stepStageID)}, {"questions": 1, "_id": 0})
         for i in range(len(answers)):
-            if str(answers[i]) == str(stepQuestions['questions'][i].values()[0][0]):
+            print(stepQuestions)
+            print(stepQuestions['questions'])
+            print(stepQuestions['questions'][i])
+            print(stepQuestions['questions'][i].values())
+            print(list(stepQuestions['questions'][i].values())[0][0])
+            if str(answers[i]) == str(list(stepQuestions['questions'][i].values())[0][0]):
                 self.db.assessment.update_one({"applicant id": ObjectId(applicantID), "job id": ObjectId(jobID), "current step": currentStep}, {"$inc": {"score":1}})
 
     def getStageResults(self, currentStep, applicantID, jobID):
@@ -484,7 +489,7 @@ class Mongo:
         else:
             self.db.application.update_one({"_id": ObjectId(applicationID)}, {"$set": {"current step": -2}})
         jobTitle = self.db.vacancy.find_one({"_id": ObjectId(stepQuery['vacancy id'])})['vacancy title']
-        message = "Your application for the " + jobTitle + " has been rejected"
+        message = "Your application for " + jobTitle + " has been rejected"
         self.db.accountInfo.update_one({"applicant id": ObjectId(stepQuery['applicant id'])}, {"$set": {"message": message}})
 
     def getAccepted(self, jobID):
@@ -492,11 +497,12 @@ class Mongo:
 
     def getRejected(self, jobID):
         rejectedQuery = self.db.application.find({"vacancy id": ObjectId(jobID), "current step": {"$lt": 0}})
-        rejected = list(rejectedQuery)
+        rejected = []
 
         for doc in rejectedQuery:
+            rejected.append(doc)
             self.db.application.delete_one({"applicant id": ObjectId(doc['applicant id']), "vacancy id": ObjectId(jobID)})
-            if len(self.db.applicantInfo.find_one({"applicant id": ObjectId(doc['applicant id'])})['vacancy ids']) == 0:
+            if len(self.db.applicantInfo.find_one({"applicant id": ObjectId(doc['applicant id'])})['vacancy ids']) == 1:
                 self.db.applicantInfo.delete_one({"applicant id": ObjectId(doc['applicant id'])})
             else:
                 self.db.applicantInfo.update_one({"applicant id": ObjectId(doc['applicant id'])}, {"$pull": {"vacancy ids": jobID}})
@@ -590,4 +596,4 @@ class Mongo:
 
     def setCompletedTrue(self, applicantId, jobId):
         self.db.application.update_one({"applicant id": ObjectId(applicantId), "vacancy id" : ObjectId(jobId)},{"$set": {"completed": True }})
-get_db().addUserScore("5c7d7c3c9a22a60680b903cf", "example,")
+print(get_db().insertStageAvailability('5c74389bad9bb61fbcc01a3a', '5c80028b8c5b5b2064c32fd7', ["2019-01-01", "13:00", "13:30"]))

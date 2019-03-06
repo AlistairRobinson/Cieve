@@ -502,4 +502,4 @@ class Evaluator:
         for id in applicantIDS:
             apl = self.db.getApplicantUserID(id)
             scores = self.basicEvaluate(apl)
-            db.addUserScore(id, scores)
+            self.db.addUserScore(id, scores)
