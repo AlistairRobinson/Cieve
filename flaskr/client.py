@@ -185,7 +185,7 @@ def newJobSummary():
 
             stagesData = []
             for i in range(len(dates)):
-                stagesData.append([dates[i], startTimes[i], endTimes[i], vacancies[i]])
+                stagesData.append([dates[i], startTimes[i], endTimes[i]])
 
             for stageData in stagesData:
                 db.insertStageAvailability(stageID, jobID, stageData)
