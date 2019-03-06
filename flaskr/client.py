@@ -178,7 +178,6 @@ def newJobSummary():
             dates = data.get("Date[]" + stepID, [])
             startTimes = data.get("startTime[]" + stepID, [])
             endTimes = data.get("endTime[]" + stepID, [])
-            vacancies = data.get("vacancies[]" + stepID, [])
 
             if len(startTimes) != len(endTimes) or len(dates) != len(startTimes):
                 flash("An unexpected error occured")
@@ -195,7 +194,7 @@ def newJobSummary():
             stagesData = []
             for i in range(len(dates)):
                 stagesData.append([dates[i], startTimes[i], endTimes[i], vacancies[i]])
-
+            print(stagesDate)
             for stageData in stagesData:
                 db.insertStageAvailability(stageID, jobID, stageData)
 
@@ -313,7 +312,15 @@ def delete():
 @login_required_C
 def weightUpdate():
     if request.method == "POST":
-        weight = request.form.to_dict(flat=False)
+        weight = jsonify(request.method)
+        return weight
+    return "Fail"
+
+@bp.route('/applicantReview', methods=('GET', 'POST'))
+@login_required_C
+def applicantReview():
+    if request.method == "POST":
+        weight = jsonify(request.form)
         return weight
     return "Fail"
 
