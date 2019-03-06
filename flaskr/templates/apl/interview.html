@@ -102,15 +102,16 @@
             <div class="column">
 		<h1 class="title"> Pick your interview Time</h1>
 			<form class="" action="" method="post">
-
+                    {{slots}}
         <div class="field">
           <div class="control">
             <div class="select is-fullwidth">
 
 
         <select name="interviewavailability">
-          {% for date in dates%}
-            <option>{{date.day}}, {{date.startTime}}-{{date.endTime}}</option>
+        
+          {% for date in slots%}
+            <option>{{date[0]}}, {{date[1]}}-{{date[2]}}</option>
           {%endfor%}
         </select>
               </div>
