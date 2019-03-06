@@ -430,8 +430,6 @@ class Mongo:
         query = self.db.vacancy.find_one({"_id": ObjectId(jobID)})
         if query is not None:
             stageID = query['stages'][int(stepNo)]
-        print(stageID)
-        print(jobID)
         timeSlotQuery = self.db.interviewStage.find({"stage id": stageID, "job id": ObjectId(jobID)})
         slot = []
         for doc in timeSlotQuery:
