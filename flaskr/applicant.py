@@ -257,6 +257,7 @@ def testingCheck():
         stepNo = request.form["stepNo"]
         stepStageID = request.form["stageId"]
 
+
         answers = []
         try:
             i = 1
@@ -267,6 +268,7 @@ def testingCheck():
             pass
         db = get_db()
         db.assessQuestions(answers, stepNo, applicantID, jobID, stepStageID)
+
         db.setCompletedTrue(applicantID, jobID)
 
         redirect(url_for('applicant.applications'))

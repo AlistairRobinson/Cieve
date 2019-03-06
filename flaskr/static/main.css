@@ -52,14 +52,6 @@ html { scroll-behavior: smooth; }
     vertical-align: middle;
 }
 
-#tab_container .container_item {
-  display: none;
-}
-
-#tab_container .container_item.is-active {
-  display: block;
-}
-
 
 /* .box { transition: all .2s ease-in-out; }
 .box:hover { transform: scale(1.1); } */

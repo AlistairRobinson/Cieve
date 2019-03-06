@@ -248,11 +248,15 @@ class Mongo:
         jobTitle = self.db.vacancy.find_one({"_id": ObjectId(jobID)})
         if stepQuery != None:
             self.db.vacancy.update_one({"_id": ObjectId(jobID)}, {"$inc": {"positions available": -1}})
+<<<<<<< HEAD
             message = "You have been accepted for the job " + jobTitle + "!"
             self.db.application.delete_one({"applicant id": ObjectId(applicantID)})
+=======
+            message = "You have been accepted for " + jobTitle['vacancy title'] + "!"
+>>>>>>> 17914f1e7f2a8774eb385b0fc97b08db09c2a9b6
         else:
-            message = "You have been moved onto the next stage for your application for " + jobTitle + ""
-        self.db.accountInfo.update_one({"applicant id": applicantID}, {"$set": {"message": message}})
+            message = "You have been moved onto the next stage for your application for " + jobTitle['vacancy title'] + ""
+        self.db.accountInfo.update_one({"applicant id": ObjectId(applicantID)}, {"$set": {"message": message}})
         return True
 
 
@@ -388,6 +392,7 @@ class Mongo:
         return True
 
 
+<<<<<<< HEAD
     def getInterviewSlots(self, jobID, stepNo):
         query = self.db.vacancy.find_one({"_id": ObjectId(jobID)})
         if query is not None:
@@ -396,6 +401,11 @@ class Mongo:
         if timeSlotQuery is not None:
             return timeSlots.get("slots", [])
         return None
+=======
+    def getInterviewSlots(self, stageID, jobID):
+        timeSlots = self.db.interviewStage.find_one({"stage id": stageID, "vacancy id": jobID})
+        return timeSlots['slots']
+>>>>>>> 17914f1e7f2a8774eb385b0fc97b08db09c2a9b6
 
 
     def bookInterviewSlots(self, applicantID, jobID, stageID, slot):
@@ -571,4 +581,4 @@ class Mongo:
         return applicants
 
     def setCompletedTrue(self, applicantId, jobId):
-        self.db.application.update_one({"applicant id": ObjectId(applicantId), "vacancy id" : ObjectId(applicantId)},{"$set": {"completed": True }})
+        self.db.application.update_one({"applicant id": ObjectId(applicantId), "vacancy id" : ObjectId(jobId)},{"$set": {"completed": True }})

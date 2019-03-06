@@ -43,10 +43,7 @@ def newJob():
             pass
 
         minDegreeLevel = request.form['min_degree_level']
-        x = request.form['preferred_degrees']
-        preferedDegrees = []
-        if x != "No Preference":
-            preferedDegrees = x
+        preferedDegrees = request.form.get('preferred_degrees',[])
 
         data = request.form.to_dict(flat=False)
         try:
@@ -287,7 +284,6 @@ def moveApplicant():
     if request.method == "POST":
         appID = request.form["applicant id"]
         jobID = request.form["job id"]
-        print(request.form)
         db = get_db()
         db.moveToNextStage(appID, jobID)
         return "Success"
