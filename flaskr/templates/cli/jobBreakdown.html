@@ -25,7 +25,7 @@
           $('#nextStepBttn').on('click', function() {
             $('#step' + currentStage).empty();
             currentStage++;
-            var stages = {{jobData["stagesType"]|safe}};
+            var stages = {{(jobData["stagesType"] | safe )| tojson }};
             console.log(stages);
             var stageToDisplay = stages[currentStage];
 
@@ -98,6 +98,25 @@
 
           function addToTestStep(completed, uncompleted) {
             var rank=1;
+            completed.forEach(e => {
+                var rowString = "<tr><td>"+rank+"</td>";
+                rank++;
+                if (e['preferred']==1) {
+                  rowString = rowString + '<td><i class="fas fa-star" style="color:#FFDF00;""></i></td>';
+                } else {
+                  rowString = rowString + '<td></td>';
+                }
+                rowString = rowString + '<td><p class="is-pulled-left">'+e['name']+'</p></td>';
+                var score = Math.round((e['basic scores'].score)*100);
+                var jobScore = Math.round((e['specialized score'])*100);
+                rowString = rowString + '<td><b><div class="scoreValue">'+score+'</div></b></td>';
+                rowString = rowString + '<td><b><div class="scoreValue">'+jobScore+'</div></b></td>';
+                rowString = rowString + '<td></td>';
+                rowString = rowString + '<td><div onclick="advanceCandidate(this)" style="cursor: pointer;" id='+e["applicant id"]+'><i class="fas fa-arrow-right"></i></div></td>';
+                rowString = rowString + '<td><div onclick="rejectCandidate(this)" style="cursor: pointer;" id='+e["_id"]+'><i class="fas fa-times"</i></td>';
+                rowString = rowString + '</tr>';
+                $('#CompleteCandidates').append(rowString);
+            });
             uncompleted.forEach(e => {
                 var rowString = "<tr><td>"+rank+"</td>";
                 rank++;
@@ -115,7 +134,7 @@
                 rowString = rowString + '<td><div onclick="rejectCandidate(this)" style="cursor: pointer;" id='+e["_id"]+'><i class="fas fa-times"</i></td>';
                 rowString = rowString + '</tr>';
                 $('#UncompleteCandidates').append(rowString);
-            })
+            });
           }
 
           function addToInterviewStep(completed, uncompleted) {
@@ -133,11 +152,30 @@
                 var jobScore = Math.round((e['specialized score'])*100);
                 rowString = rowString + '<td><b><div class="scoreValue">'+score+'</div></b></td>';
                 rowString = rowString + '<td><b><div class="scoreValue">'+jobScore+'</div></b></td>';
+                rowString = rowString + '<td></td>';
+                rowString = rowString + '<td><div onclick="advanceCandidate(this)" style="cursor: pointer;" id='+e["applicant id"]+'><i class="fas fa-arrow-right"></i></div></td>';
+                rowString = rowString + '<td><div onclick="rejectCandidate(this)" style="cursor: pointer;" id='+e["_id"]+'><i class="fas fa-times"</i></td>';
+                rowString = rowString + '</tr>';
+                $('#CompleteCandidates').append(rowString);
+            });
+            uncompleted.forEach(e => {
+                var rowString = "<tr><td>"+rank+"</td>";
+                rank++;
+                if (e['preferred']==1) {
+                  rowString = rowString + '<td><i class="fas fa-star" style="color:#FFDF00;""></i></td>';
+                } else {
+                  rowString = rowString + '<td></td>';
+                }
+                rowString = rowString + '<td><p class="is-pulled-left">'+e['name']+'</p></td>';
+                var score = Math.round((e['basic scores'].score)*100);
+                var jobScore = Math.round((e['specialized score'])*100);
+                rowString = rowString + '<td><b><div class="scoreValue">'+score+'</div></b></td>';
+                rowString = rowString + '<td><b><div class="scoreValue">'+jobScore+'</div></b></td>';
                 rowString = rowString + '<td><div onclick="advanceCandidate(this)" style="cursor: pointer;" id='+e["applicant id"]+'><i class="fas fa-arrow-right"></i></div></td>';
                 rowString = rowString + '<td><div onclick="rejectCandidate(this)" style="cursor: pointer;" id='+e["_id"]+'><i class="fas fa-times"</i></td>';
                 rowString = rowString + '</tr>';
                 $('#UncompleteCandidates').append(rowString);
-            })
+            });
           }
 
           function addToAcceptStep(uncompleted) {
@@ -164,7 +202,7 @@
             $('#step' + currentStage).empty();
             currentStage--;
             var candidateData = {};
-            var stages = {{jobData["stagesType"]|safe}};
+            var stages = {{(jobData["stagesType"]|safe)|tojson}};
             console.log(stages);
             var stageToDisplay = stages[currentStage];
             if (stageToDisplay == "Test") {

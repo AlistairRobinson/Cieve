@@ -8,6 +8,7 @@ import operator
 import json
 from flaskr.auth import login_required_C
 from flaskr.db import get_db
+from flaskr.Evaluator import Evaluator
 import collections
 
 bp = Blueprint('client', __name__, url_prefix='/cli')
@@ -218,7 +219,7 @@ def jobBreakdown():
         db = get_db()
         jobID = request.form['jobID']
         jobData = db.getJob(jobID)
-
+        print(jobData)
         jobData["stagesDetail"] = []
         jobData['stagesType'] = []
         for stage in jobData["stages"]:
@@ -298,3 +299,21 @@ def rejectApplicant():
         db.rejectApplication(appID)
         return "Success"
     return "Fail"
+
+@bp.route('/delete', methods=('GET', 'POST'))
+@login_required_C
+def delete():
+    if request.method == "POST":
+        jobID = request.form["jobID"]
+        Evaluator().deleteJob(jobID)
+        get_db().deleteJobByID(jobID)
+    return "Fail"
+
+@bp.route('/weightUpdate', methods=('GET', 'POST'))
+@login_required_C
+def weightUpdate():
+    if request.method == "POST":
+        weight = request.form.to_dict(flat=False)
+        return weight
+    return "Fail"
+

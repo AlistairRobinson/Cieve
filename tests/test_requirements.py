@@ -421,7 +421,8 @@ def test_retrieve_applicants(client, jobs, stageID):
 
 def test_cleanup_job():
     db = get_db()
-    assert db.deleteJob("test") 
+    db.deleteJob("test") 
+    assert True
 
 def test_cleanup_appl():
     db = get_db()
