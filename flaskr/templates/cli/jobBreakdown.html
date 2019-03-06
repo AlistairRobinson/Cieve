@@ -25,8 +25,8 @@
           $('#nextStepBttn').on('click', function() {
             $('#step' + currentStage).empty();
             currentStage++;
-            var stages = {{(jobData["stagesType"] | safe )| tojson }};
-            console.log(stages);
+            var stages = {{(jobData["stagesType"]|safe)}};
+            
             var stageToDisplay = stages[currentStage];
 
             console.log($('#step' + currentStage));
@@ -202,7 +202,7 @@
             $('#step' + currentStage).empty();
             currentStage--;
             var candidateData = {};
-            var stages = {{(jobData["stagesType"]|safe)|tojson}};
+            var stages = {{(jobData["stagesType"]|safe)}};
             console.log(stages);
             var stageToDisplay = stages[currentStage];
             if (stageToDisplay == "Test") {

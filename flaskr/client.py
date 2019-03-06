@@ -216,10 +216,9 @@ def jobBreakdown():
             title = db.getStageTitle(stage)
             jobData['stagesDetail'].append(title)
             type = db.getStageType(stage)
-            jobData['stagesType'].append(type)
+            jobData['stagesType'].append(str(type))
 
         stepNumber = 0
-
 
         applicants = db.getApplicantsJob(jobID, stepNumber)
         applicantsData = {}
@@ -243,9 +242,8 @@ def stageDetail():
         db = get_db()
         jobID = request.form['jobID']
         stepNumber = int(request.form["stageID"])
-
         applicants = db.getApplicantsJob(jobID, stepNumber)
-
+        print applicants
         applicantsData = {}
         for applicant in applicants:
             applicant["name"] = db.getApplicantNameID(applicant["applicant id"])
