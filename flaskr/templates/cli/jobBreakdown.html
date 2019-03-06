@@ -420,9 +420,9 @@
                             {% endif %}
                             <td><p class="is-pulled-left">
                               <form class="" action="applicantReview" method="post">
-                                <input type="hidden" name="applicantid" value="{{applicants[i]['applicant id']}}">
+                                <input type="hidden" name="applicant id" value="{{applicants[i]['applicant id']}}">
                                 <input name="_csrf_token" id="_csrf_token" type=hidden value="{{ csrf_token() }}">
-                                <input type="hidden" name="applicantname" value="{{applicants[i].name}}">
+                                <input type="hidden" name="name" value="{{applicants[i].name}}">
                               <button class="button is-text is-pulled-left" type="submit">{{applicants[i].name}}</button>
                             </form>
                             </p></td>
