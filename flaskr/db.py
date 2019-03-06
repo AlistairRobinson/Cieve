@@ -65,8 +65,8 @@ class Mongo:
                            "username": username,
                            "password_hash": passHash,
                            "salt": salt,
-                           "phish": phish
-                           "message": ""}
+                           "phish": phish,
+                           "message": "Welcome to Cieve. You can search for available jobs by clicking Job Search. You can make an application by clicking Applications"}
 
         self.db.applicantInfo.insert_one(applicantInfoData)
         self.db.accountInfo.insert_one(accountInfoData)
@@ -80,7 +80,7 @@ class Mongo:
                       "salt": salt,
                       "phish": phish,
                       "vacancies": [],
-                      "message": ""}
+                      "message": "Welcome to Cieve. You can create a job posting by clicking New Job. You can view your vacancies and applications by clicking Your Jobs"}
         clientID = self.db.client.insert_one(clientData).inserted_id
         return clientID
 
@@ -251,7 +251,7 @@ class Mongo:
             message = "You have been accepted for the job " + jobTitle + "!"
             self.db.application.delete_one({"applicant id": ObjectId(applicantID)})
         else:
-            message = "You have been moved onto the next stage for your application for the job of " + jobTitle
+            message = "You have been moved onto the next stage for your application for " + jobTitle + ""
         self.db.accountInfo.update_one({"applicant id": applicantID}, {"$set": {"message": message}})
         return True
 
@@ -311,9 +311,6 @@ class Mongo:
     def updateWeights(self, json):
         self.db.feedbackWeights.update_one({}, {"$set": json})
         return True
-
-    def updateScores(self, applicantID, educationScore, score, experienceScore, skillScore):
-        self.db.applicantInfo.update_one({"applicant id": ObjectId(applicantID)}, {"$set": })
 
     #Retuns the applicants who have been accepted for the first stage or had a specialized score higher than 0.8
     def getFeedbackApplicants(self):
@@ -424,18 +421,16 @@ class Mongo:
 
 
     #Generate the assessment details for the stage
-    def assessQuestions(self, answers, currentStep, applicantID, jobID):
-        self.db.assessement.insert_one({"applicant id": ObjectId(applicantID),
+    def assessQuestions(self, answers, currentStep, applicantID, jobID, stepStageID):
+        self.db.assessment.insert_one({"applicant id": ObjectId(applicantID),
                                         "job id": ObjectId(jobID),
                                         "current step": currentStep,
                                         "score": 0})
-        stepStage = self.db.vacancy.find_one({"_id": ObjectId(jobID)}, {"stages": 1, "_id": 0})
-        stepStageID = stepStage['stages'][currentStep]
+
         stepQuestions = self.db.questionStage.find_one({"stage id": ObjectId(stepStageID)}, {"questions": 1, "_id": 0})
         for i in range(len(answers)):
-            if answers[i] == stepQuestions['questions'][i][0]:
-                self.db.assessement.update_one({"applicant id": ObjectId(applicantID), "job id": ObjectId(jobID)}, {"$inc": {"score": 1}})
-    
+            if str(answers[i]) == str(stepQuestions['questions'][i].values()[0][0]):
+                self.db.assessment.update_one({"applicant id": ObjectId(applicantID), "job id": ObjectId(jobID), "current step": currentStep}, {"$inc": {"score":1}})
 
     def getStageResults(self, currentStep, applicantID, jobID):
         return self.db.assessment.find_one({"applicant id": ObjectId(applicantID), "job id": ObjectId(jobID), "current step": currentStep})['score']
@@ -469,8 +464,15 @@ class Mongo:
         return rejected
 
 
-    def getMessage(self, applicantID):
-        return self.db.accountInfo.find_one({"applicant id": ObjectId(applicantID)})['message']
+    def getApplicantMessage(self, applicantID):
+        if self.db.accountInfo.find_one({"applicant id": ObjectId(applicantID)}) is not None:
+            return self.db.accountInfo.find_one({"applicant id": ObjectId(applicantID)}).get('message', "")
+        return ""
+
+    def getClientMessage(self, id):
+        if self.db.client.find_one({"_id": ObjectId(id)}) is not None:
+            return self.db.client.find_one({"_id": ObjectId(id)}).get('message', "")
+        return ""
 
     #Given an id will return the title of the stage
     def getStageTitle(self, id):
@@ -506,12 +508,12 @@ class Mongo:
         for doc in self.db.applicantInfo.find({"vacancy ids": ObjectId(jobID)}):
             query = self.db.application.find_one({"applicant id": ObjectId(doc['applicant id'])})
             if query['current step'] > 0:
-                droppedApplicantInfo.append([doc, 1, query['specialized score'])
+                droppedApplicantInfo.append([doc, 1, query['specialized score']])
             else:
-                droppedApplicantInfo.append([doc, 0, query['specialized score'])
+                droppedApplicantInfo.append([doc, 0, query['specialized score']])
 
             if len(doc['vacancy ids']) == 1:
-                self.db.applicantInfo.delete_one("_id": doc['_id'])
+                self.db.applicantInfo.delete_one({"_id": ObjectId(doc['_id'])})
             else:
                 self.db.applicantInfo.update_many({"vacancy ids": ObjectId(jobID)}, {"$pull": {"vacancy ids": ObjectId(jobID)}})
 
@@ -567,3 +569,6 @@ class Mongo:
         for doc in query:
             applicants.append(doc['_id'])
         return applicants
+
+    def setCompletedTrue(self, applicantId, jobId):
+        self.db.application.update_one({"applicant id": ObjectId(applicantId), "vacancy id" : ObjectId(applicantId)},{"$set": {"completed": True }})

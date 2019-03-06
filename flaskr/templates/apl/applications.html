@@ -38,9 +38,6 @@ color: green;
                 <strong>Home</strong>
               </a>
 
-              <a class="navbar-item" href="/about">
-                About
-              </a>
               <a class="navbar-item" href="/privacy">
                 Privacy
               </a>
@@ -53,18 +50,7 @@ color: green;
                       {{name()}}
                     </a>
                     <div class="navbar-dropdown">
-                        <a class="navbar-item is-leveled " href="#">
-                            <span class="icon ">
-                                    <i class="fa fa-user-circle "></i>
-                                </span>
-                            Edit Details
-                        </a>
-                        <a class="navbar-item is-leveled " href="# ">
-                            <span class="icon ">
-                                    <i class="fa fa-key "></i>
-                                </span>
-                            Change Password
-                        </a>
+
                         <a class="navbar-item is-leveled " href="/logout">
                             <span class="icon ">
                                     <i class="fa fa-sign-out-alt"></i>
@@ -126,6 +112,17 @@ color: green;
                 <input name="_csrf_token" id="_csrf_token" type=hidden value="{{ csrf_token() }}">
                 <input name="applications" value="{{applications}}" type="hidden">
             <h3 class="title is-3">Your Applications</h3>
+            <p>You can <a href="#applications">view all of your applications</a> on this page</p>
+            <br><br>
+            {%if applications|length == 0 %}
+            <p>You have no applications, click below to start an application.</p>
+            <div class="box has-text-centered is-shadowless">
+
+                <a class="button is-link is-medium" href="/apl/newapplication">
+                    Apply now
+                </a>
+            </div>
+            {%else%}
             {%for application in applications%}
             <div class="box">
               <h3 class="title is-4">{{application['vacancy title']}}</h3>
@@ -133,15 +130,23 @@ color: green;
               <div class="steps" id="stagessteps">
               {% for i in range(application["stages"]|length) %}
               {% if application['current step'] == i %}
-                <div class="step-item is-success is-active">
+                <div class="step-item is-active is-success">
 
                   <div class="step-marker">{{i+1}}</div>
                   <div class="step-details">
                     <p class="step-title">{{application["stagesDetail"][i]}}</p>
                   </div>
                 </div>
+                {% elif application['current step'] > i %}
+                  <div class="step-item is-completed">
+
+                    <div class="step-marker">{{i+1}}</div>
+                    <div class="step-details">
+                      <p class="step-title">{{application["stagesDetail"][i]}}</p>
+                    </div>
+                  </div>
               {%else%}
-              <div class="step-item is-success">
+              <div class="step-item">
                 <div class="step-marker">{{i+1}}</div>
                 <div class="step-details">
                   <p class="step-title">{{application["stagesDetail"][i]}}</p>
@@ -154,38 +159,46 @@ color: green;
               <span class="tag"><b>Location:&nbsp</b> {{application['location']}} &nbsp<i class="fas fa-map-marker-alt"> </i></span>
               <span class="tag"><b>Role:&nbsp</b> {{application['role type']}} &nbsp<i class="fas fa-users"></i></span>
               <span class="icon is-pulled-right">
+                <form></form>
+                
                 {% if application['completed'] == True%}
 
                 <i class="far fa-check-circle fa-3x" ></i>
                   </span>
                 {%else%}
-                  {% if application["stagesDetail"][application["current step"]] == "Interview" or application["stagesDetail"][application["current step"]] == "Mobile Interview" %}
+                  {% if application["stagesType"][application["current step"]] == "Test" %}
 
-                    <form action="/apl/testing" method="post">
+                    <form action="/apl/testing" method="POST">
                       <input type="hidden" name="applicantId" value="{{application["applicant id"]}}">
                       <input type="hidden" name="vacancyId" value="{{application["vacancy id"]}}">
                       <input type="hidden" name="currentStep" value="{{application["current step"]}}">
-                      <input type="hidden" name="stageId" value="{{application["stages"]}}">
-                  <button type="submit" class="button is-link is-small" style="right:26px">Complete stage</button>
+                      <input type="hidden" name="stageId" value="{{application["stages"][application["current step"]]}}">
+                      <input name=_csrf_token id="_csrf_token" type=hidden value="{{ csrf_token() }}">
+                      <button type="submit" class="button is-link is-small" style="right:26px">Complete stage</button>
                     </form>
 
-                  {% elif application["stagesDetail"][application["current step"]] == "Verbal Test" or application["stagesDetail"][application["current step"]] == "Logic Test" %}
+                  {% elif application["stagesType"][application["current step"]] == "Interview" %}
 
-                  <form action="/apl/booking" method="post">
+                  <form action="/apl/booking" method="POST">
                     <input type="hidden" name="applicantId" value="{{application["applicant id"]}}">
                     <input type="hidden" name="vacancyId" value="{{application["vacancy id"]}}">
                     <input type="hidden" name="currentStep" value="{{application["current step"]}}">
-                <button type="submit" class="button is-link is-small" style="right:26px">Complete stage</button>
+                    <input type="hidden" name="stageId" value="{{application["stages"][application["current step"]]}}">
+                    <input name=_csrf_token id="_csrf_token" type=hidden value="{{ csrf_token() }}">
+                    <button type="submit" class="button is-link is-small" style="right:26px">Complete stage</button>
                   </form>
 
                   {%else%}
-                    <p>Waiting for Confirmation...</p>
+                  <a class="button is-link is-small" style="right: 54px">
+                      Waiting for Confirmation...
+                  </a>
                   {%endif%}
 
                 {% endif%}
 
             </div><br>
             {%endfor%}
+            {%endif%}
             </div>
 
       </section>
