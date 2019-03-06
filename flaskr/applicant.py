@@ -3,7 +3,7 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 from datetime import datetime
-from random import shuffle
+import random
 
 from flaskr.Evaluator import Evaluator
 from flaskr.auth import login_required_A
@@ -240,10 +240,11 @@ def testing():
 
         db = get_db()
         questions = db.getQuestions(stageID)
-
-        for q in questions:
-            q[0] = shuffle(q.values()[0])
-
+        print(questions)
+        for k,q in questions[0].items():
+            x = list(q)
+            q = random.sample(x, len(x))
+        print(questions)
 
         return render_template('/apl/compquestions.html', questions=questions, jobID=jobID, applicantID=applicantID, stepNo=stepNo, stageId=stageID)
     return redirect(url_for('applicant.applications'))

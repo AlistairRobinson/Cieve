@@ -243,7 +243,6 @@ def stageDetail():
         jobID = request.form['jobID']
         stepNumber = int(request.form["stageID"])
         applicants = db.getApplicantsJob(jobID, stepNumber)
-        print applicants
         applicantsData = {}
         for applicant in applicants:
             applicant["name"] = db.getApplicantNameID(applicant["applicant id"])
