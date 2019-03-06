@@ -237,7 +237,7 @@ class Mongo:
     # In order of job related score
     def getApplicantsJob(self, jobID, stepOrder):
         applicantList = []
-        applicationQuery = self.db.application.find({"vacancy id": ObjectId(jobID), "current step" : stepOrder})#.sort({"specialized score": -1})
+        applicationQuery = self.db.application.find({"vacancy id": ObjectId(jobID), "current step" : stepOrder})
         for doc in applicationQuery:
             applicantList.append(doc)
         return applicantList
@@ -471,11 +471,6 @@ class Mongo:
 
         stepQuestions = self.db.questionStage.find_one({"stage id": ObjectId(stepStageID)}, {"questions": 1, "_id": 0})
         for i in range(len(answers)):
-            print(stepQuestions)
-            print(stepQuestions['questions'])
-            print(stepQuestions['questions'][i])
-            print(stepQuestions['questions'][i].values())
-            print(list(stepQuestions['questions'][i].values())[0][0])
             if str(answers[i]) == str(list(stepQuestions['questions'][i].values())[0][0]):
                 self.db.assessment.update_one({"applicant id": ObjectId(applicantID), "job id": ObjectId(jobID), "current step": currentStep}, {"$inc": {"score":1}})
 
@@ -598,4 +593,3 @@ class Mongo:
 
     def setCompletedTrue(self, applicantId, jobId):
         self.db.application.update_one({"applicant id": ObjectId(applicantId), "vacancy id" : ObjectId(jobId)},{"$set": {"completed": True }})
-print(get_db().getInterviewSlots('5c7fd47ead9bb6a3c16e3cbe', 1))
