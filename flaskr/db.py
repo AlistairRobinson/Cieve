@@ -296,7 +296,7 @@ class Mongo:
         self.db.vacancies.delete_one({"_id": ObjectId(jobID)})
         for doc in self.db.applicantInfo.find({"vacancy ids": ObjectId(jobID)}):
             if len(doc['vacancy ids']) == 1:
-                self.db.applicantInfo.delete_one({"_id": ObjectID(doc['_id'])})
+                self.db.applicantInfo.delete_one({"_id": ObjectId(doc['_id'])})
             else:
                 self.db.applicantInfo.update_one({"vacancy ids": ObjectId(jobID)}, {"$pull": {"vacancy ids": ObjectId(jobID)}})
 
