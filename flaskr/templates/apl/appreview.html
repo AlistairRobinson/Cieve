@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Review Job</title>
+    <link rel="icon" href="../static/cieve.ico">
+		<link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.0/css/bulma.min.css">
+		<script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+    <script src="../../static/js/jquery-3.3.1.min.js"></script>
+	</head>
+	<body>
+    <nav class="navbar has-shadow">
+      <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/cli">
+                <img src="../../static/CieveNavBar.png" alt="Cieve: an automated applicant solution">
+            </a>
+            <div class="navbar-burger burger" data-target="navMenuColorprimary-example">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+
+        <div id="navMenuColorprimary-example" class="navbar-menu">
+
+            <div class="navbar-start">
+              <a class="navbar-item" href="/cli">
+                <strong>Home</strong>
+              </a>
+
+              <a class="navbar-item" href="/privacy">
+                Privacy
+              </a>
+            </div>
+
+						<div class="navbar-end">
+
+                        <a class="navbar-item is-leveled " href="/logout">
+                            <span class="icon ">
+                                    <i class="fa fa-sign-out-alt"></i>
+                                </span>
+                            Sign Out
+                        </a>
+
+            </div>
+        </div>
+        </div>
+    </nav>
+
+      <div class="container">
+      <section class="section">
+
+        <div class="columns ">
+            <div class="column is-4-tablet is-3-desktop is-2-widescreen">
+
+                <aside class="menu ">
+                    <p class="menu-label ">
+                        General
+                    </p>
+                    <ul class="menu-list">
+                        <li>
+                            <a href="/cli"><span class="icon ">
+                                    <i class="fa fa-tachometer-alt"></i>
+                                </span>Dashboard</a>
+                        </li>
+                        <li>
+                            <a href="/cli/jobs">
+                                <span class="icon">
+                                    <i class="fa fa-search"></i>
+                                </span>
+                                Your Jobs
+                            </a>
+                        </li>
+                        <li>
+                            <a class="is-active" href="">
+                                <span class="icon">
+                                    <i class="fa fa-plus"></i>
+                                </span>
+                                New Job
+                            </a>
+                        </li>
+                    </ul>
+                </aside>
+
+            </div>
+            <div class="column ">
+              <h1 class='title is-1'>Application Review</h1>
+              <h1 class="title is-5">Phone Number</h1>
+              <p>{{application["phone number"]}}</p><br>
+              <h1 class="title is-5">Address</h1>
+              <p>{{application["address"]}}</p><br>
+              <h1 class="title is-5">University Attended</h1>
+              <p>{{application["attended university"]}}</p><br>
+              <h1 class="title is-5">Degreee Qualification</h1>
+              <p>{{application["degree qualification"]}}</p><br>
+              <h1 class="title is-5">Degree Level</h1>
+              <p>{{application["degree level"]}}</p><br>
+              {% if application['year of graduation']%}
+              <h1 class="title is-5">Year of Graduation</h1>
+              <p>{{application["year of graduation"]}}</p><br>
+              {%endif%}
+
+              <h1 class="title is-5">A-Level Qualifications</h1>
+              <table class="table is-fullwidth">
+                <thead>
+                  <tr>
+                    <th>A-Level</th>
+                    <th>Grade</th>
+                  </tr>
+                </thead>
+                <tbody>
+              {%for qualification in application["a-level qualifications"]%}
+                <tr>
+                  <td>{{qualification[0]}}</td>
+                  <td>{{qualification[1]}}</td>
+                </tr>
+                {%endfor%}
+            </tbody>
+                </table><br>
+              <h1 class="title is-5">Past Experience</h1>
+              <table class="table is-fullwidth">
+                <thead>
+                  <tr>
+                    <th>Company/Institution Name</th>
+                    <th>Position</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+              {%for experience in application["previous employment"]%}
+                <tr>
+                  <td>{{experience[0]}}</td>
+                  <td>{{experience[1]}}</td>
+                  <td>{{experience[2]}}</td>
+                  <td>{{experience[3]}}</td>
+                </tr>
+                {%endfor%}
+            </tbody>
+                </table><br>
+              <h1 class="title is-5">Languages</h1>
+              <table class="table is-fullwidth">
+                <thead>
+                  <tr>
+                    <th>Language</th>
+                    <th>Proficiency</th>
+                  </tr>
+                </thead>
+                <tbody>
+              {%for language in application["languages"]%}
+                <tr>
+                  <td>{{language[0]}}</td>
+                  <td>{{language[1]}}</td>
+                </tr>
+                {%endfor%}
+            </tbody>
+                </table><br>
+              <h1 class="title is-5">Skills</h1>
+              <table class="table is-fullwidth">
+                <thead>
+                  <tr>
+                    <th>Skill</th>
+                    <th>Proficiency</th>
+                  </tr>
+                </thead>
+                <tbody>
+              {%for skill in application["skillss"]%}
+                <tr>
+                  <td>{{skill[0]}}</td>
+                  <td>{{skill[1]}}</td>
+                </tr>
+                {%endfor%}
+            </tbody>
+                </table><br>
+              <h1 class="title is-5">Cover Letter</h1>
+              <p>{{application["cover letter"]}}</p><br>
+              <h1 class="title is-5">Interesting Facts</h1>
+              <p>{{application["interesting facts"]}}</p>
+            </div>
+
+      </section>
+    </div>
+
+  </body>
+</html>
