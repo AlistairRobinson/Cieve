@@ -165,7 +165,7 @@ color: green;
                 <i class="far fa-check-circle fa-3x" ></i>
                   </span>
                 {%else%}
-                  {% if application["stagesDetail"][application["current step"]] == "Interview" or application["stagesDetail"][application["current step"]] == "Mobile Interview" %}
+                  {% if application["stagesType"][application["current step"]] == "Test" %}
 
                     <form action="/apl/testing" method="POST">
                       <input type="hidden" name="applicantId" value="{{application["applicant id"]}}">
@@ -176,7 +176,7 @@ color: green;
                       <button type="submit" class="button is-link is-small" style="right:26px">Complete stage</button>
                     </form>
 
-                  {% elif application["stagesDetail"][application["current step"]] == "Verbal Test" or application["stagesDetail"][application["current step"]] == "Logic Test" %}
+                  {% elif application["stagesType"][application["current step"]] == "Interview" %}
 
                   <form action="/apl/booking" method="POST">
                     <input type="hidden" name="applicantId" value="{{application["applicant id"]}}">

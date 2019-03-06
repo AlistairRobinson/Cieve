@@ -267,6 +267,7 @@ def testingCheck():
             pass
         db = get_db()
         db.assessQuestions(answers, stepNo, applicantID, jobID, stepStageID)
+        db.setCompletedTrue(applicantID, jobID)
 
         redirect(url_for('applicant.applications'))
     return redirect(url_for('applicant.applications'))
@@ -279,9 +280,9 @@ def booking():
         applicantID = request.form["applicantId"]
         stepNo = request.form["currentStep"]
 
-        slots = get_db().getInterviewSlots(jobID, applicantID, stepNo)
-
-        return render_template('/apl/interview.html', slots=slots, jobID=jobID, applicantID=applicantID, stepNo=stepNo)
+        slots = get_db().getInterviewSlots(jobID, applicantID)
+        return slots
+        #return render_template('/apl/interview.html', slots=slots, jobID=jobID, applicantID=applicantID, stepNo=stepNo)
     return redirect(url_for('applicant.applications'))
 
 @bp.route('/bookingSet', methods=('GET', 'POST'))

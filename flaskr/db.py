@@ -376,6 +376,7 @@ class Mongo:
 
     def getInterviewSlots(self, stageID, jobID):
         timeSlots = self.db.interviewStage.find_one({"stage id": stageID, "vacancy id": jobID})
+        print(timeSlots)
         return timeSlots['slots']
 
 
@@ -399,19 +400,15 @@ class Mongo:
 
     #Generate the assessment details for the stage
     def assessQuestions(self, answers, currentStep, applicantID, jobID, stepStageID):
-        self.db.assessement.insert_one({"applicant id": ObjectId(applicantID),
+        self.db.assessment.insert_one({"applicant id": ObjectId(applicantID),
                                         "job id": ObjectId(jobID),
                                         "current step": currentStep,
                                         "score": 0})
-        print answers
-        print currentStep
-        print applicantID
-        print jobID
-        print stepStageID
+
         stepQuestions = self.db.questionStage.find_one({"stage id": ObjectId(stepStageID)}, {"questions": 1, "_id": 0})
         for i in range(len(answers)):
-            if answers[i] == stepQuestions['questions'][i].values()[0][0]:
-                self.db.assessement.update_one({"applicant id": ObjectId(applicantID), "job id": ObjectId(jobID), "current step": currentStep}, {"$inc": {"score"}})
+            if str(answers[i]) == str(stepQuestions['questions'][i].values()[0][0]):
+                self.db.assessment.update_one({"applicant id": ObjectId(applicantID), "job id": ObjectId(jobID), "current step": currentStep}, {"$inc": {"score":1}})
 
     def getStageResults(self, currentStep, applicantID, jobID):
         return self.db.assessment.find_one({"applicant id": ObjectId(applicantID), "job id": ObjectId(jobID), "current step": currentStep})['score']
@@ -528,3 +525,6 @@ class Mongo:
         self.db.applicantInfo.update_one({"applicant id": ObjectId(userID)},
                                          {"$set": {"vacancy ids": jobIDs}})
         return True
+
+    def setCompletedTrue(self, applicantId, jobId):
+        self.db.application.update_one({"applicant id": ObjectId(applicantId), "vacancy id" : ObjectId(applicantId)},{"$set": {"completed": True }})
