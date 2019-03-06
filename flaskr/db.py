@@ -246,10 +246,10 @@ class Mongo:
     def moveToNextStage(self, applicantID, jobID):
         stageQuery = self.db.vacancy.find_one({"_id": ObjectId(jobID)}, {"stages": 1, "_id": 0})
         noOfStages = len(stageQuery['stages'])
-        
+
         self.db.application.update({"applicant id": ObjectId(applicantID), "vacancy id": ObjectId(jobID)}, {"$inc": {"current step": 1}, "$set": {"completed": False}})
-        
-        
+
+
         stepQuery = self.db.application.find_one({"applicant id": ObjectId(applicantID), "vacancy id": ObjectId(jobID), "current step": noOfStages-1})
         jobTitle = self.db.vacancy.find_one({"_id": ObjectId(jobID)})
         if stepQuery != None:
@@ -432,14 +432,19 @@ class Mongo:
         query = self.db.vacancy.find_one({"_id": ObjectId(jobID)})
         if query is not None:
             stageID = query['stages'][int(stepNo)]
-        timeSlotQuery = self.db.interviewStage.find_one({"stage id": stageID, "job id": ObjectId(jobID)})
 
-        return timeSlotQuery
+        timeSlotQuery = self.db.interviewStage.find({"stage id": stageID, "job id": ObjectId(jobID)})
 
-    def bookInterviewSlots(self, applicantID, jobID, stageID, slot):
+        slot = []
+        for doc in timeSlotQuery:
+            
+            slot[int(doc["_id"])] = str(doc["slots"][0]) + ", " + str(doc["slots"][1]) + " to " + str(doc["slots"][2])
+        return slot
+
+    def bookInterviewSlots(self, applicantID, jobID, stageID, slot, interviewStageID):
         message = ""
-        self.db.application.update_one({"applicant id": ObjectId(applicantID), "vacancy id": ObjectId(jobID)}, {"$push": {"interviews": slot}})
-        self.db.interviewStage.update_one({"job id": Object(jobID), "stage id": ObjectId(stageID)}, {"$pull": {"slots": slot}})
+        self.db.application.update_one({"applicant id": ObjectId(applicantID), "vacancy id": ObjectId(jobID)}, {"$set": {"interviews": slot}})
+        self.db.interviewStage.delete_one({"_id": ObjectId(interviewStageID)})
         query = self.db.vacancy.find_one({"_id": ObjectId(jobID)})
         if query is not None:
             jobTitle = query.get("vacancy title", "")

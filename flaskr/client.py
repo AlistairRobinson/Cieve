@@ -179,17 +179,8 @@ def newJobSummary():
             dates = data.get("Date[]" + stepID, [])
             startTimes = data.get("startTime[]" + stepID, [])
             endTimes = data.get("endTime[]" + stepID, [])
-            vacancies = data.get("vacancies[]" + stepID, [])
 
             if len(startTimes) != len(endTimes) or len(dates) != len(startTimes):
-                flash("An unexpected error occured")
-                continue
-
-            if len(vacancies) == 0:
-                flash("An unexpected error occured")
-                continue
-
-            if any(int(v) <= 0 for v in vacancies):
                 flash("An unexpected error occured")
                 continue
 
@@ -220,7 +211,6 @@ def jobBreakdown():
         db = get_db()
         jobID = request.form['jobID']
         jobData = db.getJob(jobID)
-        print(jobData)
         jobData["stagesDetail"] = []
         jobData['stagesType'] = []
         for stage in jobData["stages"]:
@@ -256,8 +246,6 @@ def stageDetail():
         stepNumber = int(request.form["stageID"])
 
         applicants = db.getApplicantsJob(jobID, stepNumber)
-        print(jobID, stepNumber)
-        print(applicants)
 
         applicantsData = {}
         for applicant in applicants:
@@ -314,7 +302,19 @@ def delete():
 @login_required_C
 def weightUpdate():
     if request.method == "POST":
-        weight = request.form.to_dict(flat=False)
+        weight = jsonify(request.method)
         return weight
     return "Fail"
 
+@bp.route('/applicantReview', methods=('GET', 'POST'))
+@login_required_C
+def applicantReview():
+    if request.method == "POST":
+        appID = request.form["applicant id"]
+
+        name = request.form["name"]
+
+        data = get_db().getApplicantUserID(appID)
+        data["name"] = name
+        return render_template('/cli/appreview.html', name = name, application = data)
+    return redirect(url_for('client.dashboard'))
