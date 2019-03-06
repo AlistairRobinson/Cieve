@@ -238,54 +238,6 @@ def test_post_vacancy_validation(client, jobs, data, message):
         "startTime[]3": ["11:00"],
         "endTime[]3": ["17:00"]
     }, 'An unexpected error occured'),
-    ({
-        'json': "{'vacancy title': 'test'," + 
-            "'division': 'HR'," +
-            "'role type': 'Graduate'," +
-            "'country': 'Germany'," +
-            "'job_desc': 'test'," +
-            "'positions available': '1'," +
-            "'skills': {'Git': 7, 'Presentation': 6}," +
-            "'languages': {'Python': 6, 'C':7}," +
-            "'start date': '03/03/2019'," +
-            "'asap': 'off'," + 
-            "'min degree level': '1:1'," + 
-            "'preferred degrees': 'University of Warwick'" + 
-        "}",
-        'interviews': "{'3': ['Interview', '5c74389bad9bb61fbcc01a3a'],'2': ['Mobile Interview', '5c7438ecad9bb61ff6d81d38']}",
-        "vacancies[]2": [],
-        "Date[]2": [],
-        "startTime[]2": [],
-        "endTime[]2": [],
-        "vacancies[]3": ["2", "3"],
-        "Date[]3": ["05/03/2019"],
-        "startTime[]3": ["11:00"],
-        "endTime[]3": ["17:00"]
-    }, 'An unexpected error occured'),
-    ({
-        'json': "{'vacancy title': 'test'," + 
-            "'division': 'HR'," +
-            "'role type': 'Graduate'," +
-            "'country': 'Germany'," +
-            "'job_desc': 'test'," +
-            "'positions available': '1'," +
-            "'skills': {'Git': 7, 'Presentation': 6}," +
-            "'languages': {'Python': 6, 'C':7}," +
-            "'start date': '03/03/2019'," +
-            "'asap': 'off'," + 
-            "'min degree level': '1:1'," + 
-            "'preferred degrees': 'University of Warwick'" + 
-        "}",
-        'interviews': "{'3': ['Interview', '5c74389bad9bb61fbcc01a3a'],'2': ['Mobile Interview', '5c7438ecad9bb61ff6d81d38']}",
-        "vacancies[]2": ["2", "3"],
-        "Date[]2": ["03/03/2019", "04/03/2019"],
-        "startTime[]2": ["12:00", "13:00"],
-        "endTime[]2": ["15:00", "17:00"],
-        "vacancies[]3": ["-2", "3"],
-        "Date[]3": ["05/03/2019"],
-        "startTime[]3": ["11:00"],
-        "endTime[]3": ["17:00"]
-    }, 'An unexpected error occured'),
 ))
 
 def test_post_vacancy(client, jobs, data_input, message):

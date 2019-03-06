@@ -2,7 +2,7 @@ import json
 import random
 import math
 import pprint
-from db import get_db
+from flaskr.db import get_db
 # Skeleto for evaluation class
 
 class Evaluator:
@@ -502,4 +502,4 @@ class Evaluator:
         for id in applicantIDS:
             apl = self.db.getApplicantUserID(id)
             scores = self.basicEvaluate(apl)
-            self.db.addUserScore(id, scores)
+            get_db().addUserScore(id, scores)
