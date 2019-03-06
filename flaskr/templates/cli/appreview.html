@@ -87,7 +87,10 @@
 
             </div>
             <div class="column ">
-              <h1 class='title is-1'>Application Review</h1>
+
+							<br><br>
+
+              <h1 class='title is-1'>Application Review- &nbsp{{name}}</h1>
               <h1 class="title is-5">Phone Number</h1>
               <p>{{application["phone number"]}}</p><br>
               <h1 class="title is-5">Address</h1>
@@ -167,7 +170,7 @@
                   </tr>
                 </thead>
                 <tbody>
-              {%for skill in application["skillss"]%}
+              {%for skill in application["skills"]%}
                 <tr>
                   <td>{{skill[0]}}</td>
                   <td>{{skill[1]}}</td>
