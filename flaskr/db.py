@@ -590,4 +590,4 @@ class Mongo:
 
     def setCompletedTrue(self, applicantId, jobId):
         self.db.application.update_one({"applicant id": ObjectId(applicantId), "vacancy id" : ObjectId(jobId)},{"$set": {"completed": True }})
-get_db().addUserScore("5c7d7c3c9a22a60680b903cf", 0.5)
+get_db().addUserScore("5c7d7c3c9a22a60680b903cf", "example,")
