@@ -172,7 +172,7 @@
                 <div class = columns>
                   <div class = column>
 
-                    <form class = "box" action="{{url_for('client.weightUpdate')}}" method="POST">
+                    <form action="{{url_for('client.weightUpdate')}}" method="POST">
 
                       <input name="_csrf_token" id="_csrf_token" type=hidden value="{{ csrf_token() }}">
 
