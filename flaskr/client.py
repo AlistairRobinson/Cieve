@@ -313,7 +313,7 @@ def delete():
 @login_required_C
 def weightUpdate():
     if request.method == "POST":
-        print(request.form)
-        return "Success"
+        weight = request.form["weight"]
+        return weight
     return "Fail"
 
