@@ -313,7 +313,7 @@ def delete():
 @login_required_C
 def weightUpdate():
     if request.method == "POST":
-        weight = request.form["weight"]
+        weight = request.form.to_dict(flat=False)
         return weight
     return "Fail"
 
