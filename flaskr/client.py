@@ -183,18 +183,10 @@ def newJobSummary():
                 flash("An unexpected error occured")
                 continue
 
-            if len(vacancies) == 0:
-                flash("An unexpected error occured")
-                continue
-
-            if any(int(v) <= 0 for v in vacancies):
-                flash("An unexpected error occured")
-                continue
-
             stagesData = []
             for i in range(len(dates)):
-                stagesData.append([dates[i], startTimes[i], endTimes[i], vacancies[i]])
-            print(stagesDate)
+                stagesData.append([dates[i], startTimes[i], endTimes[i]])
+            print(stagesData)
             for stageData in stagesData:
                 db.insertStageAvailability(stageID, jobID, stageData)
 
