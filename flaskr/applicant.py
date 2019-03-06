@@ -3,6 +3,7 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 from datetime import datetime
+from random import shuffle
 
 from flaskr.Evaluator import Evaluator
 from flaskr.auth import login_required_A
@@ -240,24 +241,32 @@ def testing():
         db = get_db()
         questions = db.getQuestions(stageID)
 
+        for q in questions:
+            q[0] = shuffle(q.values()[0])
 
 
-        return render_template('/apl/compquestions.html', questions=questions, jobID=jobID, applicantID=applicantID, stepNo=stepNo)
+        return render_template('/apl/compquestions.html', questions=questions, jobID=jobID, applicantID=applicantID, stepNo=stepNo, stageId=stageID)
     return redirect(url_for('applicant.applications'))
 
 @bp.route('/testingCheck', methods=('GET', 'POST'))
 @login_required_A
-def testingcCeck():
+def testingCheck():
     if request.method == "POST":
         jobID = request.form["vacancyId"]
         applicantID = request.form["applicantId"]
-        stepNo = request.form["currentStep"]
-        stageID = request.form["stageId"]
+        stepNo = request.form["stepNo"]
+        stepStageID = request.form["stageId"]
 
-        answers = request.fomr["answers[]"]
-
+        answers = []
+        try:
+            i = 1
+            while 1==1:
+                answers.append(request.form["answer[]"+str(i)])
+                i += 1
+        except:
+            pass
         db = get_db()
-        db.assessQuestions(answers, stepNo, applicantID, jobID)
+        db.assessQuestions(answers, stepNo, applicantID, jobID, stepStageID)
 
         redirect(url_for('applicant.applications'))
     return redirect(url_for('applicant.applications'))
@@ -270,7 +279,7 @@ def booking():
         applicantID = request.form["applicantId"]
         stepNo = request.form["currentStep"]
 
-        slots = []
+        slots = get_db().getInterviewSlots(jobID, applicantID, stepNo)
 
         return render_template('/apl/interview.html', slots=slots, jobID=jobID, applicantID=applicantID, stepNo=stepNo)
     return redirect(url_for('applicant.applications'))

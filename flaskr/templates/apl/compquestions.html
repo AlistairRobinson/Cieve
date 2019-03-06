@@ -103,22 +103,28 @@
 				<h1 class="title">
 					Questions
 				</h1>
-        <form>
-
-        {%for question in questions%}
+        <form action="/apl/testingCheck" method="POST">
+				<input type="hidden" name="vacancyId" value = "{{jobID}}">
+				<input type="hidden" name="applicantId" value="{{applicantID}}">
+				<input type="hidden" name="stepNo" value="{{stepNo}}">
+				<input type="hidden" name="stageId" value="{{stageId}}">
+				<input name=_csrf_token id="_csrf_token" type=hidden value="{{ csrf_token() }}">
+				
+				{%for question in questions%}
+				{% set rowloop = loop %}
         <div class="field">
-          <label class="label">{{question.Number}}) {{question.Question}}</label>
-          {% if question.Possibleansw|length ==0%}
+          <label class="label">{{rowloop.index}}) {{question.keys()[1]}}</label>
+          {% if question.values()[1]|length ==0%}
           <div class="control">
 
-            <input class="textarea" placeholder="Enter Your Answer" name="Question{{question.Number}}">
+            <input class="textarea" placeholder="Enter Your Answer" name="answer[]{{rowloop.index}}">
           </div>
           {% else %}
           <div class="control">
 						<div class="field">
-            {% for option in question.Possibleansw%}
-						<input class="is-checkradio" id="{{question.Number}},{{option}}" type="radio" name="Question{{question.Number}}">
-						<label for="{{question.Number}},{{option}}">{{option}}</label><br>
+            {% for option in question.values()[1]%}
+						<input class="is-checkradio" id="{{rowloop.index}},{{option}}" type="radio" name="answer[]{{rowloop.index}}" value="{{option}}">
+						<label for="{{rowloop.index}},{{option}}">{{option}}</label><br>
             {%endfor%}
 					</div>
           </div>
