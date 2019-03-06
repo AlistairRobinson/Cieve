@@ -118,7 +118,7 @@ class Mongo:
             return query
         else:
             return None
-    
+
     def getApplicantNameID(self, id):
         query = self.db.accountInfo.find_one({"applicant id": ObjectId(id)})
         if query is not None:
@@ -165,7 +165,13 @@ class Mongo:
 
     #Return the data of a job given the jobID
     def getJob(self, jobID):
-        return list(self.db.vacancy.find_one({"_id": ObjectId(jobID)}))
+            query = (self.db.vacancy.find_one({"_id": ObjectId(jobID)}))
+            print (query)
+            print (list(query))
+            if query is not None:
+                return list(query)[0]
+            else:
+                return None
 
     # Wiil accept a json parameter which will be defined by the input, adds the new job to the DB
     def addNewJob(self, json, clientID):
@@ -248,12 +254,10 @@ class Mongo:
         jobTitle = self.db.vacancy.find_one({"_id": ObjectId(jobID)})
         if stepQuery != None:
             self.db.vacancy.update_one({"_id": ObjectId(jobID)}, {"$inc": {"positions available": -1}})
-<<<<<<< HEAD
-            message = "You have been accepted for the job " + jobTitle + "!"
-            self.db.application.delete_one({"applicant id": ObjectId(applicantID)})
-=======
+
             message = "You have been accepted for " + jobTitle['vacancy title'] + "!"
->>>>>>> 17914f1e7f2a8774eb385b0fc97b08db09c2a9b6
+
+            self.db.application.delete_one({"applicant id": ObjectId(applicantID)})
         else:
             message = "You have been moved onto the next stage for your application for " + jobTitle['vacancy title'] + ""
         self.db.accountInfo.update_one({"applicant id": ObjectId(applicantID)}, {"$set": {"message": message}})
@@ -392,7 +396,6 @@ class Mongo:
         return True
 
 
-<<<<<<< HEAD
     def getInterviewSlots(self, jobID, stepNo):
         query = self.db.vacancy.find_one({"_id": ObjectId(jobID)})
         if query is not None:
@@ -401,11 +404,11 @@ class Mongo:
         if timeSlotQuery is not None:
             return timeSlots.get("slots", [])
         return None
-=======
-    def getInterviewSlots(self, stageID, jobID):
-        timeSlots = self.db.interviewStage.find_one({"stage id": stageID, "vacancy id": jobID})
-        return timeSlots['slots']
->>>>>>> 17914f1e7f2a8774eb385b0fc97b08db09c2a9b6
+# =======
+#     def getInterviewSlots(self, stageID, jobID):
+#         timeSlots = self.db.interviewStage.find_one({"stage id": stageID, "vacancy id": jobID})
+#         return timeSlots['slots']
+# >>>>>>> 17914f1e7f2a8774eb385b0fc97b08db09c2a9b6
 
 
     def bookInterviewSlots(self, applicantID, jobID, stageID, slot):
@@ -421,7 +424,7 @@ class Mongo:
         return True
 
     def getBookedInterviews(self, applicantID):
-        return list(self.db.application.find({"applicant id": ObjectId(applicantID)}, {"interviews": 1, "_id": 0}))        
+        return list(self.db.application.find({"applicant id": ObjectId(applicantID)}, {"interviews": 1, "_id": 0}))
 
     def insertStageAvailability(self, stageID, jobID, stageData):
         self.db.interviewStage.insert_one({"stage id": ObjectId(stageID),
@@ -466,7 +469,7 @@ class Mongo:
 
         for doc in rejectedQuery:
             self.db.application.delete_one({"applicant id": ObjectId(doc['applicant id']), "vacancy id": ObjectId(jobID)})
-            if len(self.db.applicantInfo.find_one({"applicant id": ObjectId(doc['applicant id'])})['vacancy ids']) == 0:        
+            if len(self.db.applicantInfo.find_one({"applicant id": ObjectId(doc['applicant id'])})['vacancy ids']) == 0:
                 self.db.applicantInfo.delete_one({"applicant id": ObjectId(doc['applicant id'])})
             else:
                 self.db.applicantInfo.update_one({"applicant id": ObjectId(doc['applicant id'])}, {"$pull": {"vacancy ids": jobID}})
