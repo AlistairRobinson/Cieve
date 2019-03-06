@@ -441,10 +441,10 @@ class Mongo:
             slot[int(doc["_id"])] = str(doc["slots"][0]) + ", " + str(doc["slots"][1]) + " to " + str(doc["slots"][2])
         return slot
 
-    def bookInterviewSlots(self, applicantID, jobID, stageID, slot):
+    def bookInterviewSlots(self, applicantID, jobID, stageID, slot, interviewStageID):
         message = ""
-        self.db.application.update_one({"applicant id": ObjectId(applicantID), "vacancy id": ObjectId(jobID)}, {"$push": {"interviews": slot}})
-        self.db.interviewStage.update_one({"job id": Object(jobID), "stage id": ObjectId(stageID)}, {"$pull": {"slots": slot}})
+        self.db.application.update_one({"applicant id": ObjectId(applicantID), "vacancy id": ObjectId(jobID)}, {"$set": {"interviews": slot}})
+        self.db.interviewStage.delete_one({"_id": ObjectId(interviewStageID)})
         query = self.db.vacancy.find_one({"_id": ObjectId(jobID)})
         if query is not None:
             jobTitle = query.get("vacancy title", "")

@@ -56,7 +56,7 @@ def newApplication():
         alevels = []
         try:
             i = 0
-            while 1==1: 
+            while 1==1:
                 alevels.append(request.form.to_dict(flat=False)["a_levels["+str(i)+"][]"])
                 i += 1
         except:
@@ -66,7 +66,7 @@ def newApplication():
         employmentHistory = []
         try:
             i = 0
-            while 1==1: 
+            while 1==1:
                 employmentHistory.append(request.form.to_dict(flat=False)["Employment_History["+str(i)+"][]"])
                 i += 1
         except:
@@ -76,17 +76,17 @@ def newApplication():
         languages = []
         try:
             i = 0
-            while 1==1: 
+            while 1==1:
                 languages.append(request.form.to_dict(flat=False)["Languages["+str(i)+"][]"])
                 i += 1
         except:
             pass
 
-        
+
         skills = []
         try:
             i = 0
-            while 1==1: 
+            while 1==1:
                 skills.append(request.form.to_dict(flat=False)["Skills["+str(i)+"][]"])
                 i += 1
         except:
@@ -131,7 +131,7 @@ def newApplication():
                 x = datetime.strptime(employ[3],"%Y-%m-%d")
             except:
                 x = datetime.today()
-            
+
             try:
                 y = datetime.strptime(employ[2],"%Y-%m-%d")
             except:
@@ -140,9 +140,9 @@ def newApplication():
         appData["Skills"] = []
         for skill in skills:
             appData["Skills"].append({"Skill" : skill[0], "Expertise" : skill[1]})
-        
-        
-        
+
+
+
 
         db.addUserScore(userID, Evaluator().basicEvaluate(appData))  # USER GENERAL SCORE
 
@@ -166,10 +166,10 @@ def newApplication():
             jobData["Skills"] = []
             for skill, expertise in data["skills"].items():
                 jobData["Skills"].append({"Skill" : skill, "Expertise" : expertise})
-            
+
 
             jobScore = Evaluator().jobEvaluate(jobData, appData)
-        
+
             db.applyJob(userID, job, 1, jobScore)
 
         for job in unselectedJobs:
@@ -188,11 +188,11 @@ def newApplication():
             jobData["Skills"] = []
             for skill, expertise in data["skills"].items():
                 jobData["Skills"].append({"Skill" : skill, "Expertise" : expertise})
-            
+
             jobScore = Evaluator().jobEvaluate(jobData, appData)
-        
+
             db.applyJob(userID, job, 0, jobScore)
-        
+
         db.addUserEducation(userID, alevels, degreeQualification, degreeLevel, universityAttended)
 
         db.addUserSkills(userID, skills)
@@ -205,7 +205,7 @@ def newApplication():
 
         db.addUserMetaData(userID, coverLetter, interestingFacts)
 
-        
+
         flash("Application successful")
     return render_template('/apl/applicationCreation.html', divisions = db.getDivisions(), roles = db.getRoles(), locations = db.getLocations())
 
@@ -283,7 +283,6 @@ def booking():
         stepNo = request.form["currentStep"]
 
         slots = get_db().getInterviewSlots(jobID, stepNo)
-        print slots
 
         return render_template('/apl/interview.html', slots=slots, jobID=jobID, applicantID=applicantID, stepNo=stepNo)
     return redirect(url_for('applicant.applications'))
@@ -295,7 +294,7 @@ def bookingSet():
         jobID = request.form["vacancyId"]
         applicantID = request.form["applicantId"]
         stepNo = request.form["currentStep"]
-        
+
         bookingRequest = request.form["booking[]"]
 
         #db call

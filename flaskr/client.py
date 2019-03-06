@@ -183,14 +183,6 @@ def newJobSummary():
                 flash("An unexpected error occured")
                 continue
 
-            if len(vacancies) == 0:
-                flash("An unexpected error occured")
-                continue
-
-            if any(int(v) <= 0 for v in vacancies):
-                flash("An unexpected error occured")
-                continue
-
             stagesData = []
             for i in range(len(dates)):
                 stagesData.append([dates[i], startTimes[i], endTimes[i], vacancies[i]])
@@ -323,6 +315,6 @@ def applicantReview():
 
         data = get_db().getApplicantUserID(appID)
         data["name"] = name
-        return render_template('/cli/jobBreakdown.html', appID = appID, appData = data)
+        return render_template('/cli/jobBreakdown.html', name = name, appData = data)
     return redirect(url_for('client.dashboard'))
 
