@@ -418,7 +418,12 @@
                             {% else %}
                               <td></td>
                             {% endif %}
-                            <td><p class="is-pulled-left">{{applicants[i].name}}</p></td>
+                            <td><p class="is-pulled-left">
+                              <form class="" action="cli/applicantReview" method="post">
+                                <input type="hidden" name="applicantid" value="{{applicant[i]['applicant id']}}">
+                              <button class="button is-text" type="submit">{{applicants[i].name}}</button>
+                            </form>
+                            </p></td>
                             <td><b><div class="scoreValue">{{(applicants[i]["basic scores"]["score"]*100)|int}}</div></b></td>
                             <td><b><div class="scoreValue">{{(applicants[i]["specialized score"]*100)|int}}</div></b></td>
                             <td><div onclick="advanceCandidate(this)" style='cursor: pointer;' id={{applicants[i]['applicant id']}}><i class="fas fa-arrow-right"></i></div></td>
