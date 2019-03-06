@@ -99,6 +99,14 @@
                   <div id="passwordStrength">
                     <p class="help is-danger">Must be longer than 8 characters and contain at least one uppercase, lowercase, numerical and special character</p>
                   </div>
+                  <div class="field">
+                    <div class="control">
+                      <label class="checkbox">
+                        <input type="checkbox">
+                        I agree to the <a href="#">privacy policy</a>
+                      </label>
+                    </div>
+                  </div>
                   <input class="button is-success is-fullwidth" type="submit" id="signupButton" value="Register">
                   <div>
                     <center>
@@ -129,7 +137,7 @@
       $('form').submit(function() {
         var regex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
         var password = document.getElementsByName('password')[0].value;
-        return (regex.test(password)) 
+        return (regex.test(password))
       })
     </script>
 

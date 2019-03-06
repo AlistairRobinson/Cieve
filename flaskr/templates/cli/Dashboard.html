@@ -7,7 +7,26 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <link rel="stylesheet" href="../static/main.css" />
+    <script src="../static/bulma-quickview/js/bulma-quickview.js"></script>
+    <link href="../static/bulma-quickview/css/bulma-quickview.min.css" rel="stylesheet">
     <link rel="icon" href="../static/cieve.ico">
+    <script src="../../static/js/jquery-3.3.1.min.js"></script>
+
+    <script>document.addEventListener("DOMContentLoaded", function(event) {
+              console.log("DOM fully loaded and parsed");
+              var quickviews = bulmaQuickview.attach();
+            }); //bulmaCalendar.attach();</script>
+
+    <script>
+      $(document).ready(function() {
+          var currentStage = 0;
+
+          $('.increment').on('click', function() {
+            console.log($(this).parent().parent().children(':first-child').children().val());
+          });
+      });
+    </script>
+
   </head>
   <body>
 
@@ -109,12 +128,149 @@
             </div>
             <main class="column ">
 
+                <div>
                 <h1 class="title ">Dashboard</h1>
-                
-                <h2 class="subtitle ">Your phish code is {{phish()}}</h2>
-                <p>This is randomly generated when you sign up. We use it to help protect you against phishing attacks.</p>
-                <p>We'll include it in all of our emails to you so you know that it's us on the other end.</p>
-                <p>We'll NEVER ask you for your phish code.</p>
+
+                <h2 class="subtitle" style="margin-bottom: 0px;">Your phish code is {{phish()}}</h2>
+                <p class="help" style="margin-top: 0px;">What is a <a data-show="quickview" data-target="quickviewDefault">phish code?</a></p>
+              </div>
+
+                  <!-- <button class="button is-small" data-show="quickview" data-target="quickviewDefault"><b>{#{phish()}#}</b></button></h2> -->
+
+                <div id="quickviewDefault" class="quickview">
+                  <header class="quickview-header">
+                    <h3 class="title is-3"><b>What is a phish code?</b></h3>
+                    <span class="delete" data-dismiss="quickview"></span>
+                  </header>
+
+                  <div class="quickview-body">
+                    <div class="quickview-block">
+                      This is randomly generated when you sign up. We use it to help protect you against phishing attacks.<br>
+                      We'll include it in all of our emails to you so you know that it's us on the other end. <br>
+                      We'll <b>never</b> ask you for your phish code.
+                    </div>
+                  </div>
+
+                  <footer class="quickview-footer">
+                  </footer>
+                </div>
+
+
+
+                <br>
+                <h4 class="title is-4">Machine Learning Control</h4>
+                You can customise the weights associated with each attribute.<br><br>
+                <div class = columns>
+                  <div class = column>
+
+                    <label class="label">(1) Education</label>
+                    <div class="field has-addons">
+
+                        <div class="control is-expanded">
+                          <input class="input" id="educationWeight" type="text" placeholder="Education Weight" value=1>
+                        </div>
+                        <div class="control">
+                          <button class="button is-primary increment">+</button>
+                        </div>
+                        <div class="control">
+                          <button class="button is-danger decrement">-</button>
+                        </div>
+                      </div>
+
+                    <label class="label">(2) Skills</label>
+                    <div class="field has-addons">
+
+                        <div class="control is-expanded">
+                          <input class="input" id="skillWeight" type="text" placeholder="Skills Weight">
+                        </div>
+                        <div class="control">
+                          <button class="button is-primary increment">+</button>
+                        </div>
+                        <div class="control">
+                          <button class="button is-danger decrement">-</button>
+                        </div>
+                      </div>
+
+                    <label class="label">(3) Experience</label>
+                    <div class="field has-addons">
+
+                        <div class="control is-expanded">
+                          <input class="input" id="experienceWeight" type="text" placeholder="Experience Weight">
+                        </div>
+                        <div class="control">
+                          <button class="button is-primary increment">+</button>
+                        </div>
+                        <div class="control">
+                          <button class="button is-danger decrement">-</button>
+                        </div>
+                      </div>
+
+                  </div>
+
+                  <div class = column>
+
+                    <label class="label">(4) A-Levels</label>
+                    <div class="field has-addons">
+
+                        <div class="control is-expanded">
+                          <input class="input" id="aLevelsWeight" type="text" placeholder="A-Levels Weight">
+                        </div>
+                        <div class="control">
+                          <button class="button is-primary increment">+</button>
+                        </div>
+                        <div class="control">
+                          <button class="button is-danger decrement">-</button>
+                        </div>
+                      </div>
+
+                    <label class="label">(5) University</label>
+                    <div class="field has-addons">
+
+                        <div class="control is-expanded">
+                          <input class="input" id="universityWeight" type="text" placeholder="University Weight">
+                        </div>
+                        <div class="control">
+                          <button class="button is-primary increment">+</button>
+                        </div>
+                        <div class="control">
+                          <button class="button is-danger decrement">-</button>
+                        </div>
+                      </div>
+
+                    <label class="label">(6) Languages</label>
+                    <div class="field has-addons">
+
+                        <div class="control is-expanded">
+                          <input class="input" id="languagesWeight" type="text" placeholder="Languages Weight">
+                        </div>
+                        <div class="control">
+                          <button class="button is-primary increment">+</button>
+                        </div>
+                        <div class="control">
+                          <button class="button is-danger decrement">-</button>
+                        </div>
+                      </div>
+
+                    <label class="label">(7) Skill Set</label>
+                    <div class="field has-addons">
+
+                        <div class="control is-expanded">
+                          <input class="input" id="skillSetWeight" type="text" placeholder="Skill Set Weight">
+                        </div>
+                        <div class="control">
+                          <button class="button is-primary increment">+</button>
+                        </div>
+                        <div class="control">
+                          <button class="button is-danger decrement">-</button>
+                        </div>
+                      </div>
+
+                  </div>
+                </div>
+
+                <div class="is-hidden-touch"><img id="flowDiagram" src="../static/MachineLearningFLowDesktop.jpg"></div>
+                <div class="is-hidden-desktop"><img id="flowDiagram" src="../static/FlowChartMobile.jpg"></div>
+
 
             </main>
 
