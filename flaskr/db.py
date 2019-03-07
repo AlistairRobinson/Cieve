@@ -324,6 +324,7 @@ class Mongo:
                 droppedApplicantInfo.append([query, 1, doc['specialized score']])
             else:
                 droppedApplicantInfo.append([query, 0, doc['specialized score']])
+        self.db.vacancy.delete_one({"_id": ObjectId(jobID)})
 
             # if len(doc['vacancy ids']) == 1:
             #     self.db.applicantInfo.delete_one({"_id": ObjectId(doc['_id'])})

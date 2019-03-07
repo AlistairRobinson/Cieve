@@ -38,7 +38,7 @@ def dashboard():
     info.append(data["Skillset weight"])
     print(info)
     # Generate post data and pass to front end
-    return render_template('/cli/Dashboard.html', info=info)
+    return render_template('/cli/Dashboard.html', weights=info)
 
 #Definition for the client job creation
 @bp.route('/newjob', methods=('GET', 'POST'))
@@ -319,7 +319,9 @@ def delete():
 @login_required_C
 def weightUpdate():
     if request.method == "POST":
-        weight = jsonify(request.method)
+        weight = request.form.to_dict(flat=False)["weight"]
+        print request.form
+        print weight
         Evaluator().dashboardWeights(weight)
         return "Success"
     return "Fail"
