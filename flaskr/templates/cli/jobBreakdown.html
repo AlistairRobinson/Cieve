@@ -152,7 +152,14 @@
                 } else {
                   rowString = rowString + '<td></td>';
                 }
-                rowString = rowString + `<td><p class="is-pulled-left">`+e["name"]+` </p></td>`;
+                rowString = rowString + `<td><p class="is-pulled-left">
+                  <form class="" action="applicantReview" method="post">
+                    <input type="hidden" name="applicant id" value=`+e["applicant id"]+`>
+                    <input name="_csrf_token" id="_csrf_token" type=hidden value="{{ csrf_token() }}">
+                    <input type="hidden" name="name" value=`+e["name"]+`>
+                  <button class="button is-text is-pulled-left" type="submit">`+e["name"]+`</button>
+                </form>
+                </p></td>`;
                 var score = Math.round((e['basic scores'].score)*100);
                 var jobScore = Math.round((e['specialized score'])*100);
                 var stageScore = e['stage score']
@@ -172,7 +179,14 @@
                 } else {
                   rowString = rowString + '<td></td>';
                 }
-                rowString = rowString +`<td><p class="is-pulled-left">`+e["name"]+` </p></td>`;
+                rowString = rowString +`<td><p class="is-pulled-left">
+                  <form class="" action="applicantReview" method="post">
+                    <input type="hidden" name="applicant id" value=`+e["applicant id"]+`>
+                    <input name="_csrf_token" id="_csrf_token" type=hidden value="{{ csrf_token() }}">
+                    <input type="hidden" name="name" value=`+e["name"]+`>
+                  <button class="button is-text is-pulled-left" type="submit">`+e["name"]+`</button>
+                </form>
+                </p></td>`;
                 var score = Math.round((e['basic scores'].score)*100);
                 var jobScore = Math.round((e['specialized score'])*100);
                 rowString = rowString + '<td><b><div class="scoreValue">'+score+'</div></b></td>';
@@ -194,7 +208,14 @@
                 } else {
                   rowString = rowString + '<td></td>';
                 }
-                rowString = rowString + `<td><p class="is-pulled-left">`+e["name"]+` </p></td>`;
+                rowString = rowString + `<td><p class="is-pulled-left">
+                  <form class="" action="applicantReview" method="post">
+                    <input type="hidden" name="applicant id" value=`+e["applicant id"]+`>
+                    <input name="_csrf_token" id="_csrf_token" type=hidden value="{{ csrf_token() }}">
+                    <input type="hidden" name="name" value=`+e["name"]+`>
+                  <button class="button is-text is-pulled-left" type="submit">`+e["name"]+`</button>
+                </form>
+                </p></td>`;
                 var score = Math.round((e['basic scores'].score)*100);
                 var jobScore = Math.round((e['specialized score'])*100);
                 rowString = rowString + '<td><b><div class="scoreValue">'+score+'</div></b></td>';
@@ -213,7 +234,14 @@
                 } else {
                   rowString = rowString + '<td></td>';
                 }
-                rowString = rowString + `<td><p class="is-pulled-left">`+e["name"]+` </p></td>`;
+                rowString = rowString + `<td><p class="is-pulled-left">
+                  <form class="" action="applicantReview" method="post">
+                    <input type="hidden" name="applicant id" value=`+e["applicant id"]+`>
+                    <input name="_csrf_token" id="_csrf_token" type=hidden value="{{ csrf_token() }}">
+                    <input type="hidden" name="name" value=`+e["name"]+`>
+                  <button class="button is-text is-pulled-left" type="submit">`+e["name"]+`</button>
+                </form>
+                </p></td>`;
                 var score = Math.round((e['basic scores'].score)*100);
                 var jobScore = Math.round((e['specialized score'])*100);
                 rowString = rowString + '<td><b><div class="scoreValue">'+score+'</div></b></td>';
@@ -235,7 +263,14 @@
                 } else {
                   rowString = rowString + '<td></td>';
                 }
-                rowString = rowString + `<td><p class="is-pulled-left">`+e["name"]+` </p></td>`;
+                rowString = rowString + `<td><p class="is-pulled-left">
+                  <form class="" action="applicantReview" method="post">
+                    <input type="hidden" name="applicant id" value=`+e["applicant id"]+`>
+                    <input name="_csrf_token" id="_csrf_token" type=hidden value="{{ csrf_token() }}">
+                    <input type="hidden" name="name" value=`+e["name"]+`>
+                  <button class="button is-text is-pulled-left" type="submit">`+e["name"]+`</button>
+                </form>
+                </p></td>`;
                 var score = Math.round((e['basic scores'].score)*100);
                 var jobScore = Math.round((e['specialized score'])*100);
                 rowString = rowString + '<td><b><div class="scoreValue">'+score+'</div></b></td>';
@@ -294,7 +329,14 @@
                 } else {
                   rowString = rowString + '<td></td>';
                 }
-                rowString = rowString + '<td><p class="is-pulled-left">'+e['name']+'</p></td>';
+                rowString = rowString + `<td><p class="is-pulled-left">
+                  <form class="" action="applicantReview" method="post">
+                    <input type="hidden" name="applicant id" value=`+e["applicant id"]+`>
+                    <input name="_csrf_token" id="_csrf_token" type=hidden value="{{ csrf_token() }}">
+                    <input type="hidden" name="name" value=`+e["name"]+`>
+                  <button class="button is-text is-pulled-left" type="submit">`+e["name"]+`</button>
+                </form>
+                </p></td>`;
 
 
                 var score = Math.round((e['basic scores'].score)*100);
