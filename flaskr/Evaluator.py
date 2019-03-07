@@ -502,7 +502,7 @@ class Evaluator:
             self.weights["University experience Weight"] = float(newWeights[4])
             self.weights["Skillset weight"] = float(newWeights[5])
             self.weights["Languages weight"] = float(newWeights[6])
-            print newWeights
+            print(newWeights)
             self.updateAllApplicantScores()
             self.writeWeights()
 
