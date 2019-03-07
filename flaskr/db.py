@@ -462,7 +462,7 @@ class Mongo:
     def getStageResults(self, currentStep, applicantID, jobID):
         query = self.db.assessment.find_one({"applicant id": ObjectId(applicantID), "job id": ObjectId(jobID), "current step": str(currentStep)})
         if query is not None:
-            print query['score']
+            print(query['score'])
             return int(query['score'])
         else:
             return 0
