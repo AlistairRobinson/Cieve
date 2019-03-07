@@ -107,12 +107,12 @@
 				<input type="hidden" name="vacancyId" value = "{{jobID}}">
 				<input type="hidden" name="applicantId" value="{{applicantID}}">
 				<input type="hidden" name="stepNo" value="{{stepNo}}">
+				<input type="hidden" name="stageId" value="{{stageId}}">
 				<input name=_csrf_token id="_csrf_token" type=hidden value="{{ csrf_token() }}">
 				
 				{%for question in questions%}
 				{% set rowloop = loop %}
         <div class="field">
-					{{question}}
           <label class="label">{{rowloop.index}}) {{question.keys()[0]}}</label>
           {% if question.values()|length ==0%}
           <div class="control">
