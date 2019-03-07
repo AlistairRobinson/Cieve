@@ -81,15 +81,61 @@
           }
 
           function displayTest(stageNum){
-            $('#step' + currentStage).append('<div class="tabs is-centered is-boxed" id="tab_header"> <ul> <li class="item is-active" data-option="1"><a><i class="fas fa-check"></i>&nbsp Completed</a></li> <li class="item" data-option="2"><a><i class="fas fa-times"></i>&nbsp Uncompleted</a></li> </ul> </div> <div class="box" id="tab_container"> <div class="container_item is-active" data-item="1"> <table class="table is-fullwidth is-hoverable center-table" id="CompleteCandidates"> <tr> <td><b>#</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="A star indicates that this candidate has selected this as their prefered job"><i class="fas fa-info"></button></td> <td style="width: 80%;"><b class="is-pulled-left">Applicant Name</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" id="scoreButton" data-tooltip="The computed ability of each candidate independent of the job"><b>Score</b></button></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The suitability of the candiate specifically for the job"><b>Job Match</b></button></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The candidate score in the given test"><b>Test Score</b></button></td> <td></td> <td></td> </tr> </table> </div> <div class="container_item" data-item="2"> <table class="table is-fullwidth is-hoverable center-table" id="UncompleteCandidates"> <tr> <td><b>#</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="A star indicates that this candidate has selected this as their prefered job"><i class="fas fa-info"></button></td> <td style="width: 80%;"><b class="is-pulled-left">Applicant Name</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" id="scoreButton" data-tooltip="The computed ability of each candidate independent of the job"><b>Score</b></button></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The suitability of the candiate specifically for the job"><b>Job Match</b></button></td> <td></td> <td></td> </tr> </table> </div> </div>');
+            $('#step' + currentStage).append(`<div class="tabs is-centered is-boxed" id="tab_header">
+            <ul>
+            <li class="item is-active" data-option="1"><a><i class="fas fa-check"></i>&nbsp Completed</a></li> <li class="item" data-option="2"><a><i class="fas fa-times"></i>&nbsp Uncompleted</a></li> </ul> </div>
+             <div class="box" id="tab_container"> <div class="container_item is-active" data-item="1">
+             <table class="table is-fullwidth is-hoverable center-table" id="CompleteCandidates">
+             <tr>
+             <td><b>#</b></td>
+             <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="A star indicates that this candidate has selected this as their prefered job"><i class="fas fa-info"></td> <td style="width: 80%"><b class="is-pulled-left">Applicant Name</b></button></td>
+             <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" id="scoreButton" data-tooltip="The computed ability of each candidate independent of the job"><b>Score</b></button></td>
+              <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The suitability of the candiate specifically for the job"><b>Job Match</b></button></td>
+              <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The candidate score in the given test"><b>Test Score</b></button></td> <td></td> <td></td>
+              </tr>
+               </table>
+               </div>
+               <div class="container_item" data-item="2">
+                <table class="table is-fullwidth is-hoverable center-table" id="UncompleteCandidates">
+                <tr>
+                <td><b>#</b></td>
+                <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="A star indicates that this candidate has selected this as their prefered job"><i class="fas fa-info"></button></td>
+                <td style="width: 80%"><b class="is-pulled-left">Applicant Name</b></td>
+                <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" id="scoreButton" data-tooltip="The computed ability of each candidate independent of the job"><b>Score</b></button></td>
+                <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The suitability of the candiate specifically for the job"><b>Job Match</b></button></td> <td></td> <td></td> </tr>
+                </table>
+                </div>
+                </div>`);
           }
 
           function displayInterview(stageNum){
-            $('#step' + currentStage).append('<div class="tabs is-centered is-boxed" id="tab_header"> <ul> <li class="item is-active" data-option="1"><a><i class="fas fa-check"></i>&nbsp Booked</a></li> <li class="item" data-option="2"><a><i class="fas fa-times"></i>&nbsp Unbooked</a></li> </ul></div><div class="box" id="tab_container"> <div class="container_item is-active" data-item="1"> <table class="table is-fullwidth is-hoverable center-table" id="CompleteCandidates"> <tr> <td><b>#</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="A star indicates that this candidate has selected this as their prefered job"><i class="fas fa-info"></button></td> <td style="width: 80%;"><b class="is-pulled-left">Applicant Name</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" id="scoreButton" data-tooltip="The computed ability of each candidate independent of the job"><b>Score</b></button></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The suitability of the candiate specifically for the job"><b>Job Match</b></button></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The time that the candidate has selected"><b>Slot</b></button></td> <td></td> <td></td> </tr> </table> </div> <div class="container_item" data-item="2"> <table class="table is-fullwidth is-hoverable center-table" id="UncompleteCandidates"> <tr> <td><b>#</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="A star indicates that this candidate has selected this as their prefered job"><i class="fas fa-info"></button></td> <td style="width: 80%;"><b class="is-pulled-left">Applicant Name</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" id="scoreButton" data-tooltip="The computed ability of each candidate independent of the job"><b>Score</b></button></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The suitability of the candiate specifically for the job"><b>Job Match</b></button></td> <td></td> <td></td> </tr> </table> </div></div>');
+            $('#step' + currentStage).append(`<div class="tabs is-centered is-boxed" id="tab_header">
+             <ul>
+             <li class="item is-active" data-option="1"><a><i class="fas fa-check"></i>&nbsp Booked</a></li>
+             <li class="item" data-option="2"><a><i class="fas fa-times"></i>&nbsp Unbooked</a></li>
+             </ul>
+             </div>
+             <div class="box" id="tab_container">
+              <div class="container_item is-active" data-item="1">
+              <table class="table is-fullwidth is-hoverable center-table" id="CompleteCandidates">
+               <tr>
+               <td><b>#</b></td>
+               <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="A star indicates that this candidate has selected this as their prefered job"><i class="fas fa-info"></button></td>
+               <td style="width: 80%;"><b class="is-pulled-left">Applicant Name</b></td>
+               <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" id="scoreButton" data-tooltip="The computed ability of each candidate independent of the job"><b>Score</b></button></td>
+                <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The suitability of the candiate specifically for the job"><b>Job Match</b></button></td>
+                <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The time that the candidate has selected"><b>Slot</b></button></td>
+                <td></td> <td></td> </tr> </table> </div> <div class="container_item" data-item="2"> <table class="table is-fullwidth is-hoverable center-table" id="UncompleteCandidates">
+                <tr>
+                <td><b>#</b></td>
+                <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="A star indicates that this candidate has selected this as their prefered job"><i class="fas fa-info"></button></td>
+                 <td style="width: 80%;"><b class="is-pulled-left">Applicant Name</b></td>
+                 <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" id="scoreButton" data-tooltip="The computed ability of each candidate independent of the job"><b>Score</b></button></td>
+                  <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The suitability of the candiate specifically for the job"><b>Job Match</b></button></td> <td></td> <td></td> </tr> </table> </div></div>`);
           }
 
           function displayAccepted(stageNum){
-            $('#step' + currentStage).append('<div class="box"> <table class="table is-fullwidth is-hoverable center-table" id="acceptedCandidates"> <tr> <td><b>#</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="A star indicates that this candidate has selected this as their prefered job"><i class="fas fa-info"></button></td> <td style="width: 80%;"><b class="is-pulled-left">Applicant Name</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" id="scoreButton" data-tooltip="The computed ability of each candidate independent of the job"><b>Score</b></button></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The suitability of the candiate specifically for the job"><b>Job Match</b></button></td> </tr> </table></div>');
+            $('#step' + currentStage).append(`<div class="box"> <table class="table is-fullwidth is-hoverable center-table" id="acceptedCandidates"> <tr> <td><b>#</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="A star indicates that this candidate has selected this as their prefered job"><i class="fas fa-info"></button></td> <td style="width: 80%;"><b class="is-pulled-left">Applicant Name</b></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" id="scoreButton" data-tooltip="The computed ability of each candidate independent of the job"><b>Score</b></button></td> <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The suitability of the candiate specifically for the job"><b>Job Match</b></button></td> </tr> </table></div>`);
           }
 
           function displayOnboarding(stageNum){
@@ -106,7 +152,7 @@
                 } else {
                   rowString = rowString + '<td></td>';
                 }
-                rowString = rowString + '<td><p class="is-pulled-left">'+e['name']+'</p></td>';
+                rowString = rowString + `<td><p class="is-pulled-left">`+e["name"]+` </p></td>`;
                 var score = Math.round((e['basic scores'].score)*100);
                 var jobScore = Math.round((e['specialized score'])*100);
                 rowString = rowString + '<td><b><div class="scoreValue">'+score+'</div></b></td>';
@@ -125,7 +171,7 @@
                 } else {
                   rowString = rowString + '<td></td>';
                 }
-                rowString = rowString + '<td><p class="is-pulled-left">'+e['name']+'</p></td>';
+                rowString = rowString +`<td><p class="is-pulled-left">`+e["name"]+` </p></td>`;
                 var score = Math.round((e['basic scores'].score)*100);
                 var jobScore = Math.round((e['specialized score'])*100);
                 rowString = rowString + '<td><b><div class="scoreValue">'+score+'</div></b></td>';
@@ -147,7 +193,7 @@
                 } else {
                   rowString = rowString + '<td></td>';
                 }
-                rowString = rowString + '<td><p class="is-pulled-left">'+e['name']+'</p></td>';
+                rowString = rowString + `<td><p class="is-pulled-left">`+e["name"]+` </p></td>`;
                 var score = Math.round((e['basic scores'].score)*100);
                 var jobScore = Math.round((e['specialized score'])*100);
                 rowString = rowString + '<td><b><div class="scoreValue">'+score+'</div></b></td>';
@@ -166,7 +212,7 @@
                 } else {
                   rowString = rowString + '<td></td>';
                 }
-                rowString = rowString + '<td><p class="is-pulled-left">'+e['name']+'</p></td>';
+                rowString = rowString + `<td><p class="is-pulled-left">`+e["name"]+` </p></td>`;
                 var score = Math.round((e['basic scores'].score)*100);
                 var jobScore = Math.round((e['specialized score'])*100);
                 rowString = rowString + '<td><b><div class="scoreValue">'+score+'</div></b></td>';
@@ -188,7 +234,7 @@
                 } else {
                   rowString = rowString + '<td></td>';
                 }
-                rowString = rowString + '<td><p class="is-pulled-left">'+e['name']+'</p></td>';
+                rowString = rowString + `<td><p class="is-pulled-left">`+e["name"]+` </p></td>`;
                 var score = Math.round((e['basic scores'].score)*100);
                 var jobScore = Math.round((e['specialized score'])*100);
                 rowString = rowString + '<td><b><div class="scoreValue">'+score+'</div></b></td>';
@@ -247,7 +293,7 @@
                 } else {
                   rowString = rowString + '<td></td>';
                 }
-                rowString = rowString + '<td><p class="is-pulled-left">'+e['name']+'</p></td>';
+                rowString = rowString + `<td><p class="is-pulled-left">`+e["name"]+` </p></td>`;
                 var score = Math.round((e['basic scores'].score)*100);
                 var jobScore = Math.round((e['specialized score'])*100);
                 rowString = rowString + '<td><b><div class="scoreValue">'+score+'</div></b></td>';
