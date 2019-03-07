@@ -38,12 +38,7 @@ def dashboard():
     info.append(data["Skillset weight"])
     print info
     # Generate post data and pass to front end
-<<<<<<< HEAD
     return render_template('/cli/Dashboard.html', info=info)
-=======
-    weights = [0,0,0,0,0,0,1]
-    return render_template('/cli/Dashboard.html', weights=weights)
->>>>>>> f4a705b0f79046f771ac87d0904db101b6f47e0e
 
 #Definition for the client job creation
 @bp.route('/newjob', methods=('GET', 'POST'))
