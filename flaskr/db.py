@@ -325,19 +325,6 @@ class Mongo:
             else:
                 droppedApplicantInfo.append([query, 0, doc['specialized score']])
         self.db.vacancy.delete_one({"_id": ObjectId(jobID)})
-
-            # if len(doc['vacancy ids']) == 1:
-            #     self.db.applicantInfo.delete_one({"_id": ObjectId(doc['_id'])})
-            # else:
-            #     self.db.applicantInfo.update_one({"vacancy ids": ObjectId(jobID)}, {"$pull": {"vacancy ids": ObjectId(jobID)}})
-        # self.db.application.delete_one({"vacancy id": ObjectId(jobID)})
-        # self.db.vacancy.delete_one({"_id": ObjectId(jobID)})
-        # clientQuery = self.db.client.find({"vacancies": ObjectId(jobID)})
-        # jobTitleQuery = self.db.vacancy.find_one({"_id": ObjectId(jobID)})
-        # if jobTitleQuery is not None:
-        #     message = "The job " + jobTitleQuery['vacancy title'] + "has been deleted"
-        # for doc in clientQuery:
-        #     self.db.client.update_one({"_id": ObjectId(doc['_id'])}, {"$set": {"message": message}})
         return droppedApplicantInfo
 
     #Returns the weights stored
@@ -475,7 +462,8 @@ class Mongo:
     def getStageResults(self, currentStep, applicantID, jobID):
         query = self.db.assessment.find_one({"applicant id": ObjectId(applicantID), "job id": ObjectId(jobID), "current step": str(currentStep)})
         if query is not None:
-            return query['score']
+            print query['score']
+            return int(query['score'])
         else:
             return 0
 

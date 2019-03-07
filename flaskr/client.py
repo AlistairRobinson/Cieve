@@ -268,6 +268,7 @@ def stageDetail():
             applicant["name"] = db.getApplicantNameID(applicant["applicant id"])
             applicant["basic scores"] = db.getApplicantUserID(applicant["applicant id"])["basic score"]
             applicant["stage score"] = db.getStageResults(stepNumber, applicant["applicant id"], jobID)
+            print applicant["stage score"]
             applicantsData[str((applicant["specialized score"] + applicant["basic scores"]["score"])/2)] = applicant
 
         appDataComp = []
@@ -321,8 +322,8 @@ def weightUpdate():
     if request.method == "POST":
         weight = request.form.to_dict(flat=False)["weight"]
         Evaluator().dashboardWeights(weight)
-        return "Success"
-    return "Fail"
+        return redirect(url_for('client.dashboard'))
+    return redirect(url_for('client.dashboard'))
 
 @bp.route('/applicantReview', methods=('GET', 'POST'))
 @login_required_C
