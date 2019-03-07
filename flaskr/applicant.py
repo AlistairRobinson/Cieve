@@ -243,6 +243,7 @@ def testing():
         print(questions)
         for k,q in questions[0].items():
             x = list(q)
+            print x
             q = random.sample(x, len(x))
         print(questions)
 

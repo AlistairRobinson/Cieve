@@ -113,8 +113,8 @@
 				{%for question in questions%}
 				{% set rowloop = loop %}
         <div class="field">
-          <label class="label">{{rowloop.index}}) {{question.keys()[1]}}</label>
-          {% if question.values()[1]|length ==0%}
+          <label class="label">{{rowloop.index}}) {{question.keys()[0]}}</label>
+          {% if question.values()|length ==0%}
           <div class="control">
 
             <input class="textarea" placeholder="Enter Your Answer" name="answer[]{{rowloop.index}}">
@@ -122,7 +122,7 @@
           {% else %}
           <div class="control">
 						<div class="field">
-            {% for option in question.values()[1]%}
+            {% for option in question.values()[0]%}
 						<input class="is-checkradio" id="{{rowloop.index}},{{option}}" type="radio" name="answer[]{{rowloop.index}}" value="{{option}}">
 						<label for="{{rowloop.index}},{{option}}">{{option}}</label><br>
             {%endfor%}

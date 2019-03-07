@@ -247,6 +247,7 @@ def stageDetail():
         for applicant in applicants:
             applicant["name"] = db.getApplicantNameID(applicant["applicant id"])
             applicant["basic scores"] = db.getApplicantUserID(applicant["applicant id"])["basic score"]
+            applicant["stage scores"] = db.getStageResults(stepNumber, applicant["applicant id"], jobID)
             applicantsData[str((applicant["specialized score"] + applicant["basic scores"]["score"])/2)] = applicant
 
         appDataComp = []
