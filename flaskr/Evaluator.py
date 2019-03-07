@@ -320,7 +320,7 @@ class Evaluator:
                     if "Graduation Date" in applicant:
                         if len(applicant["Graduation Date"]) > 0:
                             if job["Start Date"] < applicant["Graduation Date"]:
-                                score = score * 0.3
+                                score = score #* 0.3
 
 
         return score
@@ -495,13 +495,14 @@ class Evaluator:
     def dashboardWeights(self, newWeights):
 
         if newWeights:
-            self.weights["Education Weight"] = newWeights[0]
-            self.weights["Skills Weight"] = newWeights[1]
-            self.weights["Experience Weight"] = newWeights[2]
-            self.weights["Subjects Weight"] = newWeights[3]
-            self.weights["University experience Weight"] = newWeights[4]
-            self.weights["Skillset weight"] = newWeights[5]
-            self.weights["Languages weight"] = newWeights[6]
+            self.weights["Education Weight"] = float(newWeights[0])
+            self.weights["Skills Weight"] = float(newWeights[1])
+            self.weights["Experience Weight"] = float(newWeights[2])
+            self.weights["Subjects Weight"] = float(newWeights[3])
+            self.weights["University experience Weight"] = float(newWeights[4])
+            self.weights["Skillset weight"] = float(newWeights[5])
+            self.weights["Languages weight"] = float(newWeights[6])
+            print newWeights
             self.updateAllApplicantScores()
             self.writeWeights()
 
