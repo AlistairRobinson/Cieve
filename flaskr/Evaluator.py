@@ -2,15 +2,14 @@ import json
 import random
 import math
 import pprint
-from db import get_db
+from flaskr.db import get_db
 # Skeleto for evaluation class
 
 class Evaluator:
     def __init__(self):
 
         self.test = False
-        self.alpha = 0.1
-
+        self.alpha = 0.2
 
         self.db = get_db()
 
@@ -111,7 +110,7 @@ class Evaluator:
             scores['education_score'] = random.uniform(0, 1)
             scores['experience_score'] = random.uniform(0, 1)
             scores['skills_score'] = random.uniform(0, 1)
-            print(self.weights)
+            # print(self.weights)
             return scores
         # Calculate education, skills and experience scores
 
@@ -125,10 +124,21 @@ class Evaluator:
             degreeQualification = applicant["Degree Qualification"]
             degreeQualificationWeight = self.getWeight("Degree Qualifications", degreeQualification)
 
-            uni = applicant["University Attended"].upper()
-            UniversityWeight = self.getWeight("Universities weight", uni)
+            UniversityWeight = 0
+            uni = ""
+            if "University Attended" in applicant:
+                uni = applicant["University Attended"].upper()
+                UniversityWeight = self.getWeight("Universities weight", uni)
+            elif "attended university" in applicant:
+                uni = applicant["attended university"].upper()
+                UniversityWeight = self.getWeight("Universities weight", uni)
 
-            degreeLevel = applicant["Degree Level"]
+            degreeLevel = ""
+            if "Degree Level" in applicant:
+                degreeLevel = applicant["Degree Level"]
+            elif "degree level" in applicant:
+                degreeLevel = applicant["degree level"]
+
             degreeLevelScore = 0
             if degreeLevel in self.degreeLevelConversion:
                 degreeLevelScore = self.degreeLevelConversion.get(degreeLevel)
@@ -269,7 +279,7 @@ class Evaluator:
                             if appExpertise >= expertise:
                                 lSum = 1
                             else:
-                                lSum = float(appExpertise / expertise)
+                                lSum = float( int(appExpertise) / int(expertise))
                 langSum += lSum
 
         print(str(langCount) + "   " + str(langSum))
@@ -345,12 +355,15 @@ class Evaluator:
         return weight * prevError * self.gprime(score)
 
 
-    def updateWeights(self, applicants):
+    def updateWeights(self, applicants, accessMode):
         # Applicant = [applicant, wantedScore]#
         newWeights = dict(self.weights)
         batch_size = len(applicants)
         for apl in applicants:
-            self.getWeightsUpdate(apl[0], apl[1], newWeights, batch_size)
+            normalApl = apl[0]
+            if accessMode == 1:
+                normalApl = self.changeApplicationBindings(apl[0])
+            self.getWeightsUpdate(normalApl, apl[1], newWeights, batch_size)
 
         self.weights = newWeights
         self.writeWeights()
@@ -494,12 +507,50 @@ class Evaluator:
 
     def deleteJob(self, jobID):
         applicants = self.db.deleteJobByID(jobID)
-        self.updateWeights(applicants)
+        # pprint.pprint(applicants)
+        # # pprint.pprint(self.weights)
+        self.updateWeights(applicants, 1)
         self.updateAllApplicantScores()
+        # pprint.pprint(self.weights)
 
     def updateAllApplicantScores(self):
         applicantIDS = self.db.getAllApplicants()
+        # print(applicantIDS)
         for id in applicantIDS:
             apl = self.db.getApplicantUserID(id)
-            scores = self.basicEvaluate(apl)
-            db.addUserScore(id, scores)
+            # print(apl)
+            if apl != None:
+                normalApl = self.changeApplicationBindings(apl)
+
+                scores = self.basicEvaluate(normalApl)
+                # print(scores)
+                self.db.addUserScore(id, scores)
+
+    def changeApplicationBindings(self, apl):
+        normalApl = {}
+        if "a-level qualifications" in apl:
+            normalApl["A-Level Qualifications"] = []
+            for entry in apl["a-level qualifications"]:
+                normalApl["A-Level Qualifications"].append({"Subject": entry[0], "Grade":entry[1]})
+        if "attended university" in apl:
+            normalApl["University Attended"] = apl["attended university"]
+        if "degree level" in apl:
+            normalApl["Degree Level"] = apl["degree level"]
+        if "degree qualification" in apl:
+             normalApl["Degree Qualification"] = apl["degree qualification"]
+
+        if "languages" in apl:
+            normalApl["Languages Known"] = []
+            for entry in apl["languages"]:
+                normalApl["Languages Known"].append({"Language": entry[0], "Expertise":entry[1]})
+
+        if "previous employment" in apl:
+            normalApl["Previous Employment"] = []
+            for entry in apl["previous employment"]:
+                normalApl["Previous Employment"].append({"Company": entry[0], "Position":entry[1], "Length of Employment" : 300})
+
+        if "skills" in apl:
+            normalApl["Skills"] = []
+            for entry in apl["skills"]:
+                normalApl["Skills"].append({"Skill": entry[0], "Expertise":entry[1]})
+        return normalApl
