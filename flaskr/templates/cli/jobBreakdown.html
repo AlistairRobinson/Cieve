@@ -25,8 +25,8 @@
           $('#nextStepBttn').on('click', function() {
             $('#step' + currentStage).empty();
             currentStage++;
-            var stages = {{(jobData["stagesType"] | safe )| tojson }};
-            console.log(stages);
+            var stages = {{(jobData["stagesType"]|safe)}};
+
             var stageToDisplay = stages[currentStage];
 
             console.log($('#step' + currentStage));
@@ -155,9 +155,10 @@
                 rowString = rowString + `<td><p class="is-pulled-left">`+e["name"]+` </p></td>`;
                 var score = Math.round((e['basic scores'].score)*100);
                 var jobScore = Math.round((e['specialized score'])*100);
+                var stageScore = e['stage score']
                 rowString = rowString + '<td><b><div class="scoreValue">'+score+'</div></b></td>';
                 rowString = rowString + '<td><b><div class="scoreValue">'+jobScore+'</div></b></td>';
-                rowString = rowString + '<td></td>';
+                rowString = rowString + '<td><b><div class="stageValue">'+stageScore+'</div></b></td>';
                 rowString = rowString + '<td><div onclick="advanceCandidate(this)" style="cursor: pointer;" id='+e["applicant id"]+'><i class="fas fa-arrow-right"></i></div></td>';
                 rowString = rowString + '<td><div onclick="rejectCandidate(this)" style="cursor: pointer;" id='+e["_id"]+'><i class="fas fa-times"</i></td>';
                 rowString = rowString + '</tr>';
@@ -248,7 +249,7 @@
             $('#step' + currentStage).empty();
             currentStage--;
             var candidateData = {};
-            var stages = {{(jobData["stagesType"]|safe)|tojson}};
+            var stages = {{(jobData["stagesType"]|safe)}};
             console.log(stages);
             var stageToDisplay = stages[currentStage];
             if (stageToDisplay == "Test") {
@@ -293,7 +294,9 @@
                 } else {
                   rowString = rowString + '<td></td>';
                 }
-                rowString = rowString + `<td><p class="is-pulled-left">`+e["name"]+` </p></td>`;
+                rowString = rowString + '<td><p class="is-pulled-left">'+e['name']+'</p></td>';
+
+
                 var score = Math.round((e['basic scores'].score)*100);
                 var jobScore = Math.round((e['specialized score'])*100);
                 rowString = rowString + '<td><b><div class="scoreValue">'+score+'</div></b></td>';
@@ -465,7 +468,7 @@
                               <td></td>
                             {% endif %}
                             <td><p class="is-pulled-left">
-                              <form class="" action="applicantReview" method="post">
+                            <form class="" action="applicantReview" method="post">
                                 <input type="hidden" name="applicant id" value="{{applicants[i]['applicant id']}}">
                                 <input name="_csrf_token" id="_csrf_token" type=hidden value="{{ csrf_token() }}">
                                 <input type="hidden" name="name" value="{{applicants[i].name}}">

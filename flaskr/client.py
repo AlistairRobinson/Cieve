@@ -185,7 +185,7 @@ def newJobSummary():
 
             stagesData = []
             for i in range(len(dates)):
-                stagesData.append([dates[i], startTimes[i], endTimes[i], vacancies[i]])
+                stagesData.append([dates[i], startTimes[i], endTimes[i]])
 
             for stageData in stagesData:
                 db.insertStageAvailability(stageID, jobID, stageData)
@@ -216,10 +216,9 @@ def jobBreakdown():
             title = db.getStageTitle(stage)
             jobData['stagesDetail'].append(title)
             type = db.getStageType(stage)
-            jobData['stagesType'].append(type)
+            jobData['stagesType'].append(str(type))
 
         stepNumber = 0
-
 
         applicants = db.getApplicantsJob(jobID, stepNumber)
         applicantsData = {}
@@ -243,13 +242,12 @@ def stageDetail():
         db = get_db()
         jobID = request.form['jobID']
         stepNumber = int(request.form["stageID"])
-
         applicants = db.getApplicantsJob(jobID, stepNumber)
-
         applicantsData = {}
         for applicant in applicants:
             applicant["name"] = db.getApplicantNameID(applicant["applicant id"])
             applicant["basic scores"] = db.getApplicantUserID(applicant["applicant id"])["basic score"]
+            applicant["stage scores"] = db.getStageResults(stepNumber, applicant["applicant id"], jobID)
             applicantsData[str((applicant["specialized score"] + applicant["basic scores"]["score"])/2)] = applicant
 
         appDataComp = []
