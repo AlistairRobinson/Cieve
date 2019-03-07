@@ -14,7 +14,7 @@
     <link href="../../static/accordion-dist/css/bulma-accordion.min.css" rel="stylesheet">
     <link href="../../static/tooltip-dist/css/bulma-tooltip.min.css" rel="stylesheet">
     <link rel="icon" href="../static/cieve.ico">
-    <script async type="text/javascript" src="../static/js/bulma.js"></script>
+    <!-- <script async type="text/javascript" src="../static/js/bulma.js"></script> -->
 
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css" />
@@ -163,7 +163,7 @@
                 </p></td>`;
                 var score = Math.round((e['basic scores'].score)*100);
                 var jobScore = Math.round((e['specialized score'])*100);
-                var stageScore = e['stage score']
+                var stageScore = parseInt(e['stage score']);
                 rowString = rowString + '<td><b><div class="scoreValue">'+score+'</div></b></td>';
                 rowString = rowString + '<td><b><div class="scoreValue">'+jobScore+'</div></b></td>';
                 rowString = rowString + '<td><b><div class="stageValue">'+stageScore+'</div></b></td>';
@@ -199,7 +199,7 @@
             });
           }
 
-          function addToTestStep(completed, uncompleted) {
+          function addToInterviewStep(completed, uncompleted) {
             var rank=1;
             completed.forEach(e => {
                 var rowString = "<tr><td>"+rank+"</td>";
