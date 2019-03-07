@@ -456,8 +456,8 @@ class Mongo:
 
         stepQuestions = self.db.questionStage.find_one({"stage id": ObjectId(stepStageID)}, {"questions": 1, "_id": 0})
         for i in range(len(answers)):
-            if str(answers[i]) == str(list(stepQuestions['questions'][i].values())[0][0]):
-                self.db.assessment.update_one({"applicant id": ObjectId(applicantID), "job id": ObjectId(jobID), "current step": int(currentStep)}, {"$inc": {"score":1}})
+            #if str(answers[i]) == str(list(stepQuestions['questions'][i].values())[0][0]):
+            self.db.assessment.update_one({"applicant id": ObjectId(applicantID), "job id": ObjectId(jobID), "current step": int(currentStep)}, {"$inc": {"score":1}})
 
     def getStageResults(self, currentStep, applicantID, jobID):
         query = self.db.assessment.find_one({"applicant id": ObjectId(applicantID), "job id": ObjectId(jobID), "current step": str(currentStep)})
