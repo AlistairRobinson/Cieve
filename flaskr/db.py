@@ -471,7 +471,12 @@ class Mongo:
                 self.db.assessment.update_one({"applicant id": ObjectId(applicantID), "job id": ObjectId(jobID), "current step": currentStep}, {"$inc": {"score":1}})
 
     def getStageResults(self, currentStep, applicantID, jobID):
-        return self.db.assessment.find_one({"applicant id": ObjectId(applicantID), "job id": ObjectId(jobID), "current step": currentStep})['score']
+        query = self.db.assessment.find_one({"applicant id": ObjectId(applicantID), "job id": ObjectId(jobID), "current step": currentStep})['score']
+        if query is not None:
+            return query
+            print(query)
+        else:
+            return 0
 
 
     #If applicant is rejected on step 0, set step to -1. Otherwise if rejected the set is set to -2
