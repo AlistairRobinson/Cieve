@@ -112,6 +112,7 @@
 				{%for question in questions%}
 				{% set rowloop = loop %}
         <div class="field">
+					{{question}}
           <label class="label">{{rowloop.index}}) {{question.keys()[0]}}</label>
           {% if question.values()|length ==0%}
           <div class="control">
@@ -121,10 +122,13 @@
           {% else %}
           <div class="control">
 						<div class="field">
-            {% for option in question.values()[0]%}
+						{% for options in question.values()%}
+						
+						{% for option in options%}
 						<input class="is-checkradio" id="{{rowloop.index}},{{option}}" type="radio" name="answer[]{{rowloop.index}}" value="{{option}}">
 						<label for="{{rowloop.index}},{{option}}">{{option}}</label><br>
-            {%endfor%}
+						{%endfor%}
+						{%endfor%}
 					</div>
           </div>
           {% endif %}
