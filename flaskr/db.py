@@ -179,7 +179,7 @@ class Mongo:
 
     # Given an ID return all vacancies an applicant has applied too (including non-preferenced ones)
     def getApplications(self, applicantID):
-        applicationQuery = list(self.db.application.find({"applicant id": ObjectId(applicantID), "current step" : {"$gt" : 0 }}, {"date inputted": 0, "specialized score": 0}))
+        applicationQuery = list(self.db.application.find({"applicant id": ObjectId(applicantID), "current step" : {"$gt" : -1 }}, {"date inputted": 0, "specialized score": 0}))
         for application in applicationQuery:
             vacancyID = application['vacancy id']
             vacancy = list(self.db.vacancy.find({"_id": ObjectId(vacancyID)}, {"positions available": 0, "skills": 0, "_id": 0}))[0]
@@ -430,7 +430,7 @@ class Mongo:
         query = self.db.vacancy.find_one({"_id": ObjectId(jobID)})
         if query is not None:
             stageID = query['stages'][int(stepNo)]
-        timeSlotQuery = self.db.interviewStage.find({"stage id": stageID, "job id": ObjectId(jobID)})
+        timeSlotQuery = self.db.interviewStage.find({"stage id": ObjectId(stageID), "job id": ObjectId(jobID)})
         slot = []
         for doc in timeSlotQuery:
             slot.append([(doc["_id"]),str(doc["slots"][0]) + ", " + str(doc["slots"][1]) + " to " + str(doc["slots"][2])])
@@ -470,7 +470,7 @@ class Mongo:
                 self.db.assessment.update_one({"applicant id": ObjectId(applicantID), "job id": ObjectId(jobID), "current step": int(currentStep)}, {"$inc": {"score":1}})
 
     def getStageResults(self, currentStep, applicantID, jobID):
-        query = self.db.assessment.find_one({"applicant id": ObjectId(applicantID), "job id": ObjectId(jobID), "current step": int(currentStep)})
+        query = self.db.assessment.find_one({"applicant id": ObjectId(applicantID), "job id": ObjectId(jobID), "current step": str(currentStep)})
         if query is not None:
             return query['score']
         else:

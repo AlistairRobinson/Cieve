@@ -161,6 +161,7 @@ def newApplication():
             except:
                 jobData["Start Date"] = datetime.today().year
             jobData["Languages Known"] = []
+            
             for language, expertise in data["languages"].items():
                 jobData["Languages Known"].append({"Language" : language, "Expertise" : expertise})
             jobData["Skills"] = []
@@ -284,7 +285,7 @@ def booking():
         stepNo = request.form["currentStep"]
 
         slots = get_db().getInterviewSlots(jobID, stepNo)
-
+        print(slots)
         return render_template('/apl/interview.html', slots=slots, jobID=jobID, applicantID=applicantID, stepNo=stepNo)
     return redirect(url_for('applicant.applications'))
 
@@ -302,6 +303,7 @@ def bookingSet():
 
         db.bookInterviewSlots(applicantID, jobID, bookingRequest)
 
+        db.setCompletedTrue(applicantID, jobID)
         return redirect(url_for('applicant.applications'))
     return redirect(url_for('applicant.applications'))
 
