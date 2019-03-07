@@ -19,6 +19,13 @@ Notable features:
  - Comprehensive unit testing framework
  - Compliance with GDPR and DPA 2018
 
+## System Requirements
+
+Cieve has been developed with portability and platform independence in mind. As such, the only system requirements for the application are:
+
+ - Python 2.7 or above
+ - An internet connection
+
 ## Usage
 
 ### Application
