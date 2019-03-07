@@ -199,7 +199,7 @@
             });
           }
 
-          function addToInterviewStep(completed, uncompleted) {
+          function addToTestStep(completed, uncompleted) {
             var rank=1;
             completed.forEach(e => {
                 var rowString = "<tr><td>"+rank+"</td>";
@@ -219,9 +219,10 @@
                 </p></td>`;
                 var score = Math.round((e['basic scores'].score)*100);
                 var jobScore = Math.round((e['specialized score'])*100);
+                var booking = e['interviews']
                 rowString = rowString + '<td><b><div class="scoreValue">'+score+'</div></b></td>';
                 rowString = rowString + '<td><b><div class="scoreValue">'+jobScore+'</div></b></td>';
-                rowString = rowString + '<td></td>';
+                rowString = rowString + '<td><b><div class="bookingTime">'+booking+'</div></b></td>';
                 rowString = rowString + '<td><div onclick="advanceCandidate(this)" style="cursor: pointer;" id='+e["applicant id"]+'><i class="fas fa-arrow-right"></i></div></td>';
                 rowString = rowString + '<td><div onclick="rejectCandidate(this)" style="cursor: pointer;" id='+e["_id"]+'><i class="fas fa-times"</i></td>';
                 rowString = rowString + '</tr>';
@@ -235,7 +236,7 @@
                 } else {
                   rowString = rowString + '<td></td>';
                 }
-                rowString = rowString + `<td><p class="is-pulled-left">
+                rowString = rowString +`<td><p class="is-pulled-left">
                   <form class="" action="applicantReview" method="post">
                     <input type="hidden" name="applicant id" value=`+e["applicant id"]+`>
                     <input name="_csrf_token" id="_csrf_token" type=hidden value="{{ csrf_token() }}">

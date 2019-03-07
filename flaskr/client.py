@@ -18,9 +18,27 @@ bp = Blueprint('client', __name__, url_prefix='/cli')
 @bp.route('/')
 @login_required_C
 def dashboard():
+    db = get_db()
+    data = db.getWeights()[0]
+    del data["Universities weight"]
+    del data["Previous Employment position"]
+    del data["Previous Employment Company"]
+    del data["Skills"]
+    del data["Degree Qualifications"]
+    del data["A-Level Qualifications"]
+    del data["Languages Known"]
+    print(data)
+    info = []
+    info.append(data["Education Weight"])
+    info.append(data["Skills Weight"])
+    info.append(data["Experience Weight"])
+    info.append(data["Subjects Weight"])
+    info.append(data["University experience Weight"])
+    info.append(data["Languages weight"])
+    info.append(data["Skillset weight"])
+    print(info)
     # Generate post data and pass to front end
-    weights = [0,0,0,0,0,0,1]
-    return render_template('/cli/Dashboard.html', weights=weights)
+    return render_template('/cli/Dashboard.html', weights=info)
 
 #Definition for the client job creation
 @bp.route('/newjob', methods=('GET', 'POST'))
@@ -224,6 +242,7 @@ def jobBreakdown():
         applicants = db.getApplicantsJob(jobID, stepNumber)
         applicantsData = {}
         for applicant in applicants:
+            applicant["stage score"] = db.getStageResults(stepNumber, applicant["applicant id"], jobID)
             applicant["name"] = db.getApplicantNameID(applicant["applicant id"])
             applicant["basic scores"] = db.getApplicantUserID(applicant["applicant id"])["basic score"]
             applicantsData[str((applicant["specialized score"] + applicant["basic scores"]["score"])/2)] = applicant
@@ -248,7 +267,8 @@ def stageDetail():
         for applicant in applicants:
             applicant["name"] = db.getApplicantNameID(applicant["applicant id"])
             applicant["basic scores"] = db.getApplicantUserID(applicant["applicant id"])["basic score"]
-            applicant["stage scores"] = db.getStageResults(stepNumber, applicant["applicant id"], jobID)
+            applicant["stage score"] = db.getStageResults(stepNumber, applicant["applicant id"], jobID)
+            print(applicant["stage score"])
             applicantsData[str((applicant["specialized score"] + applicant["basic scores"]["score"])/2)] = applicant
 
         appDataComp = []
@@ -300,9 +320,17 @@ def delete():
 @login_required_C
 def weightUpdate():
     if request.method == "POST":
-        weight = jsonify(request.method)
-        return weight
-    return "Fail"
+        weight = request.form.to_dict(flat=False)["weight"]
+<<<<<<< HEAD
+
+        
+=======
+        print(request.form)
+        print(weight)
+>>>>>>> 60b8e872b457b107d7c73ea01de6e488d50cd4fb
+        Evaluator().dashboardWeights(weight)
+        return redirect(url_for('client.dashboard'))
+    return redirect(url_for('client.dashboard'))
 
 @bp.route('/applicantReview', methods=('GET', 'POST'))
 @login_required_C

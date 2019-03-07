@@ -179,7 +179,7 @@ class Mongo:
 
     # Given an ID return all vacancies an applicant has applied too (including non-preferenced ones)
     def getApplications(self, applicantID):
-        applicationQuery = list(self.db.application.find({"applicant id": ObjectId(applicantID), "current step" : {"$gt" : 0 }}, {"date inputted": 0, "specialized score": 0}))
+        applicationQuery = list(self.db.application.find({"applicant id": ObjectId(applicantID), "current step" : {"$gt" : -1 }}, {"date inputted": 0, "specialized score": 0}))
         for application in applicationQuery:
             vacancyID = application['vacancy id']
             vacancy = list(self.db.vacancy.find({"_id": ObjectId(vacancyID)}, {"positions available": 0, "skills": 0, "_id": 0}))[0]
@@ -324,19 +324,7 @@ class Mongo:
                 droppedApplicantInfo.append([query, 1, doc['specialized score']])
             else:
                 droppedApplicantInfo.append([query, 0, doc['specialized score']])
-
-            # if len(doc['vacancy ids']) == 1:
-            #     self.db.applicantInfo.delete_one({"_id": ObjectId(doc['_id'])})
-            # else:
-            #     self.db.applicantInfo.update_one({"vacancy ids": ObjectId(jobID)}, {"$pull": {"vacancy ids": ObjectId(jobID)}})
-        # self.db.application.delete_one({"vacancy id": ObjectId(jobID)})
-        # self.db.vacancy.delete_one({"_id": ObjectId(jobID)})
-        # clientQuery = self.db.client.find({"vacancies": ObjectId(jobID)})
-        # jobTitleQuery = self.db.vacancy.find_one({"_id": ObjectId(jobID)})
-        # if jobTitleQuery is not None:
-        #     message = "The job " + jobTitleQuery['vacancy title'] + "has been deleted"
-        # for doc in clientQuery:
-        #     self.db.client.update_one({"_id": ObjectId(doc['_id'])}, {"$set": {"message": message}})
+        self.db.vacancy.delete_one({"_id": ObjectId(jobID)})
         return droppedApplicantInfo
 
     #Returns the weights stored
@@ -432,7 +420,7 @@ class Mongo:
         query = self.db.vacancy.find_one({"_id": ObjectId(jobID)})
         if query is not None:
             stageID = query['stages'][int(stepNo)]
-        timeSlotQuery = self.db.interviewStage.find({"stage id": stageID, "job id": ObjectId(jobID)})
+        timeSlotQuery = self.db.interviewStage.find({"stage id": ObjectId(stageID), "job id": ObjectId(jobID)})
         slot = []
         for doc in timeSlotQuery:
             slot.append([(doc["_id"]),str(doc["slots"][0]) + ", " + str(doc["slots"][1]) + " to " + str(doc["slots"][2])])
@@ -472,9 +460,10 @@ class Mongo:
                 self.db.assessment.update_one({"applicant id": ObjectId(applicantID), "job id": ObjectId(jobID), "current step": int(currentStep)}, {"$inc": {"score":1}})
 
     def getStageResults(self, currentStep, applicantID, jobID):
-        query = self.db.assessment.find_one({"applicant id": ObjectId(applicantID), "job id": ObjectId(jobID), "current step": int(currentStep)})
+        query = self.db.assessment.find_one({"applicant id": ObjectId(applicantID), "job id": ObjectId(jobID), "current step": str(currentStep)})
         if query is not None:
-            return query['score']
+            print(query['score'])
+            return int(query['score'])
         else:
             return 0
 

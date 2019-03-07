@@ -25,7 +25,7 @@
                     candidateData["jobID"] = idJob;
                     candidateData["_csrf_token"] = document.getElementById('_csrf_token').value;
                     $.ajax({
-                        url: '',
+                        url: '/cli/delete',
                         type: 'POST',
                         data: candidateData,
                         success: function(response){
