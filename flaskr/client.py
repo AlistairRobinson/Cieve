@@ -27,7 +27,7 @@ def dashboard():
     del data["Degree Qualifications"]
     del data["A-Level Qualifications"]
     del data["Languages Known"]
-    print data
+    print(data)
     info = []
     info.append(data["Education Weight"])
     info.append(data["Skills Weight"])
@@ -36,7 +36,7 @@ def dashboard():
     info.append(data["University experience Weight"])
     info.append(data["Languages weight"])
     info.append(data["Skillset weight"])
-    print info
+    print(info)
     # Generate post data and pass to front end
     return render_template('/cli/Dashboard.html', info=info)
 
