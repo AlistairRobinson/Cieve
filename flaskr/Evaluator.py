@@ -2,7 +2,7 @@ import json
 import random
 import math
 import pprint
-from flaskr.db import get_db
+from db import get_db
 # Skeleto for evaluation class
 
 class Evaluator:
@@ -10,7 +10,6 @@ class Evaluator:
 
         self.test = False
         self.alpha = 0.1
-
 
         self.db = get_db()
 
@@ -125,10 +124,21 @@ class Evaluator:
             degreeQualification = applicant["Degree Qualification"]
             degreeQualificationWeight = self.getWeight("Degree Qualifications", degreeQualification)
 
-            uni = applicant["University Attended"].upper()
-            UniversityWeight = self.getWeight("Universities weight", uni)
+            UniversityWeight = 0
+            uni = ""
+            if "University Attended" in applicant:
+                uni = applicant["University Attended"].upper()
+                UniversityWeight = self.getWeight("Universities weight", uni)
+            elif "attended university" in applicant:
+                uni = applicant["attended university"].upper()
+                UniversityWeight = self.getWeight("Universities weight", uni)
 
-            degreeLevel = applicant["Degree Level"]
+            degreeLevel = ""
+            if "Degree Level" in applicant:
+                degreeLevel = applicant["Degree Level"]
+            elif "degree level" in applicant:
+                degreeLevel = applicant["degree level"]
+
             degreeLevelScore = 0
             if degreeLevel in self.degreeLevelConversion:
                 degreeLevelScore = self.degreeLevelConversion.get(degreeLevel)
@@ -269,7 +279,7 @@ class Evaluator:
                             if appExpertise >= expertise:
                                 lSum = 1
                             else:
-                                lSum = float(appExpertise / expertise)
+                                lSum = float( int(appExpertise) / int(expertise))
                 langSum += lSum
 
         print(str(langCount) + "   " + str(langSum))
@@ -501,5 +511,33 @@ class Evaluator:
         applicantIDS = self.db.getAllApplicants()
         for id in applicantIDS:
             apl = self.db.getApplicantUserID(id)
-            scores = self.basicEvaluate(apl)
-            get_db().addUserScore(id, scores)
+            if apl != None:
+                normalApl = {}
+                if "a-level qualifications" in apl:
+                    normalApl["A-Level Qualifications"] = []
+                    for entry in apl["a-level qualifications"]:
+                        normalApl["A-Level Qualifications"].append({"Subject": entry[0], "Grade":entry[1]})
+                if "attended university" in apl:
+                    normalApl["University Attended"] = apl["attended university"]
+                if "degree level" in apl:
+                    normalApl["Degree Level"] = apl["degree level"]
+                if "degree qualification" in apl:
+                     normalApl["Degree Qualification"] = apl["degree qualification"]
+
+                if "languages" in apl:
+                    normalApl["Languages Known"] = []
+                    for entry in apl["languages"]:
+                        normalApl["Languages Known"].append({"Language": entry[0], "Expertise":entry[1]})
+
+                if "previous employment" in apl:
+                    normalApl["Previous Employment"] = []
+                    for entry in apl["previous employment"]:
+                        normalApl["Previous Employment"].append({"Company": entry[0], "Position":entry[1], "Length of Employment" : 300})
+
+                if "skills" in apl:
+                    normalApl["Skills"] = []
+                    for entry in apl["skills"]:
+                        normalApl["Skills"].append({"Skill": entry[0], "Expertise":entry[1]})
+
+                scores = self.basicEvaluate(normalApl)
+                self.db.addUserScore(id, scores)
