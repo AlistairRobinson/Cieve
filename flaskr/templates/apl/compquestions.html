@@ -107,7 +107,6 @@
 				<input type="hidden" name="vacancyId" value = "{{jobID}}">
 				<input type="hidden" name="applicantId" value="{{applicantID}}">
 				<input type="hidden" name="stepNo" value="{{stepNo}}">
-				<input type="hidden" name="stageId" value="{{stageId}}">
 				<input name=_csrf_token id="_csrf_token" type=hidden value="{{ csrf_token() }}">
 				
 				{%for question in questions%}

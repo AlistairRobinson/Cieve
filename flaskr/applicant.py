@@ -295,11 +295,13 @@ def bookingSet():
     if request.method == "POST":
         jobID = request.form["vacancyId"]
         applicantID = request.form["applicantId"]
-        stepNo = request.form["currentStep"]
+        stepNo = request.form["stepNo"]
 
-        bookingRequest = request.form["booking[]"]
+        bookingRequest = request.form["interviewavailability"]
+        
+        db = get_db()
 
-        #db call
+        db.bookInterviewSlots(applicantID, jobID, bookingRequest)
 
         return redirect(url_for('applicant.applications'))
     return redirect(url_for('applicant.applications'))
