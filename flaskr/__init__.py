@@ -31,6 +31,8 @@ def create_app(test_config=None):
     except OSError:
         pass
 
+    # Enforces the inclusion of CSRF protection tokens in all POST requests
+
     @app.before_request
     def csrf_protect():
         if request.method == "POST":
@@ -46,9 +48,10 @@ def create_app(test_config=None):
         csp = "default-src 'self' 'unsafe-inline' https://*.googleapis.com https://*.gstatic.com https://maxcdn.bootstrapcdn.com https://cdnjs.cloudflare.com https://use.fontawesome.com https://cdn.jsdelivr.net"
         response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'  # Enforce HTTPS in browser
         response.headers['X-Frame-Options'] = 'SAMEORIGIN'                                     # Only allow HTML frames from this origin
-        # response.headers['X-Content-Type-Options'] = 'nosniff'                                 # Prevent browsers from autodetecting content
         response.headers['Content-Security-Policy'] = csp                                      # Prevent content loading from outside origin
         return response                                                                        # ^ This is very strict and may cause issues, edit if necessary
+
+    # Returns a user's phish code, if they are logged in
 
     def get_phish():
         if 'user_id' in session:
@@ -58,6 +61,8 @@ def create_app(test_config=None):
                 return get_db().getClientPhish(session['user_id'])
         return ""
 
+    # Returns a user's name as entered during registration, if they are logged in
+
     def get_name():
         if 'user_id' in session:
             if get_db().getApplicantNameID(session['user_id'][1:]) != "":
@@ -66,6 +71,8 @@ def create_app(test_config=None):
                 return get_db().getClientNameID(session['user_id'][1:])
         return ""
 
+    # Returns a user's message which updates as they interact with the system (e.g. apply to a job)
+
     def get_message():
         if 'user_id' in session:
             if get_db().applicantExists(session['user_id'][1:]):
@@ -73,7 +80,7 @@ def create_app(test_config=None):
             if get_db().clientExists(session['user_id'][1:]):
                 return get_db().getClientMessage(session['user_id'][1:])
 
-    # Allows templates to set unique CSRF tokens on load
+    # Allows templates to set unique CSRF tokens, phish codes, names and messages on load
                 
     app.jinja_env.globals['csrf_token'] = csrf.generate_csrf_token
     app.jinja_env.globals['phish'] = get_phish

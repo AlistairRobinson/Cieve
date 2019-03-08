@@ -1,45 +1,161 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
-  <script src="../../static/js/jquery-3.3.1.min.js"></script>
-<title>Page Title</title>
-
-<script>
-$(document).ready(function() {
-  $('#tab_header ul li.item').on('click', function() {
-    var number = $(this).data('option');
-    $('#tab_header ul li.item').removeClass('is-active');
-    $(this).addClass('is-active');
-    $('#tab_container .container_item').removeClass('is-active');
-    $('div[data-item="' + number + '"]').addClass('is-active');
-  });
-});
-</script>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <link rel="stylesheet" href="../../static/main.css" />
+    <script src="../../static/js/jquery-3.3.1.min.js"></script>
+    <link href="../../static/dist/css/bulma-steps.min.css" rel="stylesheet">
+    <script src="../../static/dist/js/bulma-steps.js"></script>
+    <script src="../../static/accordion-dist/js/bulma-accordion.js"></script>
+    <link href="../../static/accordion-dist/css/bulma-accordion.min.css" rel="stylesheet">
+    <link href="../../static/tooltip-dist/css/bulma-tooltip.min.css" rel="stylesheet">
+    <link rel="icon" href="../static/cieve.ico">
 
 
-</head>
-<body>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-steps@2.2.1/dist/css/bulma-steps.min.css">
 
-<div class="tabs is-centered" id="tab_header">
-  <ul>
-    <li class="item is-active" data-option="1"><a>Pictures</a></li>
-    <li class="item" data-option="2"><a>Music</a></li>
-    <li class="item" data-option="3"><a>Videos</a></li>
-  </ul>
-</div>
-<div class="box" id="tab_container">
-  <div class="container_item is-active" data-item="1">
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam perferendis, consequuntur facere molestiae explicabo reprehenderit vitae. Deleniti neque dolore nobis cum eius nulla porro quos sint delectus sed amet adipisci quaerat laudantium est distinctio dolor, at repudiandae similique doloribus rem. Obcaecati recusandae fugiat itaque nihil vel, mollitia modi, repellat, voluptatibus, repellendus nostrum nisi veritatis. Odit magnam quia magni quibusdam molestiae ut.
-  </div>
-  <div class="container_item" data-item="2">
-    Nobis quibusdam veritatis voluptatum, quasi. Unde eaque reprehenderit expedita at earum, accusantium laudantium vitae minima, veritatis in dolorem, illo itaque nihil cum iusto tenetur saepe repellendus nam eum culpa magnam quae! Nam, deleniti? Hic quibusdam sed perferendis quasi mollitia! Obcaecati recusandae fugiat itaque nihil vel, mollitia modi, repellat, voluptatibus, repellendus nostrum nisi veritatis. Odit magnam quia magni quibusdam molestiae ut.
-  </div>
-  <div class="container_item" data-item="3">
-    Beatae neque magni recusandae tempore ad nobis magnam. Explicabo, a! Molestiae aperiam necessitatibus suscipit mollitia dolorum quas possimus ipsa, nemo quod ipsam veniam, incidunt maxime quos iusto reiciendis. Eligendi cupiditate asperiores fuga dolore. Reiciendis eligendi eaque autem, aperiam delectus nesciunt enim similique ut laborum blanditiis tempora quidem, nobis unde incidunt alias atque dignissimos recusandae quibusdam cum dolor voluptas corrupti!
-  </div>
-</div>
+    <script>
+    function openTab(event, tabId) {
+      tabContent = document.getElementsByClassName('tabcontent');
+      for (i=0; i<tabContent.length; i++) {
+        tabContent[i].style.display = 'none';
+      }
+      tabLinks = document.getElementsByClassName('tablinks');
+      for (i=0; i<tabLinks.length; i++) {
+        tabLinks[i].className = tabLinks[i].className.replace(' is-active ', '');
+      }
+
+      document.getElementById(tabId).style.display = 'block';
+      event.currentTarget.className+="is-active";
+    }
+    </script>
+
+  </head>
+  <body>
+
+    <nav class="navbar has-shadow">
+      <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/apl">
+                <img src="../../static/CieveNavBar.png" alt="Cieve: an automated applicant solution">
+            </a>
+            <div class="navbar-burger burger" data-target="navMenuColorprimary-example">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+
+        <div id="navMenuColorprimary-example" class="navbar-menu">
+
+            <div class="navbar-start">
+              <a class="navbar-item" href="/apl">
+                <strong>Home</strong>
+              </a>
+
+            </div>
+
+            <div class="navbar-end">
+
+                        <a class="navbar-item is-leveled " href="/logout">
+                            <span class="icon ">
+                                    <i class="fa fa-sign-out-alt"></i>
+                                </span>
+                            Sign Out
+                        </a>
+
+            </div>
+        </div>
+        </div>
+    </nav>
 
 
-</body>
+      <div class="container">
+      <section class="section">
+
+        <div class="columns ">
+            <div class="column is-4-tablet is-3-desktop is-2-widescreen">
+
+              <aside class="menu ">
+                  <p class="menu-label ">
+                      General
+                  </p>
+                  <ul class="menu-list">
+                      <li>
+                          <a href="/cli"><span class="icon ">
+                                  <i class="fa fa-tachometer-alt"></i>
+                              </span>Dashboard</a>
+                      </li>
+                      <li>
+                          <a class="is-active" href="/cli/jobs">
+                              <span class="icon">
+                                  <i class="fa fa-search"></i>
+                              </span>
+                              Your Jobs
+                          </a>
+                      </li>
+                      <li>
+                          <a href="/cli/newjob">
+                              <span class="icon">
+                                  <i class="fa fa-plus"></i>
+                              </span>
+                              New Job
+                          </a>
+                      </li>
+                  </ul>
+              </aside>
+
+
+
+
+            </div>
+            <div class="column">
+            <div class="tabs is-centered is-boxed" id="tab_header">
+               <ul>
+                  <li class="tablinks is-active" onclick="openTab(event, 'booked')"><a><i class="fas fa-check"></i>&nbsp Booked</a></li>
+                  <li class="tablinks" onclick="openTab(event, 'unbooked')"><a><i class="fas fa-times"></i>&nbsp Unbooked</a></li>
+               </ul>
+            </div>
+
+            <div id="booked" class="tabcontent">
+                  <table class="table is-fullwidth is-hoverable center-table" id="CompleteCandidates">
+                     <tr>
+                        <td><b>#</b></td>
+                        <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="A star indicates that this candidate has selected this as their prefered job"><i class="fas fa-info"></button></td>
+                        <td style="width: 80%;"><b class="is-pulled-left">Applicant Name</b></td>
+                        <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" id="scoreButton" data-tooltip="The computed ability of each candidate independent of the job"><b>Score</b></button></td>
+                        <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The suitability of the candiate specifically for the job"><b>Job Match</b></button></td>
+                        <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The time that the candidate has selected"><b>Slot</b></button></td>
+                        <td></td>
+                        <td></td>
+                     </tr>
+                  </table>
+               </div>
+
+               <div id="unbooked" class="tabcontent">
+                  <table class="table is-fullwidth is-hoverable center-table" id="UncompleteCandidates">
+                     <tr>
+                        <td><b>#</b></td>
+                        <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="A star indicates that this candidate has selected this as their prefered job"><i class="fas fa-info"></button></td>
+                        <td style="width: 80%;"><b class="is-pulled-left">Applicant Name</b></td>
+                        <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" id="scoreButton" data-tooltip="The computed ability of each candidate independent of the job"><b>Score</b></button></td>
+                        <td><button class="button is-small is-tooltip-info tooltip is-tooltip-multiline" data-tooltip="The suitability of the candiate specifically for the job"><b>Job Match</b></button></td>
+                        <td></td>
+                        <td></td>
+                     </tr>
+                  </table>
+               </div>
+             </div>
+
+
+
+
+      </section>
+    </div>
+  </body>
 </html>

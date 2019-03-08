@@ -9,6 +9,7 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.0/css/bulma.min.css">
 		<script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
 		<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='bulma-checkradio.min.css') }}">
+		<script async type="text/javascript" src="../static/js/bulma.js"></script>
         <!-- <link rel="stylesheet" href="styles/debug.css"> -->
 	</head>
 	<body>
@@ -45,7 +46,7 @@
 											{{name()}}
 										</a>
 										<div class="navbar-dropdown">
-											
+
 												<a class="navbar-item is-leveled " href="/logout">
 														<span class="icon ">
 																		<i class="fa fa-sign-out-alt"></i>
@@ -109,7 +110,7 @@
 				<input type="hidden" name="stepNo" value="{{stepNo}}">
 				<input type="hidden" name="stageId" value="{{stageId}}">
 				<input name=_csrf_token id="_csrf_token" type=hidden value="{{ csrf_token() }}">
-				
+
 				{%for question in questions%}
 				{% set rowloop = loop %}
         <div class="field">
@@ -123,7 +124,7 @@
           <div class="control">
 						<div class="field">
 						{% for options in question.values()%}
-						
+
 						{% for option in options%}
 						<input class="is-checkradio" id="{{rowloop.index}},{{option}}" type="radio" name="answer[]{{rowloop.index}}" value="{{option}}">
 						<label for="{{rowloop.index}},{{option}}">{{option}}</label><br>

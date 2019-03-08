@@ -3,18 +3,14 @@ import random
 import math
 import pprint
 from flaskr.db import get_db
-# Skeleto for evaluation class
+
+
 
 class Evaluator:
     def __init__(self):
 
-        self.test = False
         self.alpha = 0.2
-
         self.db = get_db()
-
-        self.weightsFileName = 'weights.json'
-
         self.weights = self.getWeights()
 
         self.degreeLevelConversion = {"1":1,"2:1":0.7,"2:2":0.3}
@@ -25,43 +21,29 @@ class Evaluator:
          "Skills":0.1, "Previous Employment position":0.1, "Previous Employment Company":0.1}
 
 
+    # functions to retrieve and send weights to the database
+
     def getWeights(self):
-        if self.test:
-            with open(self.weightsFileName) as w:
-                weights = json.load(w)
-            return weights
-        else:
-            return self.db.getWeights()[0]
+        return self.db.getWeights()[0]
 
     def writeWeights(self):
-        if self.test:
-            f = open(self.weightsFileName, "r+")
-            f.seek(0)        # <--- should reset file position to the beginning.
-            json.dump(self.weights, f, indent=4)
-            f.truncate()     # remove remaining part
-        else:
-            self.db.updateWeights(self.weights)
-            # self.weights = self.weights
+        self.db.updateWeights(self.weights)
 
-
+    # Wrapper for activation function
     def activation(self, x):
         return self.sigmoid(x)
 
+    # Modified sigmoid function
     def sigmoid(self, x):
         return 2 / (1 + math.exp(-x*2)) - 1
-        #return 1 / (1 + math.exp(-round(x,3)))
-      # 2/(1 + exp(-x))-1
 
-        #return 1/(1 + math.exp(-(x-1.5)*3))  #for sick results
-
-      #  Use 2/(1 + exp(-x))-1 with x > 0, x = 0 if x < 0 ??????????? Done
-      # Change gPrime to be function above derivative   ///////////// Done
-
+    # Sigmoid function derivative
     def gprime(self, x):
-        return 2 * self.sigmoid(x) * (1 - self.sigmoid(x))
-        # 2*exp(x)/(exp(x)+1)^2
-        #
-        #return (3*math.exp(-3*(x-3/2)))/((math.exp(-3*(x-3/2))+1) ** 2)
+        return (4*math.exp(2*x))/((math.exp(2*x)+1)*(math.exp(2*x)+1))
+
+    # Function to retrieve weight with specific name,
+    # if it is not present, get an base weight and store it
+    # with given string, therefore creating new weight in NN
 
     def getWeight(self, attribute, value):
         if value in self.weights[attribute]:
@@ -71,6 +53,8 @@ class Evaluator:
             self.addNewWeight(attribute, value, weight)
         return weight
 
+    # Conversion function to get a score from 0 to 1
+    # from applicant A levels, skills or language know scores.
 
     def levelConversion(self, group, level):
         score = 0
@@ -79,51 +63,41 @@ class Evaluator:
                 score = self.ALevelConversion.get(level)
         elif group == "Languages Known" or group == "Skills":
             score = float(float(level) / 10)
-
         return score
+
+    # Helper function to perform forward propogation
 
     def attributeGroup(self, applicant, group, weightAttribute, levelAttribute, outputs):
         sum = 0
-
         if group in applicant:
             outputs[group] = list()
             for apl in applicant[group]:
                 attributeValue = apl[weightAttribute]
                 weight = self.getWeight(group, attributeValue)
-
                 level = apl[levelAttribute]
                 score = self.levelConversion(group, level)
                 sum += score * weight
                 outputs[group].append({"weight Attribute":str(attributeValue), "score": score})
         return sum
 
+    # Function to retrieve applicant score.
 
     def basicEvaluate(self, applicant):
         return self.basicEvaluateFeedback(applicant, {})
 
+
+    # Function that performs forward propogation to Calculate
+    # Baisc, experience, education, skills scores.
+
     def basicEvaluateFeedback(self, applicant, outputs):
 
-        if not self.test and False:
-
-            scores = {}
-            scores['score'] = random.uniform(0, 1)
-            scores['education_score'] = random.uniform(0, 1)
-            scores['experience_score'] = random.uniform(0, 1)
-            scores['skills_score'] = random.uniform(0, 1)
-            # print(self.weights)
-            return scores
-        # Calculate education, skills and experience scores
-
-        #                       ////////////////////// education
-
+        # Calculate Education Score
 
         partialES1 = 0
-
         if "Degree Qualification" in applicant:
 
             degreeQualification = applicant["Degree Qualification"]
             degreeQualificationWeight = self.getWeight("Degree Qualifications", degreeQualification)
-
             UniversityWeight = 0
             uni = ""
             if "University Attended" in applicant:
@@ -162,10 +136,7 @@ class Evaluator:
 
         outputs["Education Score"] = ES
 
-        # print("Education =   " + str(partialES1) + "   " + str(partialES2) + "    " + str(ES))
-
-
-        #                        ////////////////////// skills
+        # Calculate Skill Score
 
         partialS1 = self.attributeGroup(applicant, "Languages Known", "Language", "Expertise",outputs)
         partialS1 = self.activation(partialS1)
@@ -182,11 +153,7 @@ class Evaluator:
 
         outputs["Skill Score"] = SS
 
-        #
-        # print("Skills =  " + str(partialS1) + "   " + str(partialS2) + "    " + str(SS))
-
-        # ////////////////////// Experience
-
+        # Calculate Experience Score
 
         ExS = 0
         if "Previous Employment" in applicant:
@@ -209,21 +176,12 @@ class Evaluator:
 
         ExS = self.activation(ExS)
         outputs["Experience Score"] = ExS
-        #
-        # print("Experience =  " + str(ExS))
 
-        # Combine scores to overall basic score
+        # Calculate Main Score
 
         score = self.activation(ES * self.weights["Education Weight"]
         + SS * self.weights["Skills Weight"]
         + ExS * self.weights["Experience Weight"])
-
-        outputs["Base Score"] = score
-
-        # print("Overall score : " + str(score) )
-        # print()
-        # print()
-
 
         scores = {}
         if score < 0:
@@ -238,13 +196,12 @@ class Evaluator:
         scores['education_score'] = ES
         scores['experience_score'] = ExS
         scores['skills_score'] = SS
-
         self.writeWeights()
 
         return scores
-        # return score
 
-        # Match job and applicant data
+    # Function to match applicant entry to job specificic requirements
+
     def jobEvaluate(self, job, applicant):
 
         sum = 0
@@ -326,12 +283,14 @@ class Evaluator:
         return score
 
 
+    # Function to locally add new weight which was not seen before
+
     def addNewWeight(self, dictionaryName, weightName, weight):
         if not (dictionaryName in self.weights):
             self.weights[dictionaryName] = {}
         self.weights[dictionaryName][weightName] = weight
 
-
+    # Get a score of a length of previous employment of an applicant
 
     def getLengthScore(self, s):
         p = str(s).find('year')
@@ -350,13 +309,18 @@ class Evaluator:
             else:
                  return l/5
 
+    # helper function to help backpropogation
 
     def getError(self, weight, prevError, score):
         return weight * prevError * self.gprime(score)
 
+    # Function to be ca;;ed for weights update,
+    # It takes array of applicants, which contains
+    # applicant info next to score indicating
+    # wether they've been accepted or rejected and
+    # their specialized score.
 
     def updateWeights(self, applicants, accessMode):
-        # Applicant = [applicant, wantedScore]#
         newWeights = dict(self.weights)
         batch_size = len(applicants)
         for apl in applicants:
@@ -368,22 +332,18 @@ class Evaluator:
         self.weights = newWeights
         self.writeWeights()
 
-    def getWeightsUpdate(self, applicant, wantedScore, newWeights, batch_size):
+    # Function calculate change of temporary
+    # weights within one given applicant.
 
-        # if not self.test:
-        #     return True
+    def getWeightsUpdate(self, applicant, wantedScore, newWeights, batch_size):
 
         outputs = {}
         self.basicEvaluateFeedback(applicant, outputs)
-        # pprint.pprint(outputs)
-        # print()
-        # print("................")
-        # print()
+
+        # Calculate the errors (gradients) of an neural netowrk given wanted score
 
         baseError =  wantedScore - outputs["Base Score"]
-        # print(baseError)
         errors = {"Base Error": baseError}
-#
 
         errors["Education Error"] = self.getError(self.weights["Education Weight"], baseError, outputs["Education Score"])
         errors["Experience Error"] = self.getError(self.weights["Experience Weight"], baseError, outputs["Experience Score"])
@@ -406,10 +366,11 @@ class Evaluator:
                 errors["Previous Employment Errors"].append({"Company":company,"Position":position,"Employment Error":EmploymentError,"Length of Employment Score":lengthScore})
 
 
+        # Functions to update the temporary score.
+
         self.updateSkillsWeight(outputs["Skill Score"], baseError, newWeights, batch_size)
         self.updateExperienceWeight(outputs["Experience Score"], baseError, newWeights, batch_size)
         self.updateEducationWeight(outputs["Education Score"], baseError, newWeights, batch_size)
-
 
         self.updateSkillSetWeight(outputs["Skillset Score"], errors["Skills Error"], newWeights, batch_size)
         self.updateLanguagesWeight(outputs["Languages Score"], errors["Skills Error"], newWeights, batch_size)
@@ -426,8 +387,6 @@ class Evaluator:
         self.updateGroup("A-Level Qualifications", errors["A-levels Error"], outputs, newWeights, batch_size)
         self.updateGroup("Skills", errors["Skillset Error"], outputs, newWeights, batch_size)
 
-        # pprint.pprint(outputs)
-
         if "Previous Employment Errors" in errors:
             for q in errors["Previous Employment Errors"]:
                 company = q["Company"]
@@ -439,6 +398,8 @@ class Evaluator:
                 self.updateEmploymentLengthWeight(lengthScore, EmploymentError, newWeights, batch_size)
 
         return 0
+
+    # Functions to update different weights
 
     def updateSkillsWeight(self, output, error, weights, batch_size):
         weights["Skills Weight"] += self.multiplyToWeight(output, error, batch_size)
@@ -479,8 +440,6 @@ class Evaluator:
     def updatePrevPositionWeight(self, position, error, weights, batch_size):
         weights["Previous Employment position"][position] += self.multiplyToWeight(1, error, batch_size)
 
-
-
     def updateGroup(self, group, error, outputs, weights, batch_size):
 
         if group in outputs:
@@ -491,6 +450,9 @@ class Evaluator:
 
     def multiplyToWeight(self, score, error, batch_size):
         return score * error * self.alpha / batch_size
+
+    # Function to change weights by reqruiter
+    # dashboard weight input.
 
     def dashboardWeights(self, newWeights):
 
@@ -506,26 +468,27 @@ class Evaluator:
             self.updateAllApplicantScores()
             self.writeWeights()
 
+    # Function to delete job by its ID,
+    # it invokes weight adjusting and
+    # all applicant base score recalculation
+
     def deleteJob(self, jobID):
         applicants = self.db.deleteJobByID(jobID)
-        # pprint.pprint(applicants)
-        # # pprint.pprint(self.weights)
         self.updateWeights(applicants, 1)
         self.updateAllApplicantScores()
-        # pprint.pprint(self.weights)
+
+    # Function to update all applicant scores
 
     def updateAllApplicantScores(self):
         applicantIDS = self.db.getAllApplicants()
-        # print(applicantIDS)
         for id in applicantIDS:
             apl = self.db.getApplicantUserID(id)
-            # print(apl)
             if apl != None:
                 normalApl = self.changeApplicationBindings(apl)
-
                 scores = self.basicEvaluate(normalApl)
-                # print(scores)
                 self.db.addUserScore(id, scores)
+
+    # Helper function to normalize some strings
 
     def changeApplicationBindings(self, apl):
         normalApl = {}
@@ -539,17 +502,14 @@ class Evaluator:
             normalApl["Degree Level"] = apl["degree level"]
         if "degree qualification" in apl:
              normalApl["Degree Qualification"] = apl["degree qualification"]
-
         if "languages" in apl:
             normalApl["Languages Known"] = []
             for entry in apl["languages"]:
                 normalApl["Languages Known"].append({"Language": entry[0], "Expertise":entry[1]})
-
         if "previous employment" in apl:
             normalApl["Previous Employment"] = []
             for entry in apl["previous employment"]:
                 normalApl["Previous Employment"].append({"Company": entry[0], "Position":entry[1], "Length of Employment" : 300})
-
         if "skills" in apl:
             normalApl["Skills"] = []
             for entry in apl["skills"]:

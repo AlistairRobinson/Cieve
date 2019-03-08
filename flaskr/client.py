@@ -321,10 +321,6 @@ def delete():
 def weightUpdate():
     if request.method == "POST":
         weight = request.form.to_dict(flat=False)["weight"]
-
-
-        print(request.form)
-        print(weight)
         Evaluator().dashboardWeights(weight)
         return redirect(url_for('client.dashboard'))
     return redirect(url_for('client.dashboard'))

@@ -14,6 +14,7 @@
     <link href="../../static/accordion-dist/css/bulma-accordion.min.css" rel="stylesheet">
     <link href="../../static/tooltip-dist/css/bulma-tooltip.min.css" rel="stylesheet">
     <link rel="icon" href="../static/cieve.ico">
+    <!-- <script async type="text/javascript" src="../static/js/bulma.js"></script> -->
 
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css" />
@@ -83,8 +84,8 @@
           function displayTest(stageNum){
             $('#step' + currentStage).append(`<div class="tabs is-centered is-boxed" id="tab_header">
             <ul>
-            <li class="item is-active" data-option="1"><a><i class="fas fa-check"></i>&nbsp Completed</a></li> <li class="item" data-option="2"><a><i class="fas fa-times"></i>&nbsp Uncompleted</a></li> </ul> </div>
-             <div class="box" id="tab_container"> <div class="container_item is-active" data-item="1">
+            <li class="item is-active onclick="openTab(event, 'tabPage1')" data-option="1"><a><i class="fas fa-check"></i>&nbsp Completed</a></li> <li class="item onclick="openTab(event, 'tabPage2')" data-option="2"><a><i class="fas fa-times"></i>&nbsp Uncompleted</a></li> </ul> </div>
+             <div class="box" id="tab_container"> <div class="container_item is-active" data-item="1" id="tabPage1">
              <table class="table is-fullwidth is-hoverable center-table" id="CompleteCandidates">
              <tr>
              <td><b>#</b></td>
@@ -95,7 +96,7 @@
               </tr>
                </table>
                </div>
-               <div class="container_item" data-item="2">
+               <div class="container_item" data-item="2" id="tabPage2">
                 <table class="table is-fullwidth is-hoverable center-table" id="UncompleteCandidates">
                 <tr>
                 <td><b>#</b></td>
@@ -162,7 +163,7 @@
                 </p></td>`;
                 var score = Math.round((e['basic scores'].score)*100);
                 var jobScore = Math.round((e['specialized score'])*100);
-                var stageScore = e['stage score']
+                var stageScore = parseInt(e['stage score']);
                 rowString = rowString + '<td><b><div class="scoreValue">'+score+'</div></b></td>';
                 rowString = rowString + '<td><b><div class="scoreValue">'+jobScore+'</div></b></td>';
                 rowString = rowString + '<td><b><div class="stageValue">'+stageScore+'</div></b></td>';
@@ -198,7 +199,7 @@
             });
           }
 
-          function addToTestStep(completed, uncompleted) {
+          function addToInterviewStep(completed, uncompleted) {
             var rank=1;
             completed.forEach(e => {
                 var rowString = "<tr><td>"+rank+"</td>";
