@@ -30,7 +30,7 @@ Cieve has been developed with portability and platform independence in mind. As 
 
 ### Application
 
-Cieve has been designed with portability in mind. We installing Cieve locally in a [Python virtual environment](https://docs.python.org/3/library/venv.html). 
+Cieve has been designed with portability in mind. We recommend installing Cieve locally in a [Python virtual environment](https://docs.python.org/3/library/venv.html). 
 
 Once the environment has been configured and activated, installation of third party Python dependencies will be required. Please see the dependency list in `requirements.txt`. Run the following script in the project's root directory `/` to activate the Cieve web server on `localhost:5000`:
 
