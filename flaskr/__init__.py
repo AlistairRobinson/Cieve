@@ -10,18 +10,19 @@ from flaskr.db import get_db
 
 def create_app(test_config=None):
 
-    app = Flask(__name__, instance_relative_config=True)
+    application = Flask(__name__, instance_relative_config=True)
+    app = application
 
-    from . import auth
+    from flaskr import auth
     app.register_blueprint(auth.bp)
 
-    from . import applicant
+    from flaskr import applicant
     app.register_blueprint(applicant.bp)
 
-    from . import client
+    from flaskr import client
     app.register_blueprint(client.bp)
 
-    app.config.from_mapping(SECRET_KEY='disgrace abstain umbilical freehand isotope staleness swerve matrimony babbling clock')
+    app.config.from_mapping(TESTING=False, SECRET_KEY='disgrace abstain umbilical freehand isotope staleness swerve matrimony babbling clock')
     if test_config is None:
         app.config.from_pyfile('config.py', silent=True)
     else:
@@ -126,3 +127,9 @@ def create_app(test_config=None):
         return None
 
     return app
+
+application = create_app()
+app = application
+
+if __name__ == "__main__":
+    app.run()

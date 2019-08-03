@@ -7,8 +7,8 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from flaskr.db import get_db
 from bcrypt import gensalt
 
-with open('flaskr/static/wordlist.txt') as f:
-    words = [l.rstrip('\n').rstrip() for l in f]
+with open('flaskr/static/wordlist.txt', 'rb') as f:
+    wordlist = f.read().decode('utf-8', 'ignore').split('\n')
 
 bp = Blueprint('auth', __name__)
 
