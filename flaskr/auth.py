@@ -8,7 +8,7 @@ from flaskr.db import get_db
 from bcrypt import gensalt
 
 with open('flaskr/static/wordlist.txt', 'rb') as f:
-    wordlist = f.read().decode('utf-8', 'ignore').split('\n')
+    words = f.read().decode('utf-8', 'ignore').split('\n')
 
 bp = Blueprint('auth', __name__)
 
