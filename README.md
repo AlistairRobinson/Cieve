@@ -64,7 +64,3 @@ The following features are planned for later releases of Cieve:
  - [Abdul Kamal](https://github.com/ayydeji), Business Analyst
  - [Alistair Robinson](https://github.com/AlistairRobinson), Data Protection Officer
  - [Justas Tamulis](https://github.com/JustasTamulis), Machine Learning Developer
-
-## Acknowledgements
-
-We would like to thank our module tutor, Marcus King, for his assistance during the development of this project.
